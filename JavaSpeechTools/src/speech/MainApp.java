@@ -1,11 +1,18 @@
 package speech;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.Timer;
+
+import speech.gui.MakeFrames;
+import speech.gui.ReadImage;
+import speech.spectral.RealTimeSpectralSource;
+import speech.spectral.SpectralAnalysisProcess;
+import speech.spectral.SpectralClient;
 
 public class MainApp {
 	
@@ -25,7 +32,7 @@ public class MainApp {
 	MakeFrames frames;
 	ReadImage ri;
 	Timer timer;
-	NeuralNetClient client;
+	SpectralClient client;
 	
 	public boolean isApplet = false; 			// hack hack hack ... eeeek
 	
@@ -83,7 +90,7 @@ public class MainApp {
 		RealTimeSpectralSource rtSource = new RealTimeSpectralSource(
 				spectralAnalysis);
 		
-		client = new NeuralNetClient(fftSize, onscreenBins,frames.drawScroll);
+		client = new SpectralClient(fftSize, onscreenBins,frames.drawScroll);
 		
 		// Setup input from soundcard
 		String inName = null;

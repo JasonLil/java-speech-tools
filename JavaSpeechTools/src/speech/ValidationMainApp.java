@@ -1,5 +1,6 @@
 package speech;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
@@ -9,6 +10,11 @@ import java.io.ObjectInputStream;
 import java.util.Arrays;
 
 import javax.swing.Timer;
+
+import speech.gui.MakeFrames;
+import speech.gui.ReadImage;
+import speech.spectral.SpectralClient;
+import speech.spectral.SpectrumAdjust;
 
 public class ValidationMainApp {
 	
@@ -32,7 +38,7 @@ public class ValidationMainApp {
 	static SpectrumAdjust specAdj;
 	static MakeFrames frames;
 	static ReadImage ri;
-	static NeuralNetClient client;
+	static SpectralClient client;
 	
 	public static void main(String args[]) throws Exception {
 	

@@ -3,6 +3,8 @@ package speech;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import speech.spectral.ReadWav;
+import speech.spectral.SpectrumAdjust;
 import uk.ac.bath.ai.backprop.BackProp;
 
 //

@@ -11,6 +11,8 @@ import java.util.Arrays;
 
 import javax.swing.Timer;
 
+import speech.spectral.SpectrumAdjust;
+
 public class Validation {
 
 	public static int onscreenBins = 128;
