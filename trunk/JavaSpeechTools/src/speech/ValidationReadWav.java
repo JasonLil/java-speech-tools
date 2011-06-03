@@ -7,6 +7,8 @@ import config.Config;
 
 import java.io.File;
 import java.io.RandomAccessFile;
+
+import speech.spectral.SpectralAnalysisProcess;
 import uk.org.toot.audio.core.AudioBuffer;
 
 //
@@ -119,8 +121,8 @@ public class ValidationReadWav {
 
 			chunk.makeSilence();
 			audioReader.processAudio(chunk);
-			double output_buffer[] = spectralAnalysis.processAudio(chunk);
-
+			spectralAnalysis.processAudio(chunk,null);
+			double output_buffer[] = spectralAnalysis.getMagn();
 			for (int j = 0; j < output_buffer.length; j++) {
 				output[i][j] = output_buffer[j];
 			}
