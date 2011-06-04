@@ -1,28 +1,45 @@
 package uk.ac.bath.test;
 
+import java.util.Iterator;
+
 import uk.ac.bath.ai.backprop.TrainingData;
 
-public class TestData {
+public class TestData  implements Iterable<TrainingData> {
 	
-
-	double target[][] = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, 0 }, { 1, 1 },
+	static TrainingData TD[];
+	
+	static {
+		double out[][] = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, 0 }, { 1, 1 },
 			{ 0, 1 }, { 0, 1 }, { 1, 1 } };
 
 	// prepare test data
-	double testData[][] = { { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 },
+		double in[][] = { { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 },
 			{ 0, 1, 1 }, { 1, 0, 0 }, { 1, 0, 1 }, { 1, 1, 0 }, { 1, 1, 1 } };
 	
-	int n=target.length;
+		TD=new TrainingData[out.length];
+		
+		for(int i=0;i<TD.length;i++){
+			TD[i]=new TrainingData(in[i],out[i]);
+		}
 	
-	
-	
-	TestDataIterator iter() {
-		return new TestDataIterator();
 	}
 	
-	class TestDataIterator implements TraingDataIterator {
+	
+	
+	static int n=TD.length;
+	
+	//double target[][] = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, 0 }, { 1, 1 },
+	//		{ 0, 1 }, { 0, 1 }, { 1, 1 } };
+
+	// prepare test data
+	//double testData[][] = { { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 },
+	//		{ 0, 1, 1 }, { 1, 0, 0 }, { 1, 0, 1 }, { 1, 1, 0 }, { 1, 1, 1 } };
+
+	
+	
+	class TestDataIterator implements Iterator<TrainingData> {
 		
-		TrainingData td=new TrainingData();
+	
 		int cnt=0;
 		
 		public TestDataIterator() {
@@ -32,13 +49,28 @@ public class TestData {
 		public TrainingData next() {
 		
 			if (cnt >= n) return null;
-			td.in=testData[cnt];
-			td.out=target[cnt];
+			TrainingData td=TD[cnt];
 			cnt++;
 			return td;
 			
 		}
+
+		@Override
+		public boolean hasNext() {
+			return cnt<n;
+		}
+
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub
+			
+		}
 		
+	}
+
+	@Override
+	public Iterator<TrainingData> iterator() {
+		return new TestDataIterator();
 	}
 
 }
