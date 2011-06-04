@@ -11,11 +11,12 @@ import java.util.Random;
 
 import speech.NeuralNet;
 import uk.ac.bath.ai.backprop.BackProp;
+import uk.ac.bath.ai.backprop.TrainingData;
 
 public class BackPropTest {
 
-	public static void train(NeuralNet bp, double[][] testData, double[][] target) {
-		int nTest = target.length;
+	public static void train(NeuralNet bp, TestData tD) {
+		//int nTest = target.length;
 		double Thresh = 0.00001;
 
 		// maximum no of iterations during training
@@ -27,17 +28,16 @@ public class BackPropTest {
 		for (i = 0; i < num_iter; i++) {
 			double maxError = 0;
 
-			for (int j = 0; j < nTest; j++) {
-				bp.backPropTrain(testData[j], target[j]);
-				double out[]=bp.forwardPass(testData[j]);
-				maxError = Math.max(Util.mse(out,target[j]), maxError);
+			for (TrainingData d:tD) {
+				bp.backPropTrain(d.in,d.out);
+				double out[]=bp.forwardPass(d.in);
+				maxError = Math.max(Util.mse(out,d.out), maxError);
 			}
 
 			if (maxError < Thresh) {
 				System.out
 						.println("Network Trained. Threshold value achieved in "
 								+ i
-								* nTest
 								+ " iterations.\n"
 								+ "MSE:  "
 								+ maxError);
@@ -51,16 +51,15 @@ public class BackPropTest {
 	
 	}
 
-	public static void testNet(NeuralNet bp, double[][] testData,
-			double[][] target) {
-		int nTest = target.length;
+	public static void testNet(NeuralNet bp, TestData tD) {
+		//int nTest = target.length;
 		System.out
 				.println("Now using the trained network to make predctions on test data....");
-		for (int i = 0; i < nTest; i++) {
-			double out[]=bp.forwardPass(testData[i]);
-			System.out.println(testData[i][0] + "  " + testData[i][1] + "  "
-					+ testData[i][2] + "  " + target[i][0] + "  " + out[0]
-					+ "  " + target[i][1] + "  " + out[1]);
+		for (TrainingData t :tD) {
+			double out[]=bp.forwardPass(t.in);
+			System.out.println(t.in[0] + "  " + t.in[1] + "  "
+					+ t.in[2] + "  " + t.out[0] + "  " + out[0]
+					+ "  " + t.out[1] + "  " + out[1]);
 		}
 	}
 
@@ -68,35 +67,18 @@ public class BackPropTest {
 
 		// prepare XOR traing data
 
-		double target[][] = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, 0 }, { 1, 1 },
-				{ 0, 1 }, { 0, 1 }, { 1, 1 } };
-
-		// prepare test data
-		double testData[][] = { { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 },
-				{ 0, 1, 1 }, { 1, 0, 0 }, { 1, 0, 1 }, { 1, 1, 0 }, { 1, 1, 1 } };
-
-		// defining a net with 4 layers having 3,3,3, and 1 neuron respectively,
-		// the first layer is input layer i.e. simply holder for the input
-		// parameters
-		// and has to be the same size as the no of input parameters, in out
-		// example 3
-		// int numLayers = 4, lSz[] = {3, 3, 2, 1};
-
-		// Yes well .....
+		TestData testData=new TestData();
+		
+		
 		int lSz[] = { 3, 6, 2 };
 
-		// int numLayers = lSz.length;
-
-		// Learing rate - beta
-		// momentum - alpha
-		// Threshhold - thresh (value of target mse, training stops once it is
-		// achieved)
-		double beta = .01, alpha = 1000.;
+				double beta = .01, alpha = 1000.;
+		
 		// Creating the net
 		BackProp bp = new BackProp(lSz, beta, alpha, new Random());
 
-		train(bp,testData,target);
-		testNet(bp,testData,target);
+		train(bp,testData);
+		testNet(bp,testData);
 		
 		File file = new File("PJLBackprop.net");
 
@@ -111,7 +93,7 @@ public class BackPropTest {
 			bp=(BackProp)in.readObject();
 			in.close();
 			System.out.println(" Loaded from file .......... ");
-			testNet(bp,testData,target);
+			testNet(bp,testData);
 			
 
 		} catch (FileNotFoundException e) {

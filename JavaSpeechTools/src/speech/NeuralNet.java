@@ -10,7 +10,7 @@ public interface NeuralNet extends Serializable{
 	double[] forwardPass(double[] smoothed);
 
 	// randomize network
-	void randomWeights();
+	//void randomWeights();
 
 	double [] backPropTrain(double[] phonemeSmoothed, double[] trainOutvals);
 

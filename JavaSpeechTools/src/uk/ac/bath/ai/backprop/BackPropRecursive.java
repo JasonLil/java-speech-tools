@@ -57,10 +57,10 @@ public class BackPropRecursive  implements Serializable,NeuralNet {
     	return bp.forwardPass(in);
  	}
 
-	@Override
-	public void randomWeights() {
-		bp.randomWeights();		
-	}
+//	@Override
+//	public void randomWeights() {
+//		bp.randomWeights();		
+//	}
 
 	@Override
 	public void randomWeights(double low, double high) {

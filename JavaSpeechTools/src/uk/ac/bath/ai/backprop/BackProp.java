@@ -317,18 +317,18 @@ public class BackProp implements Serializable, NeuralNet {
 		return out[numlayer-1];
 	}
 
-	@Override
-	public void randomWeights() {
-		if (rand==null) rand=new Random();
-		for (int i = 1; i < numlayer; i++) {
-			for (int j = 0; j < layersizes[i]; j++) {
-				for (int k = 0; k < layersizes[i - 1] + 1; k++) {
-					weight[i][j][k] = (double) (rand.nextDouble() - .5);
-				}
-			}
-		}
-
-	}
+//	@Override
+//	public void randomWeights() {
+//		if (rand==null) rand=new Random();
+//		for (int i = 1; i < numlayer; i++) {
+//			for (int j = 0; j < layersizes[i]; j++) {
+//				for (int k = 0; k < layersizes[i - 1] + 1; k++) {
+//					weight[i][j][k] = (double) (rand.nextDouble() - .5);
+//				}
+//			}
+//		}
+//
+//	}
 	@Override
 	public void randomWeights(double low,double high) {
 		if (rand==null) rand=new Random();
