@@ -25,9 +25,9 @@ public class MainApp {
 	public double magnLog[];
 	public double smoothed[];
 	public double outputs[];
-	public double vocalTract[][][];
-	public double lipsInner[][][];
-	public double lipsOuter[][][];
+//	public double vocalTract[][][];
+//	public double lipsInner[][][];
+//	public double lipsOuter[][][];
 	
 	MakeFrames frames;
 	ReadImage ri;
@@ -41,22 +41,23 @@ public class MainApp {
 		app.start();
 	}
 	
-	MainApp(boolean isApplet) {
+	MainApp(boolean isApplet) throws IOException {
 		
 		frames = new MakeFrames(isApplet, phonemes, onscreenBins); 		// Create gfx for output
 		
-		final ReadImage ri = new ReadImage();
-		try {
-			vocalTract = ri.readTract(); 			// Read in data from images
-			lipsInner = ri.readLips1(); 			// of lip and tract shapes
-			lipsOuter = ri.readLips2();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	
+		
+//		try {
+//			vocalTract = ri.readTract(); 			// Read in data from images
+//			lipsInner = ri.readLips1(); 			// of lip and tract shapes
+//			lipsOuter = ri.readLips2();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 		frames.makeMaster();
 		
-		timer = new Timer(40, new ActionListener() {
+		timer = new Timer(100, new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				
 				outputs = client.outputs;
@@ -76,7 +77,7 @@ public class MainApp {
 					if (outputSort[5] == outputs[5]) {text = "UHH";}
 				}
 				
-				frames.updateGfx(vocalTract, text, lipsInner, lipsOuter, outputs, client.smoothed);
+				frames.updateGfx( text,  outputs, client.smoothed);
 			}
 		});
 		
@@ -90,7 +91,7 @@ public class MainApp {
 		RealTimeSpectralSource rtSource = new RealTimeSpectralSource(
 				spectralAnalysis);
 		
-		client = new SpectralClient(fftSize, onscreenBins,frames.drawScroll);
+		client = new SpectralClient(fftSize, onscreenBins,frames.spectralProcess);
 		
 		// Setup input from soundcard
 		String inName = null;

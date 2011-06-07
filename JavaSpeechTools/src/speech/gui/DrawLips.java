@@ -21,18 +21,24 @@ public class DrawLips extends JPanel {
 	public int posy[] = new int[28];
 	public int posx2[] = new int[26];
 	public int posy2[] = new int[26];
+	double points[][][];
+	double points2[][][];
 	int phonemes;
 	Image img = null;
-	public DrawLips(int phonemes) {
+	public DrawLips(int phonemes,ReadImage ri) throws IOException {
 		this.phonemes = phonemes;
 		
 		try{
 			img = ImageIO.read(new File("src/speech/imagefiles/face.bmp"));
 		} catch (IOException e) {}
+		setPreferredSize(new Dimension(320, 400));
+		points = ri.lipsInner; 			// of lip and tract shapes
+		points2 = ri.lipsOuter;
+	
 	}
 
 	public void paint(Graphics g) {
-
+		if (!isVisible()) return;
 		Graphics2D g2 = (Graphics2D)g;
 		g2.drawImage(img, 0, 0, null);
 		g2.setColor(Color.BLACK);
@@ -45,7 +51,7 @@ public class DrawLips extends JPanel {
 		g2.fillPolygon(posx2, posy2, 26);
 	}
 	
-	public void vectorMean(double points[][][], double points2[][][],
+	public void vectorMean(
 			double outputs[]) {
 
 		double sum_x, sum_y, sum;

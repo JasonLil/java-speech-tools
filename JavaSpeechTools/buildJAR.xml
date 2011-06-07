@@ -2,24 +2,21 @@
 <project name="speech" default="jar" basedir=".">
 
 	<!-- set global properties for this build -->
-	<property name="name" value="speech"/>
-	<property name="package" value="*"/>
-	<property name="jarname" value="${name}.jar"/>
-	<property name="src" value="src"/>
-	<property name="build" value="bin"/>
-	<property name="dest" value="dest"/>
-	<property name="lib" value="lib"/>
-	<property name="combined-jars" value="all.jar"/>
-	<property name="marshall.dir" value="marshallr"/>
+	<property name="name" value="speech" />
+	<property name="package" value="*" />
+	<property name="jarname" value="${name}.jar" />
+	<property name="src" value="src" />
+	<property name="build" value="bin" />
+	<property name="dest" value="dest" />
+	<property name="lib" value="lib" />
 
-	<property  name="libfiles" value="lib/audioServers.jar lib/rasmusdsp.jar lib/toot-r2.jar lib/frinika.jar"/>
+	<property name="marshall.dir" value="marshallr" />
+
 
 	<!-- all jar-files used by speech -->
 
 
-	<property name="classpath" value="audioServers.jar  rasmusdsp.jar toot-r2.jar frinika.jar"  />
 	<property name="javaversion" value="1.6" />
-
 
 
 	<target name="compile">
@@ -27,9 +24,7 @@
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath>
 				<pathelement path="${classpath}" />
-				<pathelement path="lib/audioServers.jar:lib/rasmusdsp.jar:lib/toot-r2.jar:lib/frinika.jar"/>
 			</classpath>
-
 		</javac>
 	</target>
 
@@ -37,73 +32,58 @@
 	<!-- make a jar file -->
 	<target name="jar" depends="compile">
 		<copy todir="${build}/imagefiles">
-			<fileset dir="${src}/imagefiles"/>
+			<fileset dir="${src}/imagefiles" />
 		</copy>
 		<copy todir="${build}/textfiles">
-			<fileset dir="${src}/textfiles"/>
+			<fileset dir="${src}/textfiles" />
 		</copy>
 		<copy todir="${build}/config">
-			<fileset dir="${src}/config"/>
+			<fileset dir="${src}/config" />
 		</copy>
 
 		<copy todir="${dest}">
-			<fileset dir="lib"/>
+			<fileset dir="lib" />
 		</copy>
 
-		<copy todir="${dest}" file="SpeechApplet.html"/>
-		
+		<copy todir="${dest}" file="SpeechApplet.html" />
+
 		<jar jarfile="${dest}/${jarname}" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="PJL_MainApp"/>
+				<attribute name="Main-Class" value="PJL_MainApp" />
 				<attribute name="Sealed" value="false" />
 				<attribute name="Class-Path" value="${classpath}" />
 			</manifest>
 		</jar>
-		
-		<copy todir="lib/">
-		  <file name="${dest}/${jarname}">
-
 	</target>
-
 
 	<target name="install" depends="jar">
 
 		<copy todir="web">
 			<fileset dir="lib">
-				<include name="*.jar"/>
+				<include name="*.jar" />
 			</fileset>
 		</copy>
 
-		<copy todir="web" file="${jarname}"/>
+		<copy todir="web" file="${jarname}" />
 
 		<copy todir="${dst}">
 			<fileset dir="web">
-				<include name="*"/>
+				<include name="*" />
 			</fileset>
 		</copy>
 
 	</target>
 
-	<target name="-post-jar">
-
-		<exec  dir="." executable="jarsigner">
-
-			<arg line="-keystore /home/scott/NetBeansProjects/rigdata/keystore/drmstore -storepass somepassword -signedjar srigdata.jar rigdata.jar someAlias"/>
-
-		</exec>
-
+	<target name="combine-jars">
+		<mkdir dir="${marshall.dir}" />
+		<unzip dest="${marshall.dir}">
+			<fileset dir="${external.jar.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</unzip>
+		<jar destfile="${combined.jar}" basedir="${marshall.dir}" />
+		<delete dir="${marshall.dir}" />
 	</target>
-
-<target name="combine-jars">
-    <mkdir dir="${marshall.dir}"/>
-    <unzip dest="${marshall.dir}">
-        <fileset dir="${external.jar.dir}">
-            <include name="**/*.jar"/>
-        </fileset>
-    </unzip>
-    <jar destfile="${combined.jar}" basedir="${marshall.dir"}>
-    <delete dir="${marshall.dir}"/>
-</target>
 
 
 </project>

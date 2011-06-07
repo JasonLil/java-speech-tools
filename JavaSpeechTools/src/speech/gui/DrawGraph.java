@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
@@ -18,17 +20,21 @@ public class DrawGraph extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	boolean scrollPause = false;
+	boolean scrollTransparent = false;
+	int scrollSpeed = 15;
+
 	private Image offScreenImage;
 	private Dimension screenSize;
 	private Graphics offScreenGraphics;
 	private AffineTransform at;
 
 	int in_value_last[], speed, phonemes;
-	boolean scrollTransparent;
+	
 	int silentCount=0;
 	double silentThresh=0.2;
 	double silentStop=50;
+	KeyHandler keyHandler;
 	
 	public DrawGraph(int phonemes) {
 		this.phonemes = phonemes;
@@ -36,12 +42,16 @@ public class DrawGraph extends JPanel {
 		scrollTransparent = false;
 		at = new AffineTransform();
 		in_value_last = new int[phonemes];
+		keyHandler=new KeyHandler();
+		
 	//	setDoubleBuffered(true);
 	}
 
 	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	public void paint(Graphics g) {
+	//	super.paint(g);
+		
+		//System.out.println(" PAINT" );
 		if (offScreenImage != null) {
 			g.drawImage(offScreenImage, 0, 0, null);
 		}
@@ -59,8 +69,7 @@ public class DrawGraph extends JPanel {
 		
 	}
 	
-	public void updateGraph(double[] in_values, int speed, 
-			boolean trans_in, boolean play, String text) {
+	public void updateGraph(double[] in_values, String text) {
 
 		this.speed = speed;
 		
@@ -71,7 +80,9 @@ public class DrawGraph extends JPanel {
 			offScreenGraphics = offScreenImage.getGraphics();
 			System.out.println("I just made some gfx");
 		}
+		
 		boolean silent=true;
+		
 		for (int i=0; i<6; i++) {
 			if (in_values[i] > silentThresh) {
 				silent=false;
@@ -81,7 +92,7 @@ public class DrawGraph extends JPanel {
 		if (silent) silentCount++;
 		
 		
-		if (play && silentCount < silentThresh) {
+		if (!scrollPause) { // && silentCount < silentThresh) {
 			
 			((Graphics2D) offScreenGraphics).setComposite(AlphaComposite.getInstance(
 					AlphaComposite.SRC_ATOP, 1.0f));
@@ -102,7 +113,7 @@ public class DrawGraph extends JPanel {
 					if (i == 5) offScreenGraphics.setColor(new Color(215, 215, 40));
 					
 					// If we want it transparent, make it transparent
-					if (trans_in) {
+					if (scrollTransparent) {
 						((Graphics2D) offScreenGraphics)
 								.setComposite(AlphaComposite.getInstance(
 										AlphaComposite.SRC_ATOP, 0.5f));
@@ -146,4 +157,40 @@ public class DrawGraph extends JPanel {
 		
 		}
 	}
+
+	class KeyHandler extends KeyAdapter {
+
+		
+
+		public void keyReleased(KeyEvent e) {
+
+			System.out.println(" KeyHit ZZZZZ");
+			int kCode = e.getKeyCode();
+
+			if (kCode == KeyEvent.VK_SPACE) {
+				if (scrollPause)
+					scrollPause = false;
+				else
+					scrollPause = true;
+			}
+
+			if (kCode == KeyEvent.VK_EQUALS) {
+				scrollSpeed += 5;
+			}
+
+			if (kCode == KeyEvent.VK_MINUS) {
+				scrollSpeed -= 5;
+			}
+
+			if (kCode == KeyEvent.VK_T) {
+				if (scrollTransparent)
+					scrollTransparent = false;
+				else
+					scrollTransparent = true;
+			}
+
+
+		}
+	}
+
 }

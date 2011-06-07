@@ -22,19 +22,19 @@ public class SpectralClient {
 	NeuralNet neuralNet;
 	SpectrumAdjust specAdj;
 	SpectralAnalysisProcess sprectralAnalysis;
-	DrawScrollingSpect scrollingSpect;
+	SpectralProcess client;
 	public double outputs[];
 	public double smoothed[];
 	double magnLog[];
 	int fftSize;
 	int onscreenBins;
 	
-	public SpectralClient(int fftsize, int onscreenBins,DrawScrollingSpect scrollingSpect) {
+	public SpectralClient(int fftsize, int onscreenBins,SpectralProcess client) {
 		
 		this.onscreenBins = onscreenBins;
 		this.fftSize=fftsize;
 		specAdj = new SpectrumAdjust();
-		this.scrollingSpect=scrollingSpect;
+		this.client=client;
 		outputs = new double[6];
 		
 		FileInputStream ostr;
@@ -64,7 +64,7 @@ public class SpectralClient {
 			smoothed[i]*=2;									// This is adding volume to the input signal.
 		}													// the USB audio interface isn't 'hot' enough
 		
-		if (scrollingSpect != null) scrollingSpect.notifyMoreDataReady(smoothed); // magnLog);
+		if (client != null) client.notifyMoreDataReady(smoothed); // magnLog);
 		outputs = neuralNet.forwardPass(smoothed);
 
 	}

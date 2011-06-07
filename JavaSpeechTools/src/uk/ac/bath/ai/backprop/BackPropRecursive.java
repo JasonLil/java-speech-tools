@@ -5,6 +5,7 @@ package uk.ac.bath.ai.backprop;
 // http://www.codeproject.com/KB/recipes/BP.aspx?msg=2809798#xx2809798xx
 //
 
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Random;
 import java.util.Vector;
@@ -67,6 +68,12 @@ public class BackPropRecursive  implements Serializable,NeuralNet {
 		bp.randomWeights(low,high);
 		
 	}
+
+@Override
+public void printWeights(PrintStream str) {
+	// TODO Auto-generated method stub
+	
+}
 
 	
     

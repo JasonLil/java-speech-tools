@@ -11,83 +11,50 @@ import java.util.Random;
 
 import speech.NeuralNet;
 import uk.ac.bath.ai.backprop.BackProp;
+import uk.ac.bath.ai.backprop.FeedForward;
+import uk.ac.bath.ai.backprop.FeedForwardIF;
 import uk.ac.bath.ai.backprop.TrainingData;
 
 public class EvolveTest {
 
-	public static void randomTrain(NeuralNetEvolvableWrapper evo) {
 
-		double thresh = .5;
-		double fit;
-		long cnt = 0;
-		double bestFit=Double.MAX_VALUE;
-		do {
-			evo.randomGuess();
-			fit = evo.fitness();
-			if (fit< bestFit){
-				bestFit=fit;
-			}
-			if ((cnt++) % 100000 == 0)
-				System.out.println(cnt + " Fitness: " + bestFit);
-		} while (fit > thresh);
+	public static void walkerTrain(Pool pool,Evaluator evaluator) {
 
-		/*
-		 * if (i == num_iter) { System.out.println(i +
-		 * " iterations completed..." + "MSE: " + bp.mse(target[(i - 1) % 8]));
-		 * }
-		 */
-	}
-
-	public static void walkerTrain(NeuralNetEvolvableWrapper evo) {
-
-		double thresh = .5;
+		double thresh = -.001;
 		double fit;
 		long cnt = 0;
 		do {
-			evo.randomGuess();
-			fit = evo.fitness();
-			if ((cnt++) % 100000 == 0)
-				System.out.println(cnt + " Fitness: " + fit);
-		} while (fit > thresh);
+			FeedForward net=pool.nextGuess();
+			fit = evaluator.fitness(net);
+			pool.addGenetic(net,fit);
+			
+			if ((cnt++) % 10000 == 0)
+				
+				System.out.println(cnt + " Fitness: " + pool.getBest().fitness);
+			
+		} while (fit < thresh);
 
-		/*
-		 * if (i == num_iter) { System.out.println(i +
-		 * " iterations completed..." + "MSE: " + bp.mse(target[(i - 1) % 8]));
-		 * }
-		 */
 	}
 
-	public static void testNet(NeuralNet bp, TestData testData) {
 
-		System.out
-				.println("Now using the trained network to make predctions on test data....");
-
-		for (TrainingData d : testData) {
-			if (d == null)
-				break;
-			double out[] = bp.forwardPass(d.in);
-
-			System.out.println(d.in[0] + "  " + d.in[1] + "  " + d.in[2] + "  "
-					+ d.out[0] + "  " + out[0] + "  " + d.out[1] + "  "
-					+ out[1]);
-		}
-	}
 
 	public static void main(String arg[]) {
 
 		TestData testData = new TestData();
+//
+//		// Yes well .....
+//		int lSz[] = { 3, 6, 2 };
+//
+//		double beta = .01, alpha = 1000.;  // NOT USED
+//		// Creating the net
+//		NeuralNet net = new BackProp(lSz, beta, alpha, new Random());
 
-		// Yes well .....
-		int lSz[] = { 3, 6, 2 };
-
-		double beta = .01, alpha = 1000.;  // NOT USED
-		// Creating the net
-		NeuralNet net = new BackProp(lSz, beta, alpha, new Random());
-
-		NeuralNetEvolvableWrapper evo = new NeuralNetEvolvableWrapper(testData,
-				net);
-		randomTrain(evo);
-		testNet(net, testData);
+		Evaluator evo = new Evaluator(testData);
+		Pool pool = new Pool(20);
+		
+		walkerTrain(pool,evo);
+		FeedForwardIF net=(FeedForwardIF) pool.getBest().net;
+		evo.testNet(net);
 
 		File file = new File("PJLBackprop.net");
 
@@ -102,7 +69,7 @@ public class EvolveTest {
 			net = (NeuralNet) in.readObject();
 			in.close();
 			System.out.println(" Loaded from file .......... ");
-			testNet(net, testData);
+			evo.testNet(net);
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

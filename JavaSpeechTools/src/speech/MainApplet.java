@@ -1,5 +1,7 @@
 package speech;
 
+import java.io.IOException;
+
 import javax.swing.JApplet;
 
 
@@ -12,7 +14,13 @@ public class MainApplet extends JApplet {
 
 	@Override
 	public void init() {
-		MainApp app = new MainApp(true);
+		MainApp app=null;
+		try {
+			app = new MainApp(true);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			app.start();
