@@ -2,6 +2,7 @@ package speech;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import speech.spectral.ReadWav;
 import speech.spectral.SpectrumAdjust;
@@ -42,7 +43,8 @@ public class WavTraining {
 
 		int sz[] = { inputs, hidden, outputs };
 
-		neuralNet = new BackProp(sz, beta, alpha, null);
+		Random rand=new Random();
+		neuralNet = new BackProp(sz, beta, alpha, rand);
 		specAdjust = new SpectrumAdjust();
 		readWav = new ReadWav(outputs);
 

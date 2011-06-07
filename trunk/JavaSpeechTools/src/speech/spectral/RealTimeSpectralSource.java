@@ -98,13 +98,14 @@ public class RealTimeSpectralSource {
 
 				System.out.println("Stop...");
 				audioServer.stop();
-
-				try {
-					audioServer.closeAudioInput(input);
-					audioServer.closeAudioOutput(output);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				
+//  The server will do this
+//				try {
+//					audioServer.closeAudioInput(input);
+//					audioServer.closeAudioOutput(output);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 
 			}
 		});

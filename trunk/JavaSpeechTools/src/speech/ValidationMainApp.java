@@ -44,14 +44,7 @@ public class ValidationMainApp {
 	
 		frames = new MakeFrames(false, phonemes, onscreenBins); 		// Create gfx for output
 		
-		final ReadImage ri = new ReadImage();
-		try {
-			vocalTract = ri.readTract(); 			// Read in data from images
-			lipsInner = ri.readLips1(); 			// of lip and tract shapes
-			lipsOuter = ri.readLips2();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		frames.makeMaster();
 		
 		readTestWav = new ValidationReadWav(phonemes, 11);
@@ -97,7 +90,7 @@ public class ValidationMainApp {
 				if (outputSort[5] == outputs[5]) {text = "UHH";}
 			}
 			
-			frames.updateGfx(vocalTract, text, lipsInner, lipsOuter, outputs, smoothed);
+			frames.updateGfx(text,  outputs, smoothed);
 
 			Thread.sleep(40);
 

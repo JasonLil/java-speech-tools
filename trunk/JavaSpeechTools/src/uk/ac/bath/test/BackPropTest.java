@@ -15,7 +15,7 @@ import uk.ac.bath.ai.backprop.TrainingData;
 
 public class BackPropTest {
 
-	public static void train(NeuralNet bp, TestData tD) {
+	public static void train(NeuralNet bp, TestData tD,Evaluator eval) {
 		//int nTest = target.length;
 		double Thresh = 0.00001;
 
@@ -30,6 +30,7 @@ public class BackPropTest {
 
 			for (TrainingData d:tD) {
 				bp.backPropTrain(d.in,d.out);
+				double err=eval.fitness(bp);
 				double out[]=bp.forwardPass(d.in);
 				maxError = Math.max(Util.mse(out,d.out), maxError);
 			}
@@ -51,17 +52,7 @@ public class BackPropTest {
 	
 	}
 
-	public static void testNet(NeuralNet bp, TestData tD) {
-		//int nTest = target.length;
-		System.out
-				.println("Now using the trained network to make predctions on test data....");
-		for (TrainingData t :tD) {
-			double out[]=bp.forwardPass(t.in);
-			System.out.println(t.in[0] + "  " + t.in[1] + "  "
-					+ t.in[2] + "  " + t.out[0] + "  " + out[0]
-					+ "  " + t.out[1] + "  " + out[1]);
-		}
-	}
+	
 
 	public static void main(String arg[]) {
 
@@ -76,9 +67,10 @@ public class BackPropTest {
 		
 		// Creating the net
 		BackProp bp = new BackProp(lSz, beta, alpha, new Random());
-
-		train(bp,testData);
-		testNet(bp,testData);
+		Evaluator eval=new Evaluator(testData);
+		train(bp,testData,eval);
+		eval.testNet(bp);
+		bp.printWeights(System.out);
 		
 		File file = new File("PJLBackprop.net");
 
@@ -93,7 +85,7 @@ public class BackPropTest {
 			bp=(BackProp)in.readObject();
 			in.close();
 			System.out.println(" Loaded from file .......... ");
-			testNet(bp,testData);
+			eval.testNet(bp);
 			
 
 		} catch (FileNotFoundException e) {

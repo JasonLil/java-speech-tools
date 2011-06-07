@@ -15,17 +15,21 @@ public class DrawTract extends JPanel {
 
 	public int posx[] = new int[102];
 	public int posy[] = new int[102];
+	double points[][][];
 	String text="";
 	int phonemes;
 	Font font;
 	
-	public DrawTract(int phonemes) {
+	public DrawTract(int phonemes,ReadImage ri) {
 		this.phonemes = phonemes;
 		font=new Font("sansserif", Font.BOLD, 32);
+		setPreferredSize(new Dimension(320, 400));
+		points = ri.tract; 
 	}
 
 	@Override
 	public void paint(Graphics g) {
+		if (!isVisible()) return;
 		Graphics2D g2 = (Graphics2D)g;
 		java.awt.Color rgb = new java.awt.Color(239, 170, 180);
 		g2.setColor(rgb);
@@ -37,7 +41,7 @@ public class DrawTract extends JPanel {
 		g2.drawString(text, 160, 70);
 	}
 	
-	public void vectorMean(double points[][][], double outputs[], String text) {
+	public void vectorMean( double outputs[], String text) {
 		this.text=text;
 		double sum_x, sum_y, sum, diffx, diffy;
 		for (int i=0; i<100; i++)  {
