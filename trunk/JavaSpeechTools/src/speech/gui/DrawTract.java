@@ -13,6 +13,10 @@ import javax.swing.*;
 
 public class DrawTract extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public int posx[] = new int[102];
 	public int posy[] = new int[102];
 	double points[][][];

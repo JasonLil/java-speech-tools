@@ -26,11 +26,11 @@ public class ReadImage {
 	double[][][] lipsInner;
 	double[][][] lipsOuter;
 
-	public ReadImage() throws IOException {
+	public ReadImage(String names[]) throws IOException {
 		tract = readTract();
 		lipsInner = readLips1();
 		lipsOuter = readLips2();
-
+		// TODO use names
 	}
 
 	private double[][][] readTract() throws IOException {

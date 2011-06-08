@@ -67,19 +67,20 @@ public class MakeFrames {
 
 	private KeyHandler keyHandler;
 
-	public MakeFrames(boolean isApplet, int phonemes, int onscreenBins)
+	private String [] phonemeNames;
+
+	public MakeFrames(boolean isApplet, String[] phonemeNames, int onscreenBins)
 			throws IOException {
+		this.phonemeNames=phonemeNames;
+		this.phonemes=phonemeNames.length;
 		this.isApplet = isApplet;
-		final ReadImage ri = new ReadImage();
+		final ReadImage ri = new ReadImage(phonemeNames);
 		drawTract = new DrawTract(phonemes, ri);
 		drawTargTract = new DrawTract(phonemes, ri);
 		drawLips = new DrawLips(phonemes, ri);
 		drawTargLips = new DrawLips(phonemes, ri);
 		this.onscreenBins = onscreenBins;
-		this.phonemes = phonemes;
-		// drawGraph = new DrawGraph(phonemes);
-		// drawScroll = new DrawScrollingSpect(480);
-		// drawHist = new DrawHist(onscreenBins);
+
 		targetNeuralOutputs[0] = 1.0;
 		targetText = "EEE";
 
@@ -111,13 +112,6 @@ public class MakeFrames {
 		c.gridx++;
 		content.add(drawTargTract, c);
 
-		// addComponent(content, drawLips, 680, 0, 320, 400);
-		// addComponent(content, drawTract, 680, 400, 320, 400);
-		// addComponent(content, drawTargLips, 1000, 0, 320, 400);
-		// addComponent(content, drawTargTract, 1000, 400, 320, 400);
-		// addComponent(content, drawGraph, 0, 0, 360, 400);
-		// addComponent(content, drawScroll, 0, 400, 480, 400);
-		// addComponent(content, drawHist, 480, 400, 200, 400);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -147,13 +141,13 @@ public class MakeFrames {
 		menu = new JMenu("Analyis");
 
 		bar.add(menu);
-		menu.add(new JMenuItem(new AbstractAction("SpectroGram") {
+		menu.add(new JMenuItem(new AbstractAction("Spectrogram") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame();
+				JFrame frame = new JFrame("Spectrogram");
 				frame.setLayout(null);
-				drawScroll = new DrawScrollingSpect(480);
+				drawScroll = new DrawScrollingSpect();
 				drawHist = new DrawHist(onscreenBins);
 
 				frame.add(drawScroll);
@@ -208,7 +202,7 @@ public class MakeFrames {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame();
+				JFrame frame = new JFrame("Phoneme Classification");
 				// frame.setLayout(null);
 				drawGraph = new DrawGraph(6);
 				drawGraph.setBounds(0, 0, 680, 400);
@@ -257,7 +251,6 @@ public class MakeFrames {
 		menu = new JMenu("Training");
 		bar.add(menu);
 
-		final String phonemeNames[] = { "EEE", "EHH", "ERR", "AHH", "OOH", "UHH" };
 
 		for (int i = 0; i < phonemeNames.length; i++) {
 
@@ -267,7 +260,7 @@ public class MakeFrames {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					targetText=phonemeNames[ii];
+					targetText = phonemeNames[ii];
 					for (int i = 0; i < 6; i++)
 						targetNeuralOutputs[i] = 0;
 					targetNeuralOutputs[ii] = 1.0;
@@ -277,16 +270,14 @@ public class MakeFrames {
 		}
 	}
 
-	public void updateGfx(String text,
-
-	double[] neuralOutputs, double[] magn) {
+	public void updateGfx(String text, double[] neuralOutputs, double[] magn) {
 
 		drawTract.vectorMean(neuralOutputs, text);
 		drawLips.vectorMean(neuralOutputs);
 
 		if (drawGraph != null) {
 			drawGraph.updateGraph(neuralOutputs, text);
-		//	graphFrame.repaint();
+			// graphFrame.repaint();
 		}
 
 		if (specFrame != null) {

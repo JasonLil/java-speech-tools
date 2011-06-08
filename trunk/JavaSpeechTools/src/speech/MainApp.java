@@ -43,21 +43,13 @@ public class MainApp {
 	
 	String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
 	
-	
+
 	MainApp(boolean isApplet) throws IOException {
 		
-		frames = new MakeFrames(isApplet, phonemes, onscreenBins); 		// Create gfx for output
+		frames = new MakeFrames(isApplet, phonemeNames, onscreenBins); 		// Create gfx for output
 		
 	
-		
-//		try {
-//			vocalTract = ri.readTract(); 			// Read in data from images
-//			lipsInner = ri.readLips1(); 			// of lip and tract shapes
-//			lipsOuter = ri.readLips2();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		
+
 		frames.makeMaster();
 		
 		timer = new Timer(100, new ActionListener() {
