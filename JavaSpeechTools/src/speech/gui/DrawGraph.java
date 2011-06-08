@@ -85,7 +85,7 @@ public class DrawGraph extends JPanel {
 			offScreenWidth = getSize().width;
 			offScreenImage = createImage(offScreenWidth, getSize().height);
 			offScreenGraphics = offScreenImage.getGraphics();
-			System.out.println("I just made some gfx");
+		//	System.out.println("I just made some gfx");
 			nextX = 0;
 		}
 
@@ -213,6 +213,8 @@ public class DrawGraph extends JPanel {
 				nextX = 0;
 			}
 			repaint(dirtX,dirtY,dirtW,dirtH);		
+		} else {
+			nextX=0;
 		}
 	
 	}
@@ -221,7 +223,7 @@ public class DrawGraph extends JPanel {
 
 		public void keyReleased(KeyEvent e) {
 
-			System.out.println(" KeyHit ZZZZZ");
+			//System.out.println(" KeyHit ZZZZZ");
 			int kCode = e.getKeyCode();
 
 			if (kCode == KeyEvent.VK_SPACE) {

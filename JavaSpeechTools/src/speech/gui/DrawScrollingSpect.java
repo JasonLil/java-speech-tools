@@ -69,8 +69,8 @@ public class DrawScrollingSpect extends JPanel {
 	ValMapper mapper;
 	double peaks[];
 
-	public DrawScrollingSpect(int nChunks) {
-		this.nChunks = nChunks;
+	public DrawScrollingSpect() {
+		//this.nChunks = nChunks;
 		this.mapper = new ValMapper();
 		mapper.update(null, null);
 		// setDoubleBuffered(true);
@@ -81,13 +81,14 @@ public class DrawScrollingSpect extends JPanel {
 	void createGraphics() {
 
 		synchronized (imagSync) {
-			// nChunks=getWidth();
+			nChunks=getWidth();
 			size = new Dimension(nChunks, nBins);
 			System.out.println(" Spectrogram  nBins="+nBins);
 			int width = nChunks;
 			int height = nBins;
 
 			screenBuffer = new int[width * height];
+			//nChunks=width;
 			peaks=new double[nBins];
 			screenConverter = new MemoryImageSource(width, height,
 					screenBuffer, 0, width);
@@ -172,7 +173,7 @@ public class DrawScrollingSpect extends JPanel {
 	//		return;
 	//	}
 		// System.out.println(" Spectro DRAWIMAGE");
-		if (size == null) return;
+		if (size == null || nChunks==0) return;
 		int w = size.width - ptr;
 		int h = size.height;
 

@@ -39,10 +39,10 @@ public class ValidationMainApp {
 	static MakeFrames frames;
 	static ReadImage ri;
 	static SpectralClient client;
-	
+	static String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
 	public static void main(String args[]) throws Exception {
 	
-		frames = new MakeFrames(false, phonemes, onscreenBins); 		// Create gfx for output
+		frames = new MakeFrames(false, phonemeNames, onscreenBins); 		// Create gfx for output
 		
 
 		frames.makeMaster();
