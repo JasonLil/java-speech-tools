@@ -67,12 +67,12 @@ public class MakeFrames {
 
 	private KeyHandler keyHandler;
 
-	private String [] phonemeNames;
+	private String[] phonemeNames;
 
 	public MakeFrames(boolean isApplet, String[] phonemeNames, int onscreenBins)
 			throws IOException {
-		this.phonemeNames=phonemeNames;
-		this.phonemes=phonemeNames.length;
+		this.phonemeNames = phonemeNames;
+		this.phonemes = phonemeNames.length;
 		this.isApplet = isApplet;
 		final ReadImage ri = new ReadImage(phonemeNames);
 		drawTract = new DrawTract(phonemes, ri);
@@ -112,12 +112,10 @@ public class MakeFrames {
 		c.gridx++;
 		content.add(drawTargTract, c);
 
-
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.setVisible(true);
 		masterFrame = frame;
-
 		makeMenus();
 		frame.pack();
 	}
@@ -251,7 +249,6 @@ public class MakeFrames {
 		menu = new JMenu("Training");
 		bar.add(menu);
 
-
 		for (int i = 0; i < phonemeNames.length; i++) {
 
 			final int ii = i;
@@ -272,8 +269,13 @@ public class MakeFrames {
 
 	public void updateGfx(String text, double[] neuralOutputs, double[] magn) {
 
-		drawTract.vectorMean(neuralOutputs, text);
-		drawLips.vectorMean(neuralOutputs);
+		if (!(masterFrame.getExtendedState() == JFrame.ICONIFIED)) {
+			drawTract.vectorMean(neuralOutputs, text);
+			drawLips.vectorMean(neuralOutputs);
+			drawTargTract.vectorMean(targetNeuralOutputs, targetText);
+			drawTargLips.vectorMean(targetNeuralOutputs);
+			masterFrame.repaint();
+		} 
 
 		if (drawGraph != null) {
 			drawGraph.updateGraph(neuralOutputs, text);
@@ -285,9 +287,6 @@ public class MakeFrames {
 			specFrame.repaint();
 		}
 
-		masterFrame.repaint();
-		drawTargTract.vectorMean(targetNeuralOutputs, targetText);
-		drawTargLips.vectorMean(targetNeuralOutputs);
 	}
 
 	// private void addComponent(Container container, Component c, int x, int y,

@@ -25,12 +25,14 @@ public class ReadImage {
 	double[][][] tract;
 	double[][][] lipsInner;
 	double[][][] lipsOuter;
+	private String[] names;
 
 	public ReadImage(String names[]) throws IOException {
+		this.names=names;
 		tract = readTract();
 		lipsInner = readLips1();
 		lipsOuter = readLips2();
-		// TODO use names
+	
 	}
 
 	private double[][][] readTract() throws IOException {
@@ -38,12 +40,12 @@ public class ReadImage {
 		double all_points[][][] = new double[100][3][6];
 		double points[][] = new double[100][3];
 		double sorted_points[][] = new double[100][3];
-		String names[] = { "ee_wgr", "eh_wgr", "er_wgr", "ah_wgr", "oo_wgr",
-				"oh_wgr" };
+//		String names[] = { "ee_wgr", "eh_wgr", "er_wgr", "ah_wgr", "oo_wgr",
+//				"oh_wgr" };
 
-		for (int f = 0; f < 6; f++) {
+		for (int f = 0; f < names.length; f++) {
 
-			String resource = "imagefiles/" + names[f] + ".bmp";
+			String resource = "imagefiles/wgr" + names[f] + ".bmp";
 
 			URL url = MainApp.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
@@ -77,11 +79,13 @@ public class ReadImage {
 		double points[][] = new double[28][3];
 		double sorted_points[][] = new double[28][3];
 
-		String names[] = { "lipsEEE", "lipsEHH", "lipsERR", "lipsAHH",
-				"lipsOOH", "lipsUHH" };
+//		String names[] = { "lipsEEE", "lipsEHH", "lipsERR", "lipsAHH",
+//				"lipsOOH", "lipsUHH" };
 
-		for (int f = 0; f < 6; f++) {
-			String resource = "imagefiles/" + names[f] + ".bmp";
+		for (int f = 0; f < names.length; f++) {
+			String resource = "imagefiles/lips" + names[f] + ".bmp";
+			System.out.println(resource);
+			
 			URL url = MainApp.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
 			int count = 0;
@@ -113,11 +117,11 @@ public class ReadImage {
 		double all_points[][][] = new double[26][3][6];
 		double points[][] = new double[26][3];
 		double sorted_points[][] = new double[26][3];
-		for (int f = 0; f < 6; f++) {
+		for (int f = 0; f < names.length; f++) {
 
-			String names[] = { "lipsEEE", "lipsEHH", "lipsERR", "lipsAHH",
-					"lipsOOH", "lipsUHH" };
-			String resource = "imagefiles/" + names[f] + ".bmp";
+//			String names[] = { "lipsEEE", "lipsEHH", "lipsERR", "lipsAHH",
+//					"lipsOOH", "lipsUHH" };
+			String resource = "imagefiles/lips" + names[f] + ".bmp";
 			URL url = MainApp.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
 
