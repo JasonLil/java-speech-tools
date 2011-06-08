@@ -20,7 +20,7 @@ public class ValidationMainApp {
 	
 	public static int onscreenBins = 128;
 	public static int fftSize = 1024;
-	public static int phonemes = 6;
+	public static int phonemes = 6;   // TODO
 	public static int Fs = 44100;
 	public static int maxAudioLength = 1000;
 	

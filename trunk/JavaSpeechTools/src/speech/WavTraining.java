@@ -27,7 +27,7 @@ public class WavTraining {
 
 	public static int inputs = 128;
 	public static int hidden = 30;
-	public static int outputs = 6;
+	public static int outputs = 6;    // TODO
 	
 	public static int fftSize = 1024;
 	public static int onscreenBins = 128;

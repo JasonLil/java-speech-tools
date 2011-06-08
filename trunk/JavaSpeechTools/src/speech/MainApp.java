@@ -63,13 +63,14 @@ public class MainApp {
 				Arrays.sort(outputSort);
 				
 				String text = "";
-				if (outputSort[5] > 0.3) {
-					if (outputSort[5] == outputs[0]) {text = "EEE";}
-					if (outputSort[5] == outputs[1]) {text = "EHH";}
-					if (outputSort[5] == outputs[2]) {text = "ERR";}
-					if (outputSort[5] == outputs[3]) {text = "AHH";}
-					if (outputSort[5] == outputs[4]) {text = "OOH";}
-					if (outputSort[5] == outputs[5]) {text = "UHH";}
+				int end=outputs.length-1;
+				if (outputSort[end] > 0.3) {
+					if (outputSort[end] == outputs[0]) {text = "EEE";}
+					if (outputSort[end] == outputs[1]) {text = "EHH";}
+					if (outputSort[end] == outputs[2]) {text = "ERR";}
+					if (outputSort[end] == outputs[3]) {text = "AHH";}
+					if (outputSort[end] == outputs[4]) {text = "OOH";}
+					if (outputSort[end] == outputs[5]) {text = "UHH";}
 				}
 				
 				frames.updateGfx( text,  outputs, client.smoothed);
