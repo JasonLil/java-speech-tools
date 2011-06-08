@@ -41,6 +41,9 @@ public class MainApp {
 		app.start();
 	}
 	
+	String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
+	
+	
 	MainApp(boolean isApplet) throws IOException {
 		
 		frames = new MakeFrames(isApplet, phonemes, onscreenBins); 		// Create gfx for output

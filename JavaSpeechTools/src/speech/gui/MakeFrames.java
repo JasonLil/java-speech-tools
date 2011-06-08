@@ -50,6 +50,9 @@ public class MakeFrames {
 
 	private int onscreenBins;
 
+	double targetNeuralOutputs[] = new double[6];
+	String targetText = "";
+
 	public SpectralProcess spectralProcess = new SpectralProcess() {
 
 		@Override
@@ -77,6 +80,9 @@ public class MakeFrames {
 		// drawGraph = new DrawGraph(phonemes);
 		// drawScroll = new DrawScrollingSpect(480);
 		// drawHist = new DrawHist(onscreenBins);
+		targetNeuralOutputs[0] = 1.0;
+		targetText = "EEE";
+
 	}
 
 	public void makeMaster() {
@@ -203,8 +209,8 @@ public class MakeFrames {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFrame frame = new JFrame();
-				frame.setLayout(null);
-				drawGraph = new DrawGraph(phonemes);
+				// frame.setLayout(null);
+				drawGraph = new DrawGraph(6);
 				drawGraph.setBounds(0, 0, 680, 400);
 				frame.add(drawGraph);
 				frame.addKeyListener(drawGraph.keyHandler);
@@ -248,7 +254,27 @@ public class MakeFrames {
 
 			}
 		}));
+		menu = new JMenu("Training");
+		bar.add(menu);
 
+		final String phonemeNames[] = { "EEE", "EHH", "ERR", "AHH", "OOH", "UHH" };
+
+		for (int i = 0; i < phonemeNames.length; i++) {
+
+			final int ii = i;
+
+			menu.add(new JMenuItem(new AbstractAction(phonemeNames[i]) {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					targetText=phonemeNames[ii];
+					for (int i = 0; i < 6; i++)
+						targetNeuralOutputs[i] = 0;
+					targetNeuralOutputs[ii] = 1.0;
+				}
+			}));
+
+		}
 	}
 
 	public void updateGfx(String text,
@@ -260,7 +286,7 @@ public class MakeFrames {
 
 		if (drawGraph != null) {
 			drawGraph.updateGraph(neuralOutputs, text);
-			graphFrame.repaint();
+		//	graphFrame.repaint();
 		}
 
 		if (specFrame != null) {
@@ -269,9 +295,8 @@ public class MakeFrames {
 		}
 
 		masterFrame.repaint();
-		drawTargTract.vectorMean(keyHandler.targetNeuralOutputs,
-				keyHandler.text);
-		drawTargLips.vectorMean(keyHandler.targetNeuralOutputs);
+		drawTargTract.vectorMean(targetNeuralOutputs, targetText);
+		drawTargLips.vectorMean(targetNeuralOutputs);
 	}
 
 	// private void addComponent(Container container, Component c, int x, int y,
@@ -282,47 +307,50 @@ public class MakeFrames {
 
 	class KeyHandler extends KeyAdapter {
 
-		double targetNeuralOutputs[] = new double[6];
-		String text = "";
-
 		public void keyReleased(KeyEvent e) {
 
 			int kCode = e.getKeyCode();
 
 			if (kCode == KeyEvent.VK_A) {
-				targetNeuralOutputs = new double[6];
+				for (int i = 0; i < 6; i++)
+					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[0] = 1.0;
-				text = "EEE";
+				targetText = "EEE";
 			}
 
 			if (kCode == KeyEvent.VK_S) {
-				targetNeuralOutputs = new double[6];
+				for (int i = 0; i < 6; i++)
+					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[1] = 1.0;
-				text = "EHH";
+				targetText = "EHH";
 			}
 
 			if (kCode == KeyEvent.VK_D) {
-				targetNeuralOutputs = new double[6];
+				for (int i = 0; i < 6; i++)
+					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[2] = 1.0;
-				text = "ERR";
+				targetText = "ERR";
 			}
 
 			if (kCode == KeyEvent.VK_F) {
-				targetNeuralOutputs = new double[6];
+				for (int i = 0; i < 6; i++)
+					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[3] = 1.0;
-				text = "AHH";
+				targetText = "AHH";
 			}
 
 			if (kCode == KeyEvent.VK_G) {
-				targetNeuralOutputs = new double[6];
+				for (int i = 0; i < 6; i++)
+					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[4] = 1.0;
-				text = "OOH";
+				targetText = "OOH";
 			}
 
 			if (kCode == KeyEvent.VK_H) {
-				targetNeuralOutputs = new double[6];
+				for (int i = 0; i < 6; i++)
+					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[5] = 1.0;
-				text = "UHH";
+				targetText = "UHH";
 			}
 
 		}
