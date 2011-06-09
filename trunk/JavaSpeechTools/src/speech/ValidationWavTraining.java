@@ -3,8 +3,9 @@ package speech;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
-import speech.spectral.SpectrumAdjust;
+import speech.spectral.SpectrumToFeature;
 import uk.ac.bath.ai.backprop.BackProp;
+import config.Config;
 
 //
 //@author JER
@@ -17,10 +18,10 @@ import uk.ac.bath.ai.backprop.BackProp;
 public class ValidationWavTraining {
 	
 	public static NeuralNet neuralNet;
-	public static SpectrumAdjust specAdjust;
+	public static SpectrumToFeature specAdjust;
 	public static ValidationReadWav readWav;
 	
-	public static int Fs = 44100;
+	public static float Fs = (float) Config.sampleRate;
 	public static int maxAudioLength = 1000;
 
 	public static int inputs = 128;
@@ -42,7 +43,7 @@ public class ValidationWavTraining {
 		int sz[] = { inputs, hidden, outputs };
 
 		neuralNet = new BackProp(sz, beta, alpha, null);
-		specAdjust = new SpectrumAdjust();
+		specAdjust = new SpectrumToFeature(onscreenBins);
 		readWav = new ValidationReadWav(outputs, 2);
 
 		neuralNet.randomWeights(0.0, 0.01);

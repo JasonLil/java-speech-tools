@@ -79,9 +79,6 @@ public class ReadImage {
 		double points[][] = new double[28][3];
 		double sorted_points[][] = new double[28][3];
 
-//		String names[] = { "lipsEEE", "lipsEHH", "lipsERR", "lipsAHH",
-//				"lipsOOH", "lipsUHH" };
-
 		for (int f = 0; f < names.length; f++) {
 			String resource = "imagefiles/lips" + names[f] + ".bmp";
 			System.out.println(resource);
@@ -119,8 +116,6 @@ public class ReadImage {
 		double sorted_points[][] = new double[26][3];
 		for (int f = 0; f < names.length; f++) {
 
-//			String names[] = { "lipsEEE", "lipsEHH", "lipsERR", "lipsAHH",
-//					"lipsOOH", "lipsUHH" };
 			String resource = "imagefiles/lips" + names[f] + ".bmp";
 			URL url = MainApp.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);

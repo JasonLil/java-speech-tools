@@ -8,7 +8,7 @@ import config.Config;
 import java.io.File;
 import java.io.RandomAccessFile;
 
-import speech.spectral.SpectralAnalysisProcess;
+import speech.spectral.SpectralConvertor;
 import uk.org.toot.audio.core.AudioBuffer;
 
 //
@@ -33,7 +33,7 @@ public class ValidationReadWav {
 	}
 
 	public static double[][][] getMonoThongWavs(int fftSize, int outputs,
-			int Fs, int maxAudioLength) throws Exception {
+			float Fs, int maxAudioLength) throws Exception {
 
 		double allWavs[][][] = new double[maxAudioLength][fftSize][7];
 
@@ -62,7 +62,7 @@ public class ValidationReadWav {
 	}
 	
 	public static double[][][] getTestWavs(int fftSize, int outputs,
-			int Fs, int maxAudioLength) throws Exception {
+			float Fs, int maxAudioLength) throws Exception {
 
 		double allWavs[][][] = new double[maxAudioLength][fftSize][21];
 
@@ -91,7 +91,7 @@ public class ValidationReadWav {
 	}
 	
 	public static double[][] getPatientWavs(int fftSize, int outputs,
-			int Fs, int maxAudioLength) throws Exception {
+			float Fs, int maxAudioLength) throws Exception {
 
 		String resource = "src/speech/validationwavs/patients/male patient e vowel.wav";
 		double wav[][] = readWav(resource, fftSize, Fs, 0);
@@ -101,11 +101,11 @@ public class ValidationReadWav {
 	
 	
 
-	public static double[][] readWav(String filename, int fftSize, int Fs,
+	public static double[][] readWav(String filename, int fftSize, float Fs,
 			int num) throws Exception {
 
-		SpectralAnalysisProcess spectralAnalysis = new SpectralAnalysisProcess(
-				fftSize, (float) 44100.0);
+		SpectralConvertor spectralAnalysis = new SpectralConvertor(
+				fftSize, Fs);
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(

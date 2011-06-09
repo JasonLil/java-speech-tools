@@ -11,17 +11,24 @@ import java.util.Arrays;
 
 import javax.swing.Timer;
 
+import config.Config;
+
 import speech.gui.MakeFrames;
 import speech.gui.ReadImage;
-import speech.spectral.SpectralClient;
-import speech.spectral.SpectrumAdjust;
+import speech.spectral.NNSpectralFeatureDetector;
+import speech.spectral.SpectrumToFeature;
 
 public class ValidationMainApp {
 	
-	public static int onscreenBins = 128;
-	public static int fftSize = 1024;
-	public static int phonemes = 6;   // TODO
-	public static int Fs = 44100;
+//	public static int onscreenBins = 128;
+//	public static int fftSize = 1024;
+//	public static int phonemes = 6;   // TODO
+//	public static int Fs = 44100;
+	
+	public static int onscreenBins = Config.featureSize;
+	public static int fftSize = Config.fftSize;
+	public static int phonemes = Config.phonemes;   // TODO
+	public static float Fs = Config.sampleRate;
 	public static int maxAudioLength = 1000;
 	
 	public static double spectrum[] = new double[fftSize];
@@ -35,10 +42,10 @@ public class ValidationMainApp {
 	
 	static ValidationReadWav readTestWav;
 	static NeuralNet neuralNet;
-	static SpectrumAdjust specAdj;
+	static SpectrumToFeature specAdj;
 	static MakeFrames frames;
 	static ReadImage ri;
-	static SpectralClient client;
+	static NNSpectralFeatureDetector client;
 	static String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
 	public static void main(String args[]) throws Exception {
 	
@@ -48,7 +55,7 @@ public class ValidationMainApp {
 		frames.makeMaster();
 		
 		readTestWav = new ValidationReadWav(phonemes, 11);
-		specAdj = new SpectrumAdjust();
+		specAdj = new SpectrumToFeature(onscreenBins);
 		double testWav[][] = readTestWav.getPatientWavs(fftSize, phonemes, Fs,
 				maxAudioLength);
 		
@@ -90,7 +97,7 @@ public class ValidationMainApp {
 				if (outputSort[5] == outputs[5]) {text = "UHH";}
 			}
 			
-			frames.updateGfx(text,  outputs, smoothed);
+			frames.updateGfx(text,  outputs);
 
 			Thread.sleep(40);
 
