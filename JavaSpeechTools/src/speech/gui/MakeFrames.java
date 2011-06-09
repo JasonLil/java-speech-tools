@@ -34,53 +34,61 @@ import speech.spectral.SpectralProcess;
 
 public class MakeFrames {
 
-	private boolean isApplet;
+	private DrawTract drawTract;
+	private DrawTract drawTargTract;
+	private DrawLips drawLips;
+	private DrawLips drawTargLips;
+	private DrawGraph drawGraph;
+	private DrawScrollingSpect drawScroll;
+	private DrawHist drawHist;
+	
+	private int nPhonemes;
+	private String[] phonemeNames;
 
-	DrawTract drawTract;
-	DrawTract drawTargTract;
-	DrawLips drawLips;
-	DrawLips drawTargLips;
-	AnalyserPanel meterPanel;
-	DrawGraph drawGraph;
-	public DrawScrollingSpect drawScroll;
-	DrawHist drawHist;
+	
+	
 	private JFrame specFrame;
 	private JFrame graphFrame;
 	private JFrame masterFrame;
 
 	private int onscreenBins;
+	private KeyHandler keyHandler;
 
-	double targetNeuralOutputs[] = new double[6];
-	String targetText = "";
+	private double targetNeuralOutputs[];
+	private String targetText = "";
 
-	public SpectralProcess spectralProcess = new SpectralProcess() {
+	// this is used to feed anything that needs to process each feature 
+	// this will be on the realtime audio thread so any observers should take care not 
+	// to call any GUI stuff from notifyMoreData.
+	
+	private SpectralProcess spectralProcess = new SpectralProcess() {
 
 		@Override
-		public void notifyMoreDataReady(double[] smoothed) {
+		public void notifyMoreDataReady(double[] data) {
 			if (drawScroll != null) {
-				drawScroll.notifyMoreDataReady(smoothed);
-			}
+				drawScroll.notifyMoreDataReady(data);
+				if (specFrame != null) {
+					drawHist.update(data);
+					drawHist.repaint();
+				}
+			}		
 		}
 	};
 
-	private int phonemes;
 
-	private KeyHandler keyHandler;
-
-	private String[] phonemeNames;
 
 	public MakeFrames(boolean isApplet, String[] phonemeNames, int onscreenBins)
 			throws IOException {
 		this.phonemeNames = phonemeNames;
-		this.phonemes = phonemeNames.length;
-		this.isApplet = isApplet;
-		final ReadImage ri = new ReadImage(phonemeNames);
-		drawTract = new DrawTract(phonemes, ri);
-		drawTargTract = new DrawTract(phonemes, ri);
-		drawLips = new DrawLips(phonemes, ri);
-		drawTargLips = new DrawLips(phonemes, ri);
-		this.onscreenBins = onscreenBins;
+		this.nPhonemes = phonemeNames.length;
 
+		final ReadImage ri = new ReadImage(phonemeNames);
+		drawTract = new DrawTract(nPhonemes, ri);
+		drawTargTract = new DrawTract(nPhonemes, ri);
+		drawLips = new DrawLips(nPhonemes, ri);
+		drawTargLips = new DrawLips(nPhonemes, ri);
+		this.onscreenBins = onscreenBins;
+		targetNeuralOutputs = new double[nPhonemes];
 		targetNeuralOutputs[0] = 1.0;
 		targetText = "EEE";
 
@@ -267,7 +275,7 @@ public class MakeFrames {
 		}
 	}
 
-	public void updateGfx(String text, double[] neuralOutputs, double[] magn) {
+	public void updateGfx(String text, double[] neuralOutputs) { //, double[] magn) {
 
 		if (!(masterFrame.getExtendedState() == JFrame.ICONIFIED)) {
 			drawTract.vectorMean(neuralOutputs, text);
@@ -282,20 +290,13 @@ public class MakeFrames {
 			// graphFrame.repaint();
 		}
 
-		if (specFrame != null) {
-			drawHist.update(magn);
-			specFrame.repaint();
-		}
+	
 
 	}
 
-	// private void addComponent(Container container, Component c, int x, int y,
-	// int width, int height) {
-	// c.setBounds(x, y, width, height);
-	// container.add(c);
-	// }
 
-	class KeyHandler extends KeyAdapter {
+
+	private class KeyHandler extends KeyAdapter {
 
 		public void keyReleased(KeyEvent e) {
 
@@ -345,4 +346,9 @@ public class MakeFrames {
 
 		}
 	}
+
+	public SpectralProcess getSpectralProcess() {
+		return spectralProcess;
+	}
+	
 }

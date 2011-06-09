@@ -13,17 +13,17 @@ public class RealTimeSpectralSource {
 	private static JavaSoundAudioServer audioServer;
 	private static AudioBuffer chunk;
 	private static AudioClient audioClient;
-	private static SpectralAnalysisProcess spectralProcess;
+	private static SpectralConvertor spectralProcess;
 	
 	//public static SpectralClient client;
 	public static double spectrum[];
 
-	public RealTimeSpectralSource(SpectralAnalysisProcess spectralProcess) {
+	public RealTimeSpectralSource(SpectralConvertor spectralProcess) {
 		this.spectralProcess = spectralProcess;
 	}
 
 	public void startAudio(String inName1, String outName1,
-			final int onscreen_bins, final SpectralClient client)
+			final int onscreen_bins, final NNSpectralFeatureDetector client)
 			throws Exception {
 
 		// Setup audio server

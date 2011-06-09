@@ -1,6 +1,5 @@
 package speech;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -8,103 +7,129 @@ import java.util.Arrays;
 
 import javax.swing.Timer;
 
+import config.Config;
+
 import speech.gui.MakeFrames;
-import speech.gui.ReadImage;
+import speech.spectral.FeatureClient;
 import speech.spectral.RealTimeSpectralSource;
-import speech.spectral.SpectralAnalysisProcess;
-import speech.spectral.SpectralClient;
+import speech.spectral.SpectralConvertor;
+import speech.spectral.NNSpectralFeatureDetector;
 
 public class MainApp {
-	
-	public int onscreenBins = 128;
-	public int fftSize = 1024;
-	public int phonemes = 6;
-	
-	public double spectrum[] = new double[fftSize];
-	public double outputSort[] = new double[phonemes];
-	public double magnLog[];
-	public double smoothed[];
-	public double outputs[];
-//	public double vocalTract[][][];
-//	public double lipsInner[][][];
-//	public double lipsOuter[][][];
-	
-	MakeFrames frames;
-	ReadImage ri;
-	Timer timer;
-	SpectralClient client;
-	
-	public boolean isApplet = false; 			// hack hack hack ... eeeek
+
+
+
+	private MakeFrames frames;
+	private Timer timer;
+	private NNSpectralFeatureDetector nnFeatureDetector;
+	public boolean isApplet = false; // hack hack hack ... eeeek
+
+	double output[]=new double[Config.phonemes];
 	
 	public static void main(String args[]) throws Exception {
 		MainApp app = new MainApp(false);
 		app.start();
 	}
-	
-	String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
-	
 
 	MainApp(boolean isApplet) throws IOException {
-		
-		frames = new MakeFrames(isApplet, phonemeNames, onscreenBins); 		// Create gfx for output
-		
-	
+
+		frames = new MakeFrames(isApplet, Config.phonemeNames,
+				Config.featureSize); // Create gfx for output
 
 		frames.makeMaster();
-		
-		timer = new Timer(100, new ActionListener() {
+		timer = new Timer(50, new ActionListener() {
+	
+			double outputSort[] = new double[Config.phonemes];
+			
 			public void actionPerformed(ActionEvent ae) {
+
+				// double outputs[]   = nnFeatureDetector.getOutputs();
+				//double spectral[]  = nnFeatureDetector.getFFTLogMagnitude();
+				//if (outputs==null) return;
 				
-				outputs = client.outputs;
-				
-				for (int i = 0; i < outputs.length; i++) {
-					outputSort[i] = outputs[i];
+				for (int i = 0; i < output.length; i++) {
+					outputSort[i] = output[i];
 				}
 				Arrays.sort(outputSort);
-				
+
 				String text = "";
-				int end=outputs.length-1;
+				int end = output.length - 1;
 				if (outputSort[end] > 0.3) {
-					if (outputSort[end] == outputs[0]) {text = "EEE";}
-					if (outputSort[end] == outputs[1]) {text = "EHH";}
-					if (outputSort[end] == outputs[2]) {text = "ERR";}
-					if (outputSort[end] == outputs[3]) {text = "AHH";}
-					if (outputSort[end] == outputs[4]) {text = "OOH";}
-					if (outputSort[end] == outputs[5]) {text = "UHH";}
+					for (int i = 0; i < Config.phonemes; i++) {
+						if (outputSort[end] == output[i]) {
+							text = Config.phonemeNames[i];
+							break;
+						}
+					}
 				}
-				
-				frames.updateGfx( text,  outputs, client.smoothed);
+
+				frames.updateGfx(text, output);
 			}
 		});
-		
+
 	}
+
+	
 	
 	void start() throws InterruptedException {
-		
-		SpectralAnalysisProcess spectralAnalysis = new SpectralAnalysisProcess(
-				fftSize, (float) 44100.0);
-		
-		RealTimeSpectralSource rtSource = new RealTimeSpectralSource(
-				spectralAnalysis);
-		
-		client = new SpectralClient(fftSize, onscreenBins,frames.spectralProcess);
-		
+
+
+		/**
+		 *  Recieve a feature vector each FFT window.
+		 *  damp this to provide the user output
+		 */
+		FeatureClient featureClient=new FeatureClient(){
+
+			double halfLife=.2;   // in secs
+			double nHalf=halfLife*Config.sampleRate/Config.fftSize;
+			double damp=Math.exp(Math.log(0.5)/nHalf);
+			{
+				System.out.println(" damp= "+damp);
+			}
+			@Override
+			public void notifyMoreDataReady(double[] outputs) {
+	
+				for (int i=0;i<outputs.length;i++){
+					MainApp.this.output[i] = MainApp.this.output[i]*damp +
+					outputs[i]*(1.0-damp);
+				}
+			}
+			
+		};
+
+		// This is used to convert the audio stream to a spectral stream.
+		SpectralConvertor spectralConverter = new SpectralConvertor(
+				Config.fftSize, Config.sampleRate);
+
+		// Grabs input and feeds into the spectralConverter
+		RealTimeSpectralSource realTimeSpectralSource = new RealTimeSpectralSource(
+				spectralConverter);
+
+		// takes the raw FFT from the spectral converter and feeds
+		// the neural net classification
+		nnFeatureDetector = new NNSpectralFeatureDetector(Config.fftSize,
+				Config.featureSize, frames.getSpectralProcess(),featureClient);
+
 		// Setup input from soundcard
+
 		String inName = null;
 		String outName = null;
+		
 		if (inName == null) {
 			inName = "default [default]";
 		}
 		if (outName == null) {
 			outName = "default [default]";
 		}
-		
+
 		try {
-			rtSource.startAudio(inName, outName, onscreenBins, client);
+			// Start audio thread and connect nnFeatureDetector via the chunk size converter
+			realTimeSpectralSource.startAudio(inName, outName,
+					Config.featureSize, nnFeatureDetector);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		timer.start();
 	}
 }

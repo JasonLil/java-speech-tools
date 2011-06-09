@@ -11,14 +11,16 @@ import java.util.Arrays;
 
 import javax.swing.Timer;
 
-import speech.spectral.SpectrumAdjust;
+import config.Config;
+
+import speech.spectral.SpectrumToFeature;
 
 public class Validation {
 
-	public static int onscreenBins = 128;
-	public static int fftSize = 1024;
-	public static int phonemes = 6;   // TODO
-	public static int Fs = 44100;
+	public static int onscreenBins = Config.featureSize;
+	public static int fftSize = Config.fftSize;
+	public static int phonemes = Config.phonemes;   // TODO
+	public static float Fs = Config.sampleRate;
 	public static int maxAudioLength = 1000;
 
 	public static double spectrum[] = new double[fftSize];
@@ -29,7 +31,7 @@ public class Validation {
 
 	static ValidationReadWav readTestWav;
 	static NeuralNet neuralNet;
-	static SpectrumAdjust specAdj;
+	static SpectrumToFeature specAdj;
 
 	public boolean isApplet = false; // hack hack hack ... eeeek
 
@@ -50,7 +52,7 @@ public class Validation {
 		}
 		
 		readTestWav = new ValidationReadWav(phonemes, 11);
-		specAdj = new SpectrumAdjust();
+		specAdj = new SpectrumToFeature(onscreenBins);
 		double testWav[][][] = readTestWav.getTestWavs(fftSize, phonemes, Fs,
 				maxAudioLength);
 

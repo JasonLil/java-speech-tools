@@ -4,8 +4,10 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Random;
 
+import config.Config;
+
 import speech.spectral.ReadWav;
-import speech.spectral.SpectrumAdjust;
+import speech.spectral.SpectrumToFeature;
 import uk.ac.bath.ai.backprop.BackProp;
 
 //
@@ -19,10 +21,10 @@ import uk.ac.bath.ai.backprop.BackProp;
 public class WavTraining {
 	
 	public static NeuralNet neuralNet;
-	public static SpectrumAdjust specAdjust;
+	public static SpectrumToFeature specAdjust;
 	public static ReadWav readWav;
 	
-	public static int Fs = 44100;
+	public static float Fs = Config.sampleRate;
 	public static int maxAudioLength = 1000;
 
 	public static int inputs = 128;
@@ -45,7 +47,7 @@ public class WavTraining {
 
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha, rand);
-		specAdjust = new SpectrumAdjust();
+		specAdjust = new SpectrumToFeature(onscreenBins);
 		readWav = new ReadWav(outputs);
 
 		neuralNet.randomWeights(0.0, 0.01);

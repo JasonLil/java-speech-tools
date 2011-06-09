@@ -2,6 +2,9 @@ package speech.spectral;
 
 import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.VanillaRandomAccessFile;
+
+import config.Config;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 
@@ -26,7 +29,7 @@ public class ReadWav {
 	}
 
 	public static double[][][] getMonoThongWavs(int fftSize, int outputs,
-			int Fs, int maxAudioLength) throws Exception {
+			float Fs, int maxAudioLength) throws Exception {
 
 		double allWavs[][][] = new double[maxAudioLength][fftSize][21];
 
@@ -49,15 +52,15 @@ public class ReadWav {
 
 	}
 
-	public static double[][] readWav(String filename, int fftSize, int Fs,
+	public static double[][] readWav(String filename, int fftSize, float Fs,
 			int num) throws Exception {
 
-		SpectralAnalysisProcess spectralAnalysis = new SpectralAnalysisProcess(
-				fftSize, (float) 44100.0);
+		SpectralConvertor spectralAnalysis = new SpectralConvertor(
+				fftSize, Config.sampleRate);
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
-				rafG),44100.0f);
+				rafG),Fs);
 		AudioBuffer chunk = new AudioBuffer("James buffer", 2, fftSize, Fs);
 		chunk.setRealTime(true);
 
