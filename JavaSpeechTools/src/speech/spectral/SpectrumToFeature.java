@@ -12,12 +12,17 @@ import java.util.Arrays;
  * 
  * Maps the the RAW FFT magnitudes onto a log frequency scale vector of size nFeature.
  * 
+ * No it doesn't it just compresses spectrum to the feature NN inputs size with a bit of averaging.
+ * 
+ *  Big TODO  here
  */
 
 public class SpectrumToFeature {
 	
 	double[] smoothed;
 	double[] magn_log;
+	
+	
 	
 	public SpectrumToFeature(int featureSize) {
 		smoothed = new double[featureSize];
@@ -26,7 +31,13 @@ public class SpectrumToFeature {
 	
 	
 	
-	public double[] linearLog(int featureSize, int fftsize, double[] spectrum) {
+	public double[] spectrumToFeature(int featureSize, int fftsize, double[] spectrum){
+		linearLog(featureSize,fftsize,spectrum);
+		running3Average(featureSize, magn_log);
+		return smoothed;
+	}
+	
+	private void linearLog(int featureSize, int fftsize, double[] spectrum) {
 
 		Arrays.fill(magn_log,0.0);
 
@@ -46,22 +57,19 @@ public class SpectrumToFeature {
 			}
 			count++;
 		}
-		return magn_log;
+		//return magn_log;
 
 	}
 
-	public double[] running3Average(int featureSize, double[] magnLog) {
+	private void running3Average(int featureSize, double[] magnLog) {
 		
-		// FIXME magnlog  is probably too long.
 		
-
 		smoothed[0]=(magnLog[1] + magnLog[0]) / 2;
 		smoothed[featureSize - 1]=(magnLog[featureSize - 1] + magnLog[featureSize - 2]) / 2;
 		
 		for (int i = 1; i < (featureSize - 1); i++) {
 			smoothed[i] = (magnLog[i - 1] + magnLog[i] + magnLog[i + 1]) / 3;
 		}
-		return smoothed;
 
 	}
 

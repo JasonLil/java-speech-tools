@@ -53,9 +53,9 @@ public class WavTraining {
 		neuralNet.randomWeights(0.0, 0.01);
 
 		double error = 1.0;
-		double[] phonemeRaw = new double[fftSize];
-		double[] phonemeLog = new double[onscreenBins];
-		double[] phonemeSmoothed = new double[onscreenBins];
+		
+		double[] fftSpectrum = new double[fftSize];
+		double[] featureVec = new double[onscreenBins];
 
 		int count = 0;
 		
@@ -76,20 +76,20 @@ public class WavTraining {
 				for (int p = 0; p < outputs+1; p++) { // Cycle through phonemes
 					
 					for (int j = 0; j < fftSize; j++) {
-						phonemeRaw[j] = wavs[i][j][p];
+						fftSpectrum[j] = wavs[i][j][p];
 					}
 					
-					phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
-					phonemeSmoothed = specAdjust.running3Average(onscreenBins, phonemeLog); 
+					// phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
+					featureVec = specAdjust.spectrumToFeature(onscreenBins, fftSize, fftSpectrum); //running3Average(onscreenBins, phonemeLog); 
 
 					double[] train_outvals = new double[outputs+1];
 					if (p != outputs)
 						train_outvals[p] = 1.0;
 
-					neuralNet.backPropTrain(phonemeSmoothed, train_outvals); // Go!
+					neuralNet.backPropTrain(featureVec, train_outvals); // Go!
 
 					double[] output_vals = neuralNet
-							.forwardPass(phonemeSmoothed);
+							.forwardPass(featureVec);
 
 					for (int j = 0; j < outputs; j++) {
 						error += (train_outvals[j] - output_vals[j])

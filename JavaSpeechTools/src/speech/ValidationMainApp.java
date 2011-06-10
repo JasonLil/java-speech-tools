@@ -33,7 +33,7 @@ public class ValidationMainApp {
 	
 	public static double spectrum[] = new double[fftSize];
 	public static double outputSort[] = new double[phonemes];
-	public static double magnLog[];
+//	public static double magnLog[];
 	public static double smoothed[];
 	public static double outputs[];
 	public static double vocalTract[][][];
@@ -78,8 +78,9 @@ public class ValidationMainApp {
 				spectrum[j] = 2.0*testWav[k][j];
 			}
 
-			magnLog = specAdj.linearLog(onscreenBins, fftSize, spectrum);
-			smoothed = specAdj.running3Average(onscreenBins, magnLog);
+//			magnLog = specAdj.linearLog(onscreenBins, fftSize, spectrum);
+//			smoothed = specAdj.running3Average(onscreenBins, magnLog);
+			smoothed =  specAdj.spectrumToFeature(onscreenBins, fftSize, spectrum);
 			outputs = neuralNet.forwardPass(smoothed);
 			
 			for (int l = 0; l < outputs.length; l++) {
