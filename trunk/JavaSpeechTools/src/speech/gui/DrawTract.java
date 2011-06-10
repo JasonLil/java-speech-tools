@@ -1,6 +1,7 @@
 package speech.gui;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 //
@@ -23,11 +24,13 @@ public class DrawTract extends JPanel {
 	String text="";
 	int phonemes;
 	Font font;
-	
+	int maxW=320;
+	int maxH=400;
 	public DrawTract(int phonemes,ReadImage ri) {
 		this.phonemes = phonemes;
 		font=new Font("sansserif", Font.BOLD, 32);
-		setPreferredSize(new Dimension(320, 400));
+		setPreferredSize(new Dimension(maxW, maxH));
+	//	setMaximumSize(new Dimension(320, 400));
 		points = ri.tract; 
 	}
 

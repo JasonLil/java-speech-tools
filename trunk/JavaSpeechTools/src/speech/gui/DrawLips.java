@@ -32,6 +32,7 @@ public class DrawLips extends JPanel {
 			img = ImageIO.read(new File("src/speech/imagefiles/face.bmp"));
 		} catch (IOException e) {}
 		setPreferredSize(new Dimension(320, 400));
+		setMaximumSize(new Dimension(320, 400));
 		points = ri.lipsInner; 			// of lip and tract shapes
 		points2 = ri.lipsOuter;
 	
