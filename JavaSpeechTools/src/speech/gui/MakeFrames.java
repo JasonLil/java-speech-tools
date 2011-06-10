@@ -97,31 +97,18 @@ public class MakeFrames {
 
 	public void makeMaster() {
 
-		// int width=800;
-		// int height=600;
 
 		JFrame frame = new JFrame("JR Speech Analysis Toolbox");
 
 		Container content = frame.getContentPane();
-		frame.setLayout(new GridBagLayout());
+		frame.setLayout(new GridLayout(2,2));
 		keyHandler = new KeyHandler();
 		frame.addKeyListener(keyHandler);
 
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx=1.0;
-		c.weighty=1.0;
-		c.gridx = 0;
-		c.gridy = 0;
-		content.add(drawLips, c);
-		c.gridx++;
-		content.add(drawTargLips, c);
-
-		c.gridx = 0;
-		c.gridy = 1;
-		content.add(drawTract, c);
-		c.gridx++;
-		content.add(drawTargTract, c);
+		content.add(drawLips);
+		content.add(drawTargLips);
+		content.add(drawTract);
+		content.add(drawTargTract);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -213,7 +200,7 @@ public class MakeFrames {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frame = new JFrame("Phoneme Classification");
 				// frame.setLayout(null);
-				drawGraph = new DrawGraph(6);
+				drawGraph = new DrawGraph(phonemeNames);
 				drawGraph.setBounds(0, 0, 680, 400);
 				frame.add(drawGraph);
 				frame.addKeyListener(drawGraph.keyHandler);

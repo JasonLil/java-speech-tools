@@ -80,7 +80,7 @@ public class MainApp {
 		 */
 		FeatureClient featureClient=new FeatureClient(){
 
-			double halfLife=.2;   // in secs
+			double halfLife=.05;   // in secs
 			double nHalf=halfLife*Config.sampleRate/Config.fftSize;
 			double damp=Math.exp(Math.log(0.5)/nHalf);
 			{
@@ -128,6 +128,7 @@ public class MainApp {
 					Config.featureSize, nnFeatureDetector);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 
 		timer.start();
