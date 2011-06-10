@@ -8,7 +8,7 @@ import config.Config;
 import java.io.File;
 import java.io.RandomAccessFile;
 
-import speech.spectral.SpectralConvertor;
+import speech.spectral.SampledToSpectral;
 import uk.org.toot.audio.core.AudioBuffer;
 
 //
@@ -104,7 +104,7 @@ public class ValidationReadWav {
 	public static double[][] readWav(String filename, int fftSize, float Fs,
 			int num) throws Exception {
 
-		SpectralConvertor spectralAnalysis = new SpectralConvertor(
+		SampledToSpectral spectralAnalysis = new SampledToSpectral(
 				fftSize, Fs);
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");

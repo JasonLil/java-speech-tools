@@ -21,7 +21,7 @@ public class NNSpectralFeatureDetector {
 
 	private NeuralNet neuralNet;
 	private SpectrumToFeature specAdj;
-	private SpectralConvertor sprectralAnalysis;
+	private SampledToSpectral sprectralAnalysis;
 	private SpectralProcess spectralClient;
 //private double outputs[];
 	private  double smoothed[];
