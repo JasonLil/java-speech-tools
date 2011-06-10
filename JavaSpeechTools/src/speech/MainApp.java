@@ -12,7 +12,7 @@ import config.Config;
 import speech.gui.MakeFrames;
 import speech.spectral.FeatureClient;
 import speech.spectral.RealTimeSpectralSource;
-import speech.spectral.SpectralConvertor;
+import speech.spectral.SampledToSpectral;
 import speech.spectral.NNSpectralFeatureDetector;
 
 public class MainApp {
@@ -96,7 +96,7 @@ public class MainApp {
 		};
 
 		// This is used to convert the audio stream to a spectral stream.
-		SpectralConvertor spectralConverter = new SpectralConvertor(
+		SampledToSpectral spectralConverter = new SampledToSpectral(
 				Config.fftSize, Config.sampleRate);
 
 		// Grabs input and feeds into the spectralConverter

@@ -8,7 +8,7 @@ import uk.org.toot.audio.core.AudioBuffer;
  * have a full chunk it is fed into FFT and the spectral feature fed to the client.
  */
 
-public class SpectralConvertor {
+public class SampledToSpectral {
 
 	private FFTWorker fft;
 
@@ -18,7 +18,7 @@ public class SpectralConvertor {
 	private double magn[];
 	private int ptr;
 
-	public SpectralConvertor(int fftSize, float Fs) {
+	public SampledToSpectral(int fftSize, float Fs) {
 
 		doHanning = true;
 		fft = new FFTWorker(Fs, doHanning);

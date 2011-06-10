@@ -10,15 +10,15 @@ import uk.org.toot.audio.server.MultiIOJavaSoundAudioServer;
 
 public class RealTimeSpectralSource {
 
-	private static JavaSoundAudioServer audioServer;
-	private static AudioBuffer chunk;
-	private static AudioClient audioClient;
-	private static SpectralConvertor spectralProcess;
+	private  JavaSoundAudioServer audioServer;
+	private  AudioBuffer chunk;
+	private  AudioClient audioClient;
+	private  SampledToSpectral spectralProcess;
 	
 	//public static SpectralClient client;
 	public static double spectrum[];
 
-	public RealTimeSpectralSource(SpectralConvertor spectralProcess) {
+	public RealTimeSpectralSource(SampledToSpectral spectralProcess) {
 		this.spectralProcess = spectralProcess;
 	}
 

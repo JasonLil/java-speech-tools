@@ -65,7 +65,7 @@ public class ReadWav {
 	public double[][] readWav(String filename, int fftSize, float Fs,
 			int num) throws Exception {
 
-		SpectralConvertor spectralAnalysis = new SpectralConvertor(
+		SampledToSpectral spectralAnalysis = new SampledToSpectral(
 				fftSize, Config.sampleRate);
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
