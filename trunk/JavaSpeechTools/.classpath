@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="tootSrc"/>
 	<classpathentry kind="src" path="srcTootServers"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/frinika"/>
 	<classpathentry kind="lib" path="lib/js.jar"/>
 	<classpathentry kind="lib" path="lib/jVorbis.jar"/>
 	<classpathentry kind="lib" path="lib/JVstHost.jar"/>

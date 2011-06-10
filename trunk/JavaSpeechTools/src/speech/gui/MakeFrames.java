@@ -54,6 +54,7 @@ public class MakeFrames {
 	private int onscreenBins;
 	private KeyHandler keyHandler;
 
+	// For training
 	private double targetNeuralOutputs[];
 	private String targetText = "";
 
@@ -108,6 +109,8 @@ public class MakeFrames {
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
+		c.weightx=1.0;
+		c.weighty=1.0;
 		c.gridx = 0;
 		c.gridy = 0;
 		content.add(drawLips, c);
