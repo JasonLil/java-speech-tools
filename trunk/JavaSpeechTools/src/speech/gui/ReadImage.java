@@ -6,6 +6,8 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import config.Config;
+
 import speech.MainApp;
 
 // multidimensional array sort taken from: http://realityisimportant.blogspot.com/
@@ -37,7 +39,7 @@ public class ReadImage {
 
 	private double[][][] readTract() throws IOException {
 
-		double all_points[][][] = new double[100][3][6];
+		double all_points[][][] = new double[100][3][Config.phonemes];
 		double points[][] = new double[100][3];
 		double sorted_points[][] = new double[100][3];
 //		String names[] = { "ee_wgr", "eh_wgr", "er_wgr", "ah_wgr", "oo_wgr",
@@ -75,13 +77,13 @@ public class ReadImage {
 
 	private double[][][] readLips1() throws IOException {
 
-		double all_points[][][] = new double[28][3][6];
+		double all_points[][][] = new double[28][3][Config.phonemes];
 		double points[][] = new double[28][3];
 		double sorted_points[][] = new double[28][3];
 
 		for (int f = 0; f < names.length; f++) {
 			String resource = "imagefiles/lips" + names[f] + ".bmp";
-			System.out.println(resource);
+		//	System.out.println(resource);
 			
 			URL url = MainApp.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
@@ -111,7 +113,7 @@ public class ReadImage {
 
 	private double[][][] readLips2() throws IOException {
 
-		double all_points[][][] = new double[26][3][6];
+		double all_points[][][] = new double[26][3][Config.phonemes];
 		double points[][] = new double[26][3];
 		double sorted_points[][] = new double[26][3];
 		for (int f = 0; f < names.length; f++) {
