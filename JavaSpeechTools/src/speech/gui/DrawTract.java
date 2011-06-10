@@ -17,9 +17,10 @@ public class DrawTract extends JPanel {
 	/**
 	 * 
 	 */
+	int nPts=103;
 	private static final long serialVersionUID = 1L;
-	public int posx[] = new int[102];
-	public int posy[] = new int[102];
+	public int posx[] = new int[nPts];
+	public int posy[] = new int[nPts];
 	double points[][][];
 	String text="";
 	int phonemes;
@@ -40,10 +41,10 @@ public class DrawTract extends JPanel {
 		Graphics2D g2 = (Graphics2D)g;
 		java.awt.Color rgb = new java.awt.Color(239, 170, 180);
 		g2.setColor(rgb);
-		g2.fillPolygon(posx, posy, 102);
+		g2.fillPolygon(posx, posy, nPts);
 		g2.setColor(Color.BLACK);
 		g2.setStroke(new BasicStroke( 2.0f ));
-		g2.drawPolygon(posx, posy, 102);
+		g2.drawPolygon(posx, posy, nPts);
 		g2.setFont(font);
 		g2.drawString(text, 160, 70);
 	}
@@ -68,10 +69,17 @@ public class DrawTract extends JPanel {
 			posy[i]*=0.82;
 			posx[i]+=25;
 		}
+//		posx[100]=100;
+//		posy[100]=1200;
+//		posx[101]=1500;
+//		posy[101]=0;
 		posx[100]=100;
-		posy[100]=1200;
-		posx[101]=1500;
-		posy[101]=0;
+		posy[100]=maxH;
+		posx[101]=maxW;
+		posy[101]=maxH;
+		posx[102]=maxW;
+		posy[102]=0;
+		
 		// repaint();
 	}
 }
