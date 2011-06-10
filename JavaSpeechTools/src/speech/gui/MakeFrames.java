@@ -291,44 +291,44 @@ public class MakeFrames {
 		public void keyReleased(KeyEvent e) {
 
 			int kCode = e.getKeyCode();
-
+			int n=phonemeNames.length;
 			if (kCode == KeyEvent.VK_A) {
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[0] = 1.0;
 				targetText = "EEE";
 			}
 
 			if (kCode == KeyEvent.VK_S) {
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[1] = 1.0;
 				targetText = "EHH";
 			}
 
 			if (kCode == KeyEvent.VK_D) {
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[2] = 1.0;
 				targetText = "ERR";
 			}
 
 			if (kCode == KeyEvent.VK_F) {
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[3] = 1.0;
 				targetText = "AHH";
 			}
 
 			if (kCode == KeyEvent.VK_G) {
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[4] = 1.0;
 				targetText = "OOH";
 			}
 
 			if (kCode == KeyEvent.VK_H) {
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
 				targetNeuralOutputs[5] = 1.0;
 				targetText = "UHH";
