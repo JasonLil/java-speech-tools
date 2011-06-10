@@ -77,9 +77,9 @@ public class ValidationWavTraining {
 						phonemeRaw[j] = wavs[i][j][p];
 					}
 					
-					phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
-					phonemeSmoothed = specAdjust.running3Average(onscreenBins, phonemeLog); 
-
+					// phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
+					phonemeSmoothed = //specAdjust.running3Average(onscreenBins, phonemeLog); 
+						specAdjust.spectrumToFeature(onscreenBins, fftSize, phonemeRaw);
 					double[] train_outvals = new double[outputs+1];
 					if (p != outputs)
 						train_outvals[p] = 1.0;

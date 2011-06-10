@@ -25,7 +25,7 @@ public class Validation {
 
 	public static double spectrum[] = new double[fftSize];
 	public double outputSort[] = new double[phonemes];
-	public static double magnLog[];
+//	public static double magnLog[];
 	public static double smoothed[];
 	public static double outputs[];
 
@@ -64,8 +64,8 @@ public class Validation {
 					spectrum[j] = testWav[k][j][i];
 				}
 
-				magnLog = specAdj.linearLog(onscreenBins, fftSize, spectrum);
-				smoothed = specAdj.running3Average(onscreenBins, magnLog);
+			//	magnLog = specAdj.linearLog(onscreenBins, fftSize, spectrum);
+				smoothed =  specAdj.spectrumToFeature(onscreenBins, fftSize, spectrum);  //specAdj.running3Average(onscreenBins, magnLog);
 				outputs = neuralNet.forwardPass(smoothed);
 
 				System.out.println(

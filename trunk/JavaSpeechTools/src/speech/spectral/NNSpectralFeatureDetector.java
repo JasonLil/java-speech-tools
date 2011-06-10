@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import config.Config;
+
 import speech.NeuralNet;
 import speech.gui.DrawScrollingSpect;
 
@@ -56,8 +58,8 @@ public class NNSpectralFeatureDetector {
 
 	public void process(double[] spectrum) {
 
-		magnLog = specAdj.linearLog(featureSize, fftSize, spectrum);
-		smoothed = specAdj.running3Average(featureSize, magnLog);
+		// magnLog = specAdj.linearLog(featureSize, Config.fftSize, spectrum);
+		smoothed = specAdj.spectrumToFeature(featureSize, Config.fftSize, spectrum); // running3Average(featureSize, magnLog);
 
 		for (int i = 0; i < smoothed.length; i++) {
 			smoothed[i] *= 2; // This is adding volume to the input signal.

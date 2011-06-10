@@ -58,7 +58,7 @@ public class SpectralConvertor {
 		}
 	}
 
-	public double[] getMagn() {
+	public double[] getMagn() {   // TODO Deprecate this
 
 		return magn;
 	}

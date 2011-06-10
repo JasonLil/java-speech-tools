@@ -43,9 +43,7 @@ public class MainApp {
 			
 			public void actionPerformed(ActionEvent ae) {
 
-				// double outputs[]   = nnFeatureDetector.getOutputs();
-				//double spectral[]  = nnFeatureDetector.getFFTLogMagnitude();
-				//if (outputs==null) return;
+			
 				
 				for (int i = 0; i < output.length; i++) {
 					outputSort[i] = output[i];

@@ -22,24 +22,34 @@ import uk.org.toot.audio.core.AudioBuffer;
 
 public class ReadWav {
 
-	public static int file_length[];
+	public int file_length[];
 
 	public ReadWav(int outputs) {
 		file_length = new int[outputs + 1];
 	}
 
-	public static double[][][] getMonoThongWavs(int fftSize, int outputs,
+	public double[][][] getMonoThongWavs(int fftSize, int outputs,
 			float Fs, int maxAudioLength) throws Exception {
 
 		double allWavs[][][] = new double[maxAudioLength][fftSize][21];
+//
+//		String names[] = { "eee_all", "ehh_all", "err_all", "ahh_all",
+//				"ooh_all", "uhh_all", "silence_all" };
 
-		String names[] = { "eee_all", "ehh_all", "err_all", "ahh_all",
-				"ooh_all", "uhh_all", "silence_all" };
-
+		String cn[]=Config.phonemeNames;
+		
+		String files[] = new String[cn.length+1];
+		
+		for (int i=0;i<cn.length;i++) {
+			files[i]="src/speech/wavfiles/"+cn[i].toLowerCase()+"_all.wav";
+		}
+		files[cn.length]="src/speech/wavfiles/silence_all.wav";
+		
 		for (int i = 0; i < outputs + 1; i++) {
 
-			String resource = "src/speech/wavfiles/" + names[i] + ".wav";
-			double wav[][] = readWav(resource, fftSize, Fs, i);
+			//String resource = "src/speech/wavfiles/" + names[i] + ".wav";
+			//assert(resource.equals(files[i]));
+			double wav[][] = readWav(files[i], fftSize, Fs, i);
 
 			for (int j = 0; j < wav.length; j++) {
 				for (int k = 0; k < wav[0].length; k++) {
@@ -52,7 +62,7 @@ public class ReadWav {
 
 	}
 
-	public static double[][] readWav(String filename, int fftSize, float Fs,
+	public double[][] readWav(String filename, int fftSize, float Fs,
 			int num) throws Exception {
 
 		SpectralConvertor spectralAnalysis = new SpectralConvertor(
