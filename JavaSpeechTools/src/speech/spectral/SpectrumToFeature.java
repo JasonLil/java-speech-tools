@@ -29,7 +29,7 @@ public class SpectrumToFeature {
 		magn_log = new double[featureSize];
 	}	
 	
-	
+
 	
 	public double[] spectrumToFeature(int featureSize, int fftsize, double[] spectrum){
 		linearLog(featureSize,fftsize,spectrum);
@@ -56,6 +56,7 @@ public class SpectrumToFeature {
 				count2++;
 			}
 			count++;
+		//	System.out.println(" Conunt2: "+count2);
 		}
 		//return magn_log;
 

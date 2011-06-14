@@ -93,7 +93,8 @@ public class ValidationReadWav {
 	public static double[][] getPatientWavs(int fftSize, int outputs,
 			float Fs, int maxAudioLength) throws Exception {
 
-		String resource = "src/speech/validationwavs/patients/male patient e vowel.wav";
+		String resource = "/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Father.wav" ;
+				// "//src/speech/validationwavs/patients/male patient e vowel.wav";
 		double wav[][] = readWav(resource, fftSize, Fs, 0);
 		return wav;
 

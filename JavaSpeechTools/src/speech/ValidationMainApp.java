@@ -19,12 +19,7 @@ import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.SpectrumToFeature;
 
 public class ValidationMainApp {
-	
-//	public static int onscreenBins = 128;
-//	public static int fftSize = 1024;
-//	public static int phonemes = 6;   // TODO
-//	public static int Fs = 44100;
-	
+
 	public static int onscreenBins = Config.featureSize;
 	public static int fftSize = Config.fftSize;
 	public static int phonemes = Config.phonemes;   // TODO
@@ -33,7 +28,6 @@ public class ValidationMainApp {
 	
 	public static double spectrum[] = new double[fftSize];
 	public static double outputSort[] = new double[phonemes];
-//	public static double magnLog[];
 	public static double smoothed[];
 	public static double outputs[];
 	public static double vocalTract[][][];
@@ -49,7 +43,7 @@ public class ValidationMainApp {
 	static String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
 	public static void main(String args[]) throws Exception {
 	
-		frames = new MakeFrames(false, phonemeNames, onscreenBins); 		// Create gfx for output
+		frames = new MakeFrames(false, phonemeNames, onscreenBins,null); 		// Create gfx for output
 		
 
 		frames.makeMaster();
@@ -78,8 +72,6 @@ public class ValidationMainApp {
 				spectrum[j] = 2.0*testWav[k][j];
 			}
 
-//			magnLog = specAdj.linearLog(onscreenBins, fftSize, spectrum);
-//			smoothed = specAdj.running3Average(onscreenBins, magnLog);
 			smoothed =  specAdj.spectrumToFeature(onscreenBins, fftSize, spectrum);
 			outputs = neuralNet.forwardPass(smoothed);
 			
@@ -100,7 +92,7 @@ public class ValidationMainApp {
 			
 			frames.updateGfx(text,  outputs);
 
-			Thread.sleep(40);
+			Thread.sleep(500);
 
 		}
 		}
