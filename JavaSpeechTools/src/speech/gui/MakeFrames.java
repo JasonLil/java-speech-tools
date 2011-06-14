@@ -24,12 +24,14 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.filechooser.FileFilter;
 
 import com.frinika.global.FrinikaConfig;
@@ -64,7 +66,7 @@ public class MakeFrames {
 
 	private int onscreenBins;
 	private KeyHandler keyHandler;
-	File defaultWavFile=Config.defaultWaveFile;
+	File defaultWavFile = Config.defaultWaveFile;
 
 	// For training
 	private double targetNeuralOutputs[];
@@ -91,11 +93,11 @@ public class MakeFrames {
 	private File waveDiretory;
 	private MainApp app;
 
-	public MakeFrames(boolean isApplet, String[] phonemeNames, int onscreenBins,MainApp app)
-			throws IOException {
+	public MakeFrames(boolean isApplet, String[] phonemeNames,
+			int onscreenBins, MainApp app) throws IOException {
 		this.phonemeNames = phonemeNames;
 		this.nPhonemes = phonemeNames.length;
-		this.app=app;
+		this.app = app;
 		final ReadImage ri = new ReadImage(phonemeNames);
 		drawTract = new DrawTract(nPhonemes, ri);
 		drawTargTract = new DrawTract(nPhonemes, ri);
@@ -135,12 +137,44 @@ public class MakeFrames {
 		JMenuBar bar = new JMenuBar();
 		masterFrame.setJMenuBar(bar);
 
+		bar.add(makeFileMenu());
+
+		bar.add(makeSourceMenu());
+
+		bar.add(makeAnalysisMenu());
+		bar.add(makeSettingMenu());
+		bar.add(makeTrainingMenu());
+
+	}
+
+	JMenu makeSettingMenu() {
+		JMenu menu = new JMenu("Setting");
+		JMenu overLapMenu = new JMenu("Window Overlap");
+		menu.add(overLapMenu);
+		ButtonGroup group = new ButtonGroup();
+
+		for (int i = 0; i < 4; i++) {
+
+			final int sampsOverLap = (Config.fftSize * i) / 4;
+			String percent = (100 * sampsOverLap) / Config.fftSize + "%";
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(
+					new AbstractAction(percent) {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							app.spectralConverter.setOverlap(sampsOverLap);
+						}
+					});
+			overLapMenu.add(item);
+			group.add(item);
+			if (i==0) item.setSelected(true);
+		}
+		return menu;
+	}
+
+	JMenu makeFileMenu() {
 		JMenu menu = new JMenu("File");
 
-		bar.add(menu);
-
-		
-		
 		menu.add(new JMenuItem(new AbstractAction("Quit") {
 
 			@Override
@@ -148,22 +182,22 @@ public class MakeFrames {
 				System.exit(0);
 			}
 		}));
+		return menu;
+	}
 
-		
-		menu=new JMenu("Source");
-		bar.add(menu);
-		
+	JMenu makeSourceMenu() {
+		JMenu menu = new JMenu("Source");
+
 		menu.add(new JMenuItem(new AbstractAction("file") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				File wav=selectWaveFile();
-				if (wav == null) return;
+				File wav = selectWaveFile();
+				if (wav == null)
+					return;
 				app.setInputWave(wav);
 			}
 		}));
-
-		
 
 		menu.add(new JMenuItem(new AbstractAction("mic") {
 
@@ -172,11 +206,12 @@ public class MakeFrames {
 				app.setInputWave(null);
 			}
 		}));
+		return menu;
+	}
 
-		
-		menu = new JMenu("Analyis");
+	JMenu makeAnalysisMenu() {
+		JMenu menu = new JMenu("Analyis");
 
-		bar.add(menu);
 		menu.add(new JMenuItem(new AbstractAction("Spectrogram") {
 
 			@Override
@@ -284,8 +319,12 @@ public class MakeFrames {
 
 			}
 		}));
-		menu = new JMenu("Training");
-		bar.add(menu);
+
+		return menu;
+	}
+
+	JMenu makeTrainingMenu() {
+		JMenu menu = new JMenu("Training");
 
 		for (int i = 0; i < phonemeNames.length; i++) {
 
@@ -303,8 +342,7 @@ public class MakeFrames {
 			}));
 
 		}
-		
-	
+		return menu;
 	}
 
 	public void updateGfx(String text, double[] neuralOutputs) { // , double[]
@@ -325,6 +363,29 @@ public class MakeFrames {
 
 	}
 
+	void resetGraphs() {
+		if (drawGraph != null) {
+			drawGraph.reset();
+			// graphFrame.repaint();
+		}
+		if (drawScroll != null) {
+			drawScroll.reset();
+		}	
+		
+	}
+	
+	
+	void pauseGraphs(boolean yes) {
+		if (drawGraph != null) {
+			drawGraph.pause(yes);
+			// graphFrame.repaint();
+		}
+		if (drawScroll != null) {
+			drawScroll.pause(yes);
+		}	
+		
+	}
+	
 	private class KeyHandler extends KeyAdapter {
 
 		public void keyReleased(KeyEvent e) {
@@ -381,13 +442,13 @@ public class MakeFrames {
 	File selectWaveFile() {
 		chooser.setDialogTitle("Select audio file");
 		chooser.setFileFilter(new AudioFileFilter());
-		
+
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			return chooser.getSelectedFile();
 		}
-	
+
 		return null;
-	
+
 	}
 
 	public SpectralProcess getSpectralProcess() {
@@ -396,25 +457,27 @@ public class MakeFrames {
 
 }
 
-
 class AudioFileFilter extends FileFilter {
 
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-     */
-    public boolean accept(File f) {
-        if(f.getName().toLowerCase().indexOf(".wav")>0 || 
-                f.isDirectory())
-            return true;
-        else
-            return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
+	 */
+	public boolean accept(File f) {
+		if (f.getName().toLowerCase().indexOf(".wav") > 0 || f.isDirectory())
+			return true;
+		else
+			return false;
+	}
 
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#getDescription()
-     */
-    public String getDescription() {
-        return "Wave file";
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.filechooser.FileFilter#getDescription()
+	 */
+	public String getDescription() {
+		return "Wave file";
+	}
 
 }

@@ -21,6 +21,8 @@ import uk.org.toot.audio.core.AudioBuffer;
  *  
  */
 
+// (MainApp now reads in wave)
+@Deprecated   
 public class ValidationReadWav {
 
 	public static int file_length[];
@@ -106,7 +108,7 @@ public class ValidationReadWav {
 			int num) throws Exception {
 
 		SampledToSpectral spectralAnalysis = new SampledToSpectral(
-				fftSize, Fs);
+				fftSize,0, Fs);
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
