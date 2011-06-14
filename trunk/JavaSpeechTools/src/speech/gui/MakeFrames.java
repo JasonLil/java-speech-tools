@@ -1,5 +1,7 @@
 package speech.gui;
 
+import static com.frinika.localization.CurrentLocale.getMessage;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -17,16 +19,27 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 
+import com.frinika.global.FrinikaConfig;
+import com.frinika.project.ProjectContainer;
+import com.frinika.project.gui.ProjectFrame;
+import com.frinika.tracker.ProjectFileFilter;
+
+import config.Config;
+
+import speech.MainApp;
 import speech.gui.DrawGraph.KeyHandler;
 import speech.spectral.SpectralProcess;
 
@@ -41,27 +54,27 @@ public class MakeFrames {
 	private DrawGraph drawGraph;
 	private DrawScrollingSpect drawScroll;
 	private DrawHist drawHist;
-	
+
 	private int nPhonemes;
 	private String[] phonemeNames;
 
-	
-	
 	private JFrame specFrame;
 	private JFrame graphFrame;
 	private JFrame masterFrame;
 
 	private int onscreenBins;
 	private KeyHandler keyHandler;
+	File defaultWavFile=Config.defaultWaveFile;
 
 	// For training
 	private double targetNeuralOutputs[];
 	private String targetText = "";
 
-	// this is used to feed anything that needs to process each feature 
-	// this will be on the realtime audio thread so any observers should take care not 
+	// this is used to feed anything that needs to process each feature
+	// this will be on the realtime audio thread so any observers should take
+	// care not
 	// to call any GUI stuff from notifyMoreData.
-	
+
 	private SpectralProcess spectralProcess = new SpectralProcess() {
 
 		@Override
@@ -72,17 +85,17 @@ public class MakeFrames {
 					drawHist.update(data);
 					drawHist.repaint();
 				}
-			}		
+			}
 		}
 	};
+	private File waveDiretory;
+	private MainApp app;
 
-
-
-	public MakeFrames(boolean isApplet, String[] phonemeNames, int onscreenBins)
+	public MakeFrames(boolean isApplet, String[] phonemeNames, int onscreenBins,MainApp app)
 			throws IOException {
 		this.phonemeNames = phonemeNames;
 		this.nPhonemes = phonemeNames.length;
-
+		this.app=app;
 		final ReadImage ri = new ReadImage(phonemeNames);
 		drawTract = new DrawTract(nPhonemes, ri);
 		drawTargTract = new DrawTract(nPhonemes, ri);
@@ -97,11 +110,10 @@ public class MakeFrames {
 
 	public void makeMaster() {
 
-
 		JFrame frame = new JFrame("JR Speech Analysis Toolbox");
 
 		Container content = frame.getContentPane();
-		frame.setLayout(new GridLayout(2,2));
+		frame.setLayout(new GridLayout(2, 2));
 		keyHandler = new KeyHandler();
 		frame.addKeyListener(keyHandler);
 
@@ -126,6 +138,9 @@ public class MakeFrames {
 		JMenu menu = new JMenu("File");
 
 		bar.add(menu);
+
+		
+		
 		menu.add(new JMenuItem(new AbstractAction("Quit") {
 
 			@Override
@@ -134,6 +149,31 @@ public class MakeFrames {
 			}
 		}));
 
+		
+		menu=new JMenu("Source");
+		bar.add(menu);
+		
+		menu.add(new JMenuItem(new AbstractAction("file") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File wav=selectWaveFile();
+				if (wav == null) return;
+				app.setInputWave(wav);
+			}
+		}));
+
+		
+
+		menu.add(new JMenuItem(new AbstractAction("mic") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				app.setInputWave(null);
+			}
+		}));
+
+		
 		menu = new JMenu("Analyis");
 
 		bar.add(menu);
@@ -263,9 +303,12 @@ public class MakeFrames {
 			}));
 
 		}
+		
+	
 	}
 
-	public void updateGfx(String text, double[] neuralOutputs) { //, double[] magn) {
+	public void updateGfx(String text, double[] neuralOutputs) { // , double[]
+																	// magn) {
 
 		if (!(masterFrame.getExtendedState() == JFrame.ICONIFIED)) {
 			drawTract.vectorMean(neuralOutputs, text);
@@ -273,25 +316,21 @@ public class MakeFrames {
 			drawTargTract.vectorMean(targetNeuralOutputs, targetText);
 			drawTargLips.vectorMean(targetNeuralOutputs);
 			masterFrame.repaint();
-		} 
+		}
 
 		if (drawGraph != null) {
 			drawGraph.updateGraph(neuralOutputs, text);
 			// graphFrame.repaint();
 		}
 
-	
-
 	}
-
-
 
 	private class KeyHandler extends KeyAdapter {
 
 		public void keyReleased(KeyEvent e) {
 
 			int kCode = e.getKeyCode();
-			int n=phonemeNames.length;
+			int n = phonemeNames.length;
 			if (kCode == KeyEvent.VK_A) {
 				for (int i = 0; i < n; i++)
 					targetNeuralOutputs[i] = 0;
@@ -337,8 +376,45 @@ public class MakeFrames {
 		}
 	}
 
+	JFileChooser chooser = new JFileChooser(defaultWavFile);
+
+	File selectWaveFile() {
+		chooser.setDialogTitle("Select audio file");
+		chooser.setFileFilter(new AudioFileFilter());
+		
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			return chooser.getSelectedFile();
+		}
+	
+		return null;
+	
+	}
+
 	public SpectralProcess getSpectralProcess() {
 		return spectralProcess;
 	}
-	
+
+}
+
+
+class AudioFileFilter extends FileFilter {
+
+    /* (non-Javadoc)
+     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
+     */
+    public boolean accept(File f) {
+        if(f.getName().toLowerCase().indexOf(".wav")>0 || 
+                f.isDirectory())
+            return true;
+        else
+            return false;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.filechooser.FileFilter#getDescription()
+     */
+    public String getDescription() {
+        return "Wave file";
+    }
+
 }

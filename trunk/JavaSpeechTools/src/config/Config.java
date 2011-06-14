@@ -27,6 +27,7 @@ public class Config {
 	public static int fftSize = 1024;
 	public static int phonemes = 6;
 	public static String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
+	public static File defaultWaveFile=new File("/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Cat.wav");
 	
 	//	private static final String CONFIG_FILE_NAME = "Config.xml";
 //

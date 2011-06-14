@@ -17,6 +17,6 @@
 	<classpathentry kind="lib" path="lib/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="lib/vorbis-java.jar"/>
 	<classpathentry kind="lib" path="lib/vorbisspi1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/frinika.jar"/>
+	<classpathentry kind="lib" path="lib/frinika.jar" sourcepath="/frinika"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

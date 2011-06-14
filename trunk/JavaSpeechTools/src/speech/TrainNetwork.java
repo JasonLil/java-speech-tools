@@ -18,7 +18,7 @@ import uk.ac.bath.ai.backprop.BackProp;
  * a variety of sound sources
  */
 
-public class WavTraining {
+public class TrainNetwork {
 	
 	public static NeuralNet neuralNet;
 	public static SpectrumToFeature specAdjust;

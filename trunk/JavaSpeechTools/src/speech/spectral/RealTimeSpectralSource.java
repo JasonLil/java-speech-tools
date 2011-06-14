@@ -2,6 +2,8 @@ package speech.spectral;
 
 import java.util.List;
 
+import com.frinika.audio.io.AudioReader;
+
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.server.AudioClient;
 import uk.org.toot.audio.server.IOAudioProcess;
@@ -14,6 +16,7 @@ public class RealTimeSpectralSource {
 	private  AudioBuffer chunk;
 	private  AudioClient audioClient;
 	private  SampledToSpectral spectralProcess;
+	private AudioReader reader;
 	
 	//public static SpectralClient client;
 	public static double spectrum[];
@@ -79,8 +82,13 @@ public class RealTimeSpectralSource {
 		audioClient = new AudioClient() {
 			public void work(int arg0) {
 				chunk.makeSilence();
-				input.processAudio(chunk);
-				output.processAudio(chunkOut);
+				if (reader != null) {
+					reader.processAudio(chunk);
+					output.processAudio(chunk);
+				} else {
+					input.processAudio(chunk);
+					output.processAudio(chunkOut);
+				}
 				spectralProcess.processAudio(chunk,client);
 			}
 			public void setEnabled(boolean arg0) {
@@ -98,17 +106,13 @@ public class RealTimeSpectralSource {
 
 				System.out.println("Stop...");
 				audioServer.stop();
-				
-//  The server will do this
-//				try {
-//					audioServer.closeAudioInput(input);
-//					audioServer.closeAudioOutput(output);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
 
 			}
 		});
+	}
+
+	public void streamFile(AudioReader audioReader) {
+		reader=audioReader;
 	}
 
 }

@@ -18,9 +18,9 @@ import uk.ac.bath.ai.backprop.TrainingData;
 public class EvolveTest {
 
 
-	public static void walkerTrain(Pool pool,Evaluator evaluator) {
+	public static void mutationTrain(Pool pool,Evaluator evaluator) {
 
-		double thresh = -.001;
+		double thresh = -.01;
 		double fit;
 		long cnt = 0;
 		do {
@@ -28,10 +28,10 @@ public class EvolveTest {
 			fit = evaluator.fitness(net);
 			pool.addGenetic(net,fit);
 			
-			if ((cnt++) % 10000 == 0)
-				
+			if ((cnt) % 10000 == 0)			
 				System.out.println(cnt + " Fitness: " + pool.getBest().fitness);
 			
+			cnt++;
 		} while (fit < thresh);
 
 	}
@@ -52,7 +52,7 @@ public class EvolveTest {
 		Evaluator evo = new Evaluator(testData);
 		Pool pool = new Pool(20);
 		
-		walkerTrain(pool,evo);
+		mutationTrain(pool,evo);
 		FeedForwardIF net=(FeedForwardIF) pool.getBest().net;
 		evo.testNet(net);
 
@@ -66,7 +66,7 @@ public class EvolveTest {
 			net = null;
 			FileInputStream ostr = new FileInputStream(file);
 			ObjectInputStream in = new ObjectInputStream(ostr);
-			net = (NeuralNet) in.readObject();
+			net = (FeedForward) in.readObject();
 			in.close();
 			System.out.println(" Loaded from file .......... ");
 			evo.testNet(net);
