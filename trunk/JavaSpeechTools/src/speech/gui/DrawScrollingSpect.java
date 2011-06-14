@@ -37,6 +37,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.MemoryImageSource;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
@@ -96,17 +97,19 @@ public class DrawScrollingSpect extends JPanel {
 			screenConverter.setFullBufferUpdates(false);
 			offscreen = Toolkit.getDefaultToolkit()
 					.createImage(screenConverter);
+			ptr=0;
 			// setPreferredSize(size);
 			// setSize(size);
 		}
 	}
 
 	boolean recursion = false;
+	private boolean reset;
+	private boolean pause;
 
 	public void notifyMoreDataReady(double[] bins) {
 		
-		
-		
+
 		if (recursion) {
 			System.err.println(" RECURSION ");
 		}
@@ -121,6 +124,11 @@ public class DrawScrollingSpect extends JPanel {
 			createGraphics();
 		}
 
+		if (reset) {
+			ptr=0;
+			Arrays.fill(screenBuffer, 0);
+			reset=false;
+		}
 		for (int i = 1; i < bins.length - 1; i++) {
 			if (bins[i] > bins[i - 1] && bins[i] > bins[i + 1]) {
 				peaks[i] = bins[i];
@@ -215,6 +223,14 @@ public class DrawScrollingSpect extends JPanel {
 			return 200;
 		}
 		return size.height;
+	}
+
+	public void reset() {
+		reset=true;
+	}
+
+	public void pause(boolean yes) {
+		pause=yes;	
 	}
 
 }

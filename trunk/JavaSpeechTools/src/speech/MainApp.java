@@ -31,7 +31,8 @@ public class MainApp {
 	public boolean isApplet = false; // hack hack hack ... eeeek
 
 	double output[]=new double[Config.phonemes];
-	private RealTimeSpectralSource realTimeSpectralSource;
+	public RealTimeSpectralSource realTimeSpectralSource;
+	public SampledToSpectral spectralConverter;
 	
 	public static void main(String args[]) throws Exception {
 		MainApp app = new MainApp(false);
@@ -104,8 +105,8 @@ public class MainApp {
 		};
 
 		// This is used to convert the audio stream to a spectral stream.
-		SampledToSpectral spectralConverter = new SampledToSpectral(
-				Config.fftSize, Config.sampleRate);
+		spectralConverter = new SampledToSpectral(
+				Config.fftSize,0, Config.sampleRate);
 
 		// Grabs input and feeds into the spectralConverter
 		realTimeSpectralSource = new RealTimeSpectralSource(

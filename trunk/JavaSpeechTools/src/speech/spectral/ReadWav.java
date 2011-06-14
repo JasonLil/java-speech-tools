@@ -66,7 +66,7 @@ public class ReadWav {
 			int num) throws Exception {
 
 		SampledToSpectral spectralAnalysis = new SampledToSpectral(
-				fftSize, Config.sampleRate);
+				fftSize, 0,Config.sampleRate);
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(

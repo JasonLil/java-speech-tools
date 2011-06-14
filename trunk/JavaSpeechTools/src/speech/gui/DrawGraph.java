@@ -180,4 +180,13 @@ public class DrawGraph extends JPanel {
 		}
 	}
 
+	public void reset() {
+		clear=true;		
+	}
+
+	public void pause(boolean yes) {
+		clear=scrollPause=yes;		
+	}
+
+	
 }

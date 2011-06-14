@@ -18,7 +18,11 @@ public class SampledToSpectral {
 	private double magn[];
 	private int ptr;
 
-	public SampledToSpectral(int fftSize, float Fs) {
+	private int overlap;
+
+	private int fftSize;
+
+	public SampledToSpectral(int fftSize,int overlap, float Fs) {
 
 		doHanning = true;
 		fft = new FFTWorker(Fs, doHanning);
@@ -28,9 +32,16 @@ public class SampledToSpectral {
 		postFft = new double[2 * fftSize];
 		magn = new double[fftSize/2];
 		ptr = 0;
+		this.overlap=overlap;
+		this.fftSize=fftSize;
 
 	}
 
+	public void setOverlap(int overlap){
+		assert(overlap < fftSize);
+		this.overlap=overlap;	
+	}
+	
 	public void processAudio(AudioBuffer chunk,
 			NNSpectralFeatureDetector client) {
 
@@ -51,7 +62,12 @@ public class SampledToSpectral {
 					double imag = postFft[2 * j + 1];
 					magn[j] = (float) Math.sqrt((real * real) + (imag * imag));
 				}
-				ptr = 0;
+				
+				ptr = overlap;
+				if (overlap != 0) {
+					System.arraycopy(preFft, fftSize-overlap, preFft, 0, overlap);
+				}
+				
 				if (client != null)
 					client.process(magn);
 			}
