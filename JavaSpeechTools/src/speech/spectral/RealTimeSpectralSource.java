@@ -38,22 +38,22 @@ public class RealTimeSpectralSource {
 
 		audioServer = new JavaSoundAudioServer();
 		List<String> outputs = audioServer.getAvailableOutputNames();
-		System.out.println("Outputs:");
+		System.out.println("Available Outputs:");
 
 		for (String name : outputs) {
 			System.out.println(name);
 		}
 
 		List<String> inputs = audioServer.getAvailableInputNames();
-		System.out.println("Inputs:");
+		System.out.println("Available Inputs:");
 		for (String name : inputs) {
 			System.out.println(name);
 		}
 
-		String inName = outputs.get(0);
+		String inName = inputs.get(0);
 		String outName = outputs.get(0);
 
-		if (inName1 != null) {
+		if (outName1 != null) {
 			for (String name : outputs) {
 				if (name.equals(outName1)) {
 					outName = outName1;
@@ -62,7 +62,7 @@ public class RealTimeSpectralSource {
 			}
 		}
 
-		if (outName1 != null) {
+		if (inName1 != null) {
 			for (String name : inputs) {
 				if (name.equals(inName1)) {
 					inName = inName1;
@@ -71,8 +71,8 @@ public class RealTimeSpectralSource {
 			}
 		}
 		
-		System.out.println(" Outputs " + outName);
-		System.out.println(" Inputs " + inName);
+		System.out.println(" Using Output: " + outName);
+		System.out.println("  Using Input: " + inName);
 
 		final IOAudioProcess output = audioServer.openAudioOutput(outName,"output");
 		final IOAudioProcess input = audioServer
@@ -93,7 +93,7 @@ public class RealTimeSpectralSource {
 					if (!eof) {
 						if (reader.eof()) {
 							eof=true;
-							
+							app.pause(true);
 						}
 					}
 					

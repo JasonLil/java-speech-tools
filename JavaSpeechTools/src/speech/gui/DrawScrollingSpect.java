@@ -109,7 +109,7 @@ public class DrawScrollingSpect extends JPanel {
 
 	public void notifyMoreDataReady(double[] bins) {
 		
-
+		if (pause) return;
 		if (recursion) {
 			System.err.println(" RECURSION ");
 		}

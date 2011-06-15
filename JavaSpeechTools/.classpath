@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="opengl/joglHelloWorld.java|video/GetSnapshotApp.java|video/WebcamViewer.java|speech/gui/CopyOfMakeFrames.java" kind="src" path="src"/>
+	<classpathentry excluding="opengl/joglHelloWorld.java|video/GetSnapshotApp.java|video/WebcamViewer.java|speech/gui/CopyOfMakeFrames.java|video/SimpleViewer.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="rasmusDSPsrc"/>
 	<classpathentry kind="src" path="tootSrc"/>
 	<classpathentry kind="src" path="srcTootServers"/>
