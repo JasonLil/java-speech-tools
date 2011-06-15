@@ -53,7 +53,7 @@ public class MakeFrames {
 	private DrawTract drawTargTract;
 	private DrawLips drawLips;
 	private DrawLips drawTargLips;
-	private DrawGraph drawGraph;
+	public DrawGraph drawGraph;
 	private DrawScrollingSpect drawScroll;
 	private DrawHist drawHist;
 
@@ -357,13 +357,13 @@ public class MakeFrames {
 		}
 
 		if (drawGraph != null) {
-			drawGraph.updateGraph(neuralOutputs, text);
+		//	drawGraph.updateGraph(neuralOutputs, text);
 			// graphFrame.repaint();
 		}
 
 	}
 
-	void resetGraphs() {
+	public void resetGraphs() {
 		if (drawGraph != null) {
 			drawGraph.reset();
 			// graphFrame.repaint();
@@ -375,7 +375,7 @@ public class MakeFrames {
 	}
 	
 	
-	void pauseGraphs(boolean yes) {
+	public void pauseGraphs(boolean yes) {
 		if (drawGraph != null) {
 			drawGraph.pause(yes);
 			// graphFrame.repaint();
@@ -454,6 +454,8 @@ public class MakeFrames {
 	public SpectralProcess getSpectralProcess() {
 		return spectralProcess;
 	}
+
+	
 
 }
 

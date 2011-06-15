@@ -100,6 +100,9 @@ public class MainApp {
 					MainApp.this.output[i] = MainApp.this.output[i]*damp +
 					outputs[i]*(1.0-damp);
 				}
+				if (frames == null || frames.drawGraph == null) return;
+				
+				frames.drawGraph.updateGraph(outputs, "");
 			}
 			
 		};
@@ -161,7 +164,12 @@ public class MainApp {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		frames.pauseGraphs(false);
+		frames.resetGraphs();
+	}
+
+	public void pause(boolean b) {
+		frames.pauseGraphs(b);
 	}
 	
 }
