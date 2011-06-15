@@ -110,7 +110,7 @@ public class MainApp {
 
 		// Grabs input and feeds into the spectralConverter
 		realTimeSpectralSource = new RealTimeSpectralSource(
-				spectralConverter);
+				spectralConverter,this);
 
 		// takes the raw FFT from the spectral converter and feeds
 		// the neural net classification
