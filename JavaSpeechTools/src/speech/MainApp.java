@@ -148,11 +148,13 @@ public class MainApp {
 		
 		if (waveFile == null) {
 			realTimeSpectralSource.streamFile(null);
+			frames.pauseGraphs(false);
+			frames.resetGraphs();
 			return;
 		}
-		RandomAccessFile rafG;
+		
 		try {
-			rafG = new RandomAccessFile(waveFile, "r");
+			RandomAccessFile rafG = new RandomAccessFile(waveFile, "r");
 			AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
 					rafG),Config.sampleRate);	
 			realTimeSpectralSource.streamFile(audioReader);
