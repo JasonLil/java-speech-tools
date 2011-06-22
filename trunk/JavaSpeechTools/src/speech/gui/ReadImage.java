@@ -1,6 +1,7 @@
 package speech.gui;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -8,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import config.Config;
 
-import speech.MainApp;
+import speech.monopthong.MainApp;
 
 // multidimensional array sort taken from: http://realityisimportant.blogspot.com/
 
@@ -28,13 +29,16 @@ public class ReadImage {
 	double[][][] lipsInner;
 	double[][][] lipsOuter;
 	private String[] names;
+	private BufferedImage face;
 
 	public ReadImage(String names[]) throws IOException {
 		this.names=names;
 		tract = readTract();
 		lipsInner = readLips1();
 		lipsOuter = readLips2();
-	
+		String resource = "imagefiles/face.bmp";
+		URL url = ReadImage.class.getResource(resource);
+		face = ImageIO.read(url);		
 	}
 
 	private double[][][] readTract() throws IOException {
@@ -49,7 +53,7 @@ public class ReadImage {
 
 			String resource = "imagefiles/wgr" + names[f] + ".bmp";
 
-			URL url = MainApp.class.getResource(resource);
+			URL url = ReadImage.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
 			int count = 0;
 			for (int i = 0; i < 405; i++) {
@@ -85,7 +89,7 @@ public class ReadImage {
 			String resource = "imagefiles/lips" + names[f] + ".bmp";
 		//	System.out.println(resource);
 			
-			URL url = MainApp.class.getResource(resource);
+			URL url = ReadImage.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
 			int count = 0;
 			for (int i = 0; i < 715; i++) {
@@ -119,7 +123,7 @@ public class ReadImage {
 		for (int f = 0; f < names.length; f++) {
 
 			String resource = "imagefiles/lips" + names[f] + ".bmp";
-			URL url = MainApp.class.getResource(resource);
+			URL url = ReadImage.class.getResource(resource);
 			BufferedImage img = ImageIO.read(url);
 
 			int count = 0;
@@ -165,4 +169,12 @@ public class ReadImage {
 		return MultiIn;
 	}
 
+	
+	BufferedImage getFace() {
+		return face;
+		
+	}
+	
+	
+	
 }

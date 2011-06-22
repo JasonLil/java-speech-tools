@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;

@@ -1,11 +1,13 @@
 package speech.spectral;
 
+import speech.Data;
 import uk.ac.bath.audio.FFTWorker;
 import uk.org.toot.audio.core.AudioBuffer;
 
 /**
  * Takes chunks of one size and packs them into chunks of another size Once we
- * have a full chunk it is fed into FFT and the spectral feature fed to the client.
+ * have a full chunk it is fed into FFT and the spectral feature fed to the
+ * client.
  */
 
 public class SampledToSpectral {
@@ -15,14 +17,16 @@ public class SampledToSpectral {
 	private boolean doHanning;
 	private double preFft[];
 	private double postFft[];
-	private double magn[];
+	// private double magn[];
 	private int ptr;
 
 	private int overlap;
 
 	private int fftSize;
 
-	public SampledToSpectral(int fftSize,int overlap, float Fs) {
+	private Data data;
+
+	public SampledToSpectral(int fftSize, int overlap, float Fs,int featureSize) {
 
 		doHanning = true;
 		fft = new FFTWorker(Fs, doHanning);
@@ -30,20 +34,21 @@ public class SampledToSpectral {
 
 		preFft = new double[fftSize];
 		postFft = new double[2 * fftSize];
-		magn = new double[fftSize/2];
+		// magn = new double[fftSize/2];
 		ptr = 0;
-		this.overlap=overlap;
-		this.fftSize=fftSize;
-
-	}
-
-	public void setOverlap(int overlap){
-		assert(overlap < fftSize);
-		this.overlap=overlap;	
-	}
+		this.overlap = overlap;
+		this.fftSize = fftSize;
+		data = new Data(fftSize,featureSize);
 	
-	public void processAudio(AudioBuffer chunk,
-			NNSpectralFeatureDetector client) {
+
+	}
+
+	public void setOverlap(int overlap) {
+		assert (overlap < fftSize);
+		this.overlap = overlap;
+	}
+
+	public void processAudio(AudioBuffer chunk, NNSpectralFeatureDetector client) throws Exception {
 
 		// PJL: Mix left and right so we don't need to worry about which channel
 		// is
@@ -57,26 +62,59 @@ public class SampledToSpectral {
 			ptr++;
 			if (ptr == preFft.length) {
 				fft.process(preFft, postFft);
-				for (int j = 0; j < preFft.length/2; j++) {
+				for (int j = 0; j < preFft.length / 2; j++) {
 					double real = postFft[2 * j];
 					double imag = postFft[2 * j + 1];
-					magn[j] = (float) Math.sqrt((real * real) + (imag * imag));
+					data.spectrum[j] = (float) Math.sqrt((real * real)
+							+ (imag * imag));
 				}
-				
+
 				ptr = overlap;
 				if (overlap != 0) {
-					System.arraycopy(preFft, fftSize-overlap, preFft, 0, overlap);
+					System.arraycopy(preFft, fftSize - overlap, preFft, 0,
+							overlap);
 				}
-				
+
 				if (client != null)
-					client.process(magn);
+					client.process(data);
 			}
 		}
 	}
 
-	public double[] getMagn() {   // TODO Deprecate this
+	public double[] processAudio(AudioBuffer chunk) {
 
-		return magn;
+		// PJL: Mix left and right so we don't need to worry about which channel
+		// is
+		// being used.
+
+		float chn0[] = chunk.getChannel(0);
+		float chn1[] = chunk.getChannel(1);
+
+		if (chn0.length != preFft.length) {
+			try {
+				throw new Exception(" Chunk size must be same as FFT window");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		for (int i = 0; i < chn0.length; i++) {
+			preFft[i] = chn0[i] + chn1[i];
+		}
+
+		fft.process(preFft, postFft);
+		for (int j = 0; j < preFft.length / 2; j++) {
+			double real = postFft[2 * j];
+			double imag = postFft[2 * j + 1];
+			data.spectrum[j] = (float) Math.sqrt((real * real) + (imag * imag));
+		}
+		return data.spectrum;
 	}
+
+	// public double[] getMagn() { // TODO Deprecate this
+	//
+	// return spectrum;
+	// }
 
 }

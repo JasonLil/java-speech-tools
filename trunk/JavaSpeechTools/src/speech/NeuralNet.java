@@ -14,8 +14,10 @@ public interface NeuralNet extends Serializable ,FeedForwardIF{
 	// randomize network
 	//void randomWeights();
 
-	double [] backPropTrain(double[] phonemeSmoothed, double[] trainOutvals);
+	double [] backPropTrain(double[] phonemeSmoothed, double[] trainOutvals) throws Exception;
 
 	void randomWeights(double low, double high);
+
+	void process(Data data) throws Exception;
 
 }

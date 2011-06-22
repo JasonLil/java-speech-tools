@@ -28,6 +28,22 @@ public class Config {
 	public static int phonemes = 6;
 	public static String phonemeNames[]={"EEE","EHH","ERR","AHH","OOH","UHH"};
 	public static File defaultWaveFile=new File("/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Cat.wav");
+	public static int getFFTSize() {
+		return fftSize;
+	}
+	
+	public static float getSampleRate() {	
+		return sampleRate;
+	}
+	
+	public static int getFeatureVectorSize() {		
+		return featureSize;
+	}
+
+	public static int getNumberOfTargets() {
+		// TODO Auto-generated method stub
+		return phonemes;
+	}
 	
 	//	private static final String CONFIG_FILE_NAME = "Config.xml";
 //

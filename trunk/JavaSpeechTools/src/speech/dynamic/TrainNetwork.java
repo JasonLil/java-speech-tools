@@ -1,11 +1,16 @@
-package speech;
+package speech.dynamic;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
+import config.Config;
+
+import speech.NeuralNet;
+import speech.ReadWav;
 import speech.spectral.SpectrumToFeature;
 import uk.ac.bath.ai.backprop.BackProp;
-import config.Config;
+import uk.ac.bath.ai.backprop.BackPropRecursive;
 
 //
 //@author JER
@@ -15,24 +20,24 @@ import config.Config;
  * a variety of sound sources
  */
 
-public class ValidationWavTraining {
+public class TrainNetwork {
 	
 	public static NeuralNet neuralNet;
 	public static SpectrumToFeature specAdjust;
-	public static ValidationReadWav readWav;
+	public static ReadWav readWav;
 	
-	public static float Fs = (float) Config.sampleRate;
+	public static float Fs = Config.sampleRate;
 	public static int maxAudioLength = 1000;
 
 	public static int inputs = 128;
 	public static int hidden = 30;
-	public static int outputs = 6;
+	public static int outputs = 6;    // TODO
 	
 	public static int fftSize = 1024;
 	public static int onscreenBins = 128;
 	
-	public static double alpha = 1000.0;
-	public static double beta = 0.0001;
+	public static double alpha = 300000.0;
+	public static double beta = .000001;
 	
 	public static double maxError = 0.01;
 	
@@ -42,16 +47,17 @@ public class ValidationWavTraining {
 
 		int sz[] = { inputs, hidden, outputs };
 
-		neuralNet = new BackProp(sz, beta, alpha, null);
-		specAdjust = new SpectrumToFeature(onscreenBins);
-		readWav = new ValidationReadWav(outputs, 2);
+		Random rand=new Random();
+		neuralNet = new BackPropRecursive(sz, beta, alpha, rand);
+		specAdjust = new SpectrumToFeature(onscreenBins,fftSize);
+		readWav = new ReadWav(outputs);
 
 		neuralNet.randomWeights(0.0, 0.01);
 
 		double error = 1.0;
-		double[] phonemeRaw = new double[fftSize];
-		double[] phonemeLog = new double[onscreenBins];
-		double[] phonemeSmoothed = new double[onscreenBins];
+		
+		double[] fftSpectrum = new double[fftSize];
+		double[] featureVec = new double[onscreenBins];
 
 		int count = 0;
 		
@@ -60,13 +66,11 @@ public class ValidationWavTraining {
 		// Read wavs from file
 		double[][][] wavs = readWav.getMonoThongWavs(fftSize, outputs, Fs, maxAudioLength);
 		
-		long startTime = System.nanoTime();
-		
 		while (error > maxError) {
 			
 			error = 0.0;
 			
-			i_max = 110;//readWav.file_length[0] - 1;
+			i_max = readWav.file_length[0] - 1;
 
 			// readWav.file_length[0] can be replaced with a number
 
@@ -74,19 +78,20 @@ public class ValidationWavTraining {
 				for (int p = 0; p < outputs+1; p++) { // Cycle through phonemes
 					
 					for (int j = 0; j < fftSize; j++) {
-						phonemeRaw[j] = wavs[i][j][p];
+						fftSpectrum[j] = wavs[i][j][p];
 					}
 					
-				
-					phonemeSmoothed = specAdjust.spectrumToFeature(onscreenBins, fftSize, phonemeRaw);
+					// phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
+					 specAdjust.spectrumToFeature(fftSpectrum,featureVec); //running3Average(onscreenBins, phonemeLog); 
+
 					double[] train_outvals = new double[outputs+1];
 					if (p != outputs)
 						train_outvals[p] = 1.0;
 
-					neuralNet.backPropTrain(phonemeSmoothed, train_outvals); // Go!
+					neuralNet.backPropTrain(featureVec, train_outvals); // Go!
 
 					double[] output_vals = neuralNet
-							.forwardPass(phonemeSmoothed);
+							.forwardPass(featureVec);
 
 					for (int j = 0; j < outputs; j++) {
 						error += (train_outvals[j] - output_vals[j])
@@ -101,8 +106,6 @@ public class ValidationWavTraining {
 			count++;
 			
 		}
-		
-		System.out.println("Convergence time: " + ((System.nanoTime()-startTime)/1000000000));
 
 		FileOutputStream istr = new FileOutputStream(
 				"src/textfiles/network.txt");

@@ -3,14 +3,12 @@ package speech.spectral;
 import java.io.IOException;
 import java.util.List;
 
-import com.frinika.audio.io.AudioReader;
-
-import speech.MainApp;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.server.AudioClient;
 import uk.org.toot.audio.server.IOAudioProcess;
 import uk.org.toot.audio.server.JavaSoundAudioServer;
-import uk.org.toot.audio.server.MultiIOJavaSoundAudioServer;
+
+import com.frinika.audio.io.AudioReader;
 
 public class RealTimeSpectralSource {
 
@@ -19,13 +17,13 @@ public class RealTimeSpectralSource {
 	private  AudioClient audioClient;
 	private  SampledToSpectral spectralProcess;
 	private AudioReader reader;
-	private MainApp app;
+	private SpectralClient app;
 	private boolean eof=false;
 	
 	//public static SpectralClient client;
 	public static double spectrum[];
 
-	public RealTimeSpectralSource(SampledToSpectral spectralProcess,MainApp app) {
+	public RealTimeSpectralSource(SampledToSpectral spectralProcess,SpectralClient app) {
 		this.spectralProcess = spectralProcess;
 		this.app=app;
 	}
@@ -93,7 +91,7 @@ public class RealTimeSpectralSource {
 					if (!eof) {
 						if (reader.eof()) {
 							eof=true;
-							app.pause(true);
+							app.eof(true);
 						}
 					}
 					
@@ -101,7 +99,12 @@ public class RealTimeSpectralSource {
 					input.processAudio(chunk);
 					output.processAudio(chunkOut);
 				}
-				spectralProcess.processAudio(chunk,client);
+				try {
+					spectralProcess.processAudio(chunk,client);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			public void setEnabled(boolean arg0) {
 			}

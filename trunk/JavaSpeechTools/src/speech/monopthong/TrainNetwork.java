@@ -1,4 +1,4 @@
-package speech;
+package speech.monopthong;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -6,7 +6,8 @@ import java.util.Random;
 
 import config.Config;
 
-import speech.spectral.ReadWav;
+import speech.NeuralNet;
+import speech.ReadWav;
 import speech.spectral.SpectrumToFeature;
 import uk.ac.bath.ai.backprop.BackProp;
 
@@ -47,7 +48,7 @@ public class TrainNetwork {
 
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha, rand);
-		specAdjust = new SpectrumToFeature(onscreenBins);
+		specAdjust = new SpectrumToFeature(onscreenBins,fftSize);
 		readWav = new ReadWav(outputs);
 
 		neuralNet.randomWeights(0.0, 0.01);
@@ -80,7 +81,7 @@ public class TrainNetwork {
 					}
 					
 					// phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
-					featureVec = specAdjust.spectrumToFeature(onscreenBins, fftSize, fftSpectrum); //running3Average(onscreenBins, phonemeLog); 
+					specAdjust.spectrumToFeature(fftSpectrum,featureVec); //running3Average(onscreenBins, phonemeLog); 
 
 					double[] train_outvals = new double[outputs+1];
 					if (p != outputs)

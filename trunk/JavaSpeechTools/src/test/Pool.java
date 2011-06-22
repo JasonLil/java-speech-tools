@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 import java.util.Random;
 import java.util.TreeSet;

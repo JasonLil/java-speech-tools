@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 public interface Evolvable {
 

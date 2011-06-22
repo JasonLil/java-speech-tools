@@ -1,4 +1,4 @@
-package speech;
+package speech.monopthong;
 
 import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.VanillaRandomAccessFile;
@@ -108,7 +108,7 @@ public class ValidationReadWav {
 			int num) throws Exception {
 
 		SampledToSpectral spectralAnalysis = new SampledToSpectral(
-				fftSize,0, Fs);
+				fftSize,0, Fs,Config.getFeatureVectorSize());
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
@@ -125,11 +125,11 @@ public class ValidationReadWav {
 			chunk.makeSilence();
 			audioReader.processAudio(chunk);
 			spectralAnalysis.processAudio(chunk,null);
-			double output_buffer[] = spectralAnalysis.getMagn();
-			for (int j = 0; j < output_buffer.length; j++) {
-				output[i][j] = output_buffer[j];
-			}
-			i++;
+			// FIXME (maybe) double output_buffer[] = spectralAnalysis.getMagn();
+//			for (int j = 0; j < output_buffer.length; j++) {
+//				output[i][j] = output_buffer[j];
+//			}
+//			i++;
 
 		}
 
