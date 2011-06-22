@@ -181,7 +181,7 @@ public class DrawScrollingSpect extends JPanel {
 	//		return;
 	//	}
 		// System.out.println(" Spectro DRAWIMAGE");
-		if (size == null || nChunks==0) return;
+		if (size == null || nChunks==0 || peaks == null) return;
 		int w = size.width - ptr;
 		int h = size.height;
 

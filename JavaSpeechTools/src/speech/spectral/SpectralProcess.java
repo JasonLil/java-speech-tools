@@ -1,5 +1,7 @@
 package speech.spectral;
 
+import speech.Data;
+
 
 /**
  * Interface for observers of spectral data
@@ -7,5 +9,5 @@ package speech.spectral;
  *
  */
 public interface SpectralProcess {
-	void notifyMoreDataReady(double[] data);
+	void notifyMoreDataReady(Data data);
 }

@@ -3,10 +3,13 @@ package speech.spectral;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.URL;
 
 import config.Config;
 
+import speech.Data;
 import speech.NeuralNet;
 import speech.gui.DrawScrollingSpect;
 
@@ -21,29 +24,32 @@ public class NNSpectralFeatureDetector {
 
 	private NeuralNet neuralNet;
 	private SpectrumToFeature specAdj;
-	private SampledToSpectral sprectralAnalysis;
+//	private SampledToSpectral sprectralAnalysis;
 	private SpectralProcess spectralClient;
 //private double outputs[];
-	private  double smoothed[];
-	private double magnLog[];
-	private int fftSize;
+//	private  double smoothed[];
+//	private double magnLog[];
+//	private int fftSize;
 	private int featureSize;
 	private FeatureClient featureClient;
 
 	public NNSpectralFeatureDetector(int fftsize, int onscreenBins,
-			SpectralProcess spectralClient,FeatureClient fc) {
+			SpectralProcess spectralClient,FeatureClient fc,URL nnURL) {
 
 		this.featureSize = onscreenBins;
-		this.fftSize = fftsize;
-		specAdj = new SpectrumToFeature(onscreenBins);
+	//	this.fftSize = fftsize;
+		specAdj = new SpectrumToFeature(onscreenBins,fftsize);
 		this.spectralClient = spectralClient;
 		this.featureClient=fc;
 		//outputs = new double[6];
 
-		FileInputStream ostr;
+		//FileInputStream ostr;
+		
+		
 		try {
-			ostr = new FileInputStream("src/textfiles/network.txt");
-			ObjectInputStream in = new ObjectInputStream(ostr);
+			//ostr = new FileInputStream("src/textfiles/network.txt");
+			//ostr = new FileInputStream(nnURL);
+			ObjectInputStream in = new ObjectInputStream(nnURL.openStream());
 			neuralNet = (NeuralNet) in.readObject();
 			in.close();
 		} catch (FileNotFoundException e) {
@@ -56,20 +62,21 @@ public class NNSpectralFeatureDetector {
 
 	}
 
-	public void process(double[] spectrum) {
+	public void process(Data data) throws Exception {
 
 		// magnLog = specAdj.linearLog(featureSize, Config.fftSize, spectrum);
-		smoothed = specAdj.spectrumToFeature(featureSize, Config.fftSize, spectrum); // running3Average(featureSize, magnLog);
+		specAdj.spectrumToFeature(data.spectrum,data.feature); // running3Average(featureSize, magnLog);
 
-		for (int i = 0; i < smoothed.length; i++) {
-			smoothed[i] *= 2; // This is adding volume to the input signal.
+		for (int i = 0; i < data.feature.length; i++) {
+			data.feature[i] *= 2; // This is adding volume to the input signal.
 		} // the USB audio interface isn't 'hot' enough
 
 		if (spectralClient != null)
-			spectralClient.notifyMoreDataReady(smoothed); // magnLog);
+			spectralClient.notifyMoreDataReady(data); // magnLog);
 		
-		double output[] = neuralNet.forwardPass(smoothed);
-		if (featureClient != null)  featureClient.notifyMoreDataReady(output);
+		 neuralNet.process(data);
+		 
+		if (featureClient != null)  featureClient.notifyMoreDataReady(data.output);
 	}
 
 	/** 

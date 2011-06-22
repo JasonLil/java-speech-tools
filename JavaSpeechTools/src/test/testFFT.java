@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 import rasmus.interpreter.sampled.util.FFT;
 

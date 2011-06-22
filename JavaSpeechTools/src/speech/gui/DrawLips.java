@@ -28,9 +28,9 @@ public class DrawLips extends JPanel {
 	public DrawLips(int phonemes,ReadImage ri) throws IOException {
 		this.phonemes = phonemes;
 		
-		try{
-			img = ImageIO.read(new File("src/speech/imagefiles/face.bmp"));
-		} catch (IOException e) {}
+		
+		
+		img=ri.getFace();
 		setPreferredSize(new Dimension(320, 400));
 		setMaximumSize(new Dimension(320, 400));
 		points = ri.lipsInner; 			// of lip and tract shapes

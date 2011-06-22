@@ -1,4 +1,4 @@
-package speech;
+package speech.monopthong;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,13 +13,14 @@ import javax.swing.Timer;
 
 import config.Config;
 
+import speech.NeuralNet;
 import speech.spectral.SpectrumToFeature;
 
 public class Validation {
 
-	public static int onscreenBins = Config.featureSize;
-	public static int fftSize = Config.fftSize;
-	public static int phonemes = Config.phonemes;   // TODO
+	public static int onscreenBins = Config.getFeatureVectorSize();
+	public static int fftSize = Config.getFFTSize();
+	public static int phonemes = Config.getNumberOfTargets();   // TODO
 	public static float Fs = Config.sampleRate;
 	public static int maxAudioLength = 1000;
 
@@ -52,7 +53,7 @@ public class Validation {
 		}
 		
 		readTestWav = new ValidationReadWav(phonemes, 11);
-		specAdj = new SpectrumToFeature(onscreenBins);
+		specAdj = new SpectrumToFeature(onscreenBins,fftSize);
 		double testWav[][][] = readTestWav.getTestWavs(fftSize, phonemes, Fs,
 				maxAudioLength);
 
@@ -65,7 +66,7 @@ public class Validation {
 				}
 
 			//	magnLog = specAdj.linearLog(onscreenBins, fftSize, spectrum);
-				smoothed =  specAdj.spectrumToFeature(onscreenBins, fftSize, spectrum);  //specAdj.running3Average(onscreenBins, magnLog);
+				specAdj.spectrumToFeature(spectrum,smoothed);  //specAdj.running3Average(onscreenBins, magnLog);
 				outputs = neuralNet.forwardPass(smoothed);
 
 				System.out.println(

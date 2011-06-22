@@ -12,6 +12,7 @@ import java.util.Observer;
 import java.util.Random;
 import java.util.Vector;
 
+import speech.Data;
 import speech.NeuralNet;
 import uk.ac.bath.tweaks.Tweakable;
 import uk.ac.bath.tweaks.TweakableDouble;
@@ -239,4 +240,6 @@ public class BackProp extends FeedForward implements Serializable, NeuralNet,Fee
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 }

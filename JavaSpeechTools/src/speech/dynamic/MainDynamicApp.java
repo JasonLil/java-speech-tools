@@ -1,4 +1,4 @@
-package speech;
+package speech.dynamic;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 
 import javax.swing.Timer;
@@ -20,58 +22,59 @@ import speech.spectral.FeatureClient;
 import speech.spectral.RealTimeSpectralSource;
 import speech.spectral.SampledToSpectral;
 import speech.spectral.NNSpectralFeatureDetector;
+import speech.spectral.SpectralClient;
 
-public class MainApp {
+public class MainDynamicApp implements SpectralClient {
 
 
 
 	private MakeFrames frames;
-	private Timer timer;
+	// private Timer timer;
 	private NNSpectralFeatureDetector nnFeatureDetector;
-	public boolean isApplet = false; // hack hack hack ... eeeek
+	//public boolean isApplet = false; // hack hack hack ... eeeek
 
 	double output[]=new double[Config.phonemes];
 	public RealTimeSpectralSource realTimeSpectralSource;
 	public SampledToSpectral spectralConverter;
 	
 	public static void main(String args[]) throws Exception {
-		MainApp app = new MainApp(false);
+		MainDynamicApp app = new MainDynamicApp(false);
 		app.start();
 	}
 
-	MainApp(boolean isApplet) throws IOException {
+	MainDynamicApp(boolean isApplet) throws IOException {
 
-		frames = new MakeFrames(isApplet, Config.phonemeNames,
-				Config.featureSize,this); // Create gfx for output
-
-		frames.makeMaster();
-		timer = new Timer(50, new ActionListener() {
-	
-			double outputSort[] = new double[Config.phonemes];
-			
-			public void actionPerformed(ActionEvent ae) {
-
-			
-				
-				for (int i = 0; i < output.length; i++) {
-					outputSort[i] = output[i];
-				}
-				Arrays.sort(outputSort);
-
-				String text = "";
-				int end = output.length - 1;
-				if (outputSort[end] > 0.3) {
-					for (int i = 0; i < Config.phonemes; i++) {
-						if (outputSort[end] == output[i]) {
-							text = Config.phonemeNames[i];
-							break;
-						}
-					}
-				}
-
-				frames.updateGfx(text, output);
-			}
-		});
+//		frames = new MakeFrames(isApplet, Config.phonemeNames,
+//				Config.featureSize,this); // Create gfx for output
+//
+//		frames.makeMaster();
+//		timer = new Timer(50, new ActionListener() {
+//	
+//			double outputSort[] = new double[Config.phonemes];
+//			
+//			public void actionPerformed(ActionEvent ae) {
+//
+//			
+//				
+//				for (int i = 0; i < output.length; i++) {
+//					outputSort[i] = output[i];
+//				}
+//				Arrays.sort(outputSort);
+//
+//				String text = "";
+//				int end = output.length - 1;
+//				if (outputSort[end] > 0.3) {
+//					for (int i = 0; i < Config.phonemes; i++) {
+//						if (outputSort[end] == output[i]) {
+//							text = Config.phonemeNames[i];
+//							break;
+//						}
+//					}
+//				}
+//
+//				frames.updateGfx(text, output);
+//			}
+//		});
 
 	}
 
@@ -97,19 +100,21 @@ public class MainApp {
 			public void notifyMoreDataReady(double[] outputs) {
 	
 				for (int i=0;i<outputs.length;i++){
-					MainApp.this.output[i] = MainApp.this.output[i]*damp +
+					output[i] = output[i]*damp +
 					outputs[i]*(1.0-damp);
 				}
-				if (frames == null || frames.drawGraph == null) return;
 				
-				frames.drawGraph.updateGraph(outputs, "");
+				
+//				if (frames == null || frames.drawGraph == null) return;
+//				
+//				frames.drawGraph.updateGraph(outputs, "");
 			}
 			
 		};
 
 		// This is used to convert the audio stream to a spectral stream.
 		spectralConverter = new SampledToSpectral(
-				Config.fftSize,0, Config.sampleRate);
+				Config.fftSize,0, Config.sampleRate,Config.getFeatureVectorSize());
 
 		// Grabs input and feeds into the spectralConverter
 		realTimeSpectralSource = new RealTimeSpectralSource(
@@ -117,8 +122,16 @@ public class MainApp {
 
 		// takes the raw FFT from the spectral converter and feeds
 		// the neural net classification
+		
+		URL url=null;
+		try {
+			url = new URL("src/textfiles/network.txt");
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		nnFeatureDetector = new NNSpectralFeatureDetector(Config.fftSize,
-				Config.featureSize, frames.getSpectralProcess(),featureClient);
+				Config.featureSize, frames.getSpectralProcess(),featureClient,url);
 
 		// Setup input from soundcard
 
@@ -141,15 +154,15 @@ public class MainApp {
 			System.exit(-1);
 		}
 
-		timer.start();
+//		timer.start();
 	}
 	
 	public void setInputWave(File waveFile){
 		
 		if (waveFile == null) {
 			realTimeSpectralSource.streamFile(null);
-			frames.pauseGraphs(false);
-			frames.resetGraphs();
+//			frames.pauseGraphs(false);
+//			frames.resetGraphs();
 			return;
 		}
 		
@@ -166,12 +179,12 @@ public class MainApp {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		frames.pauseGraphs(false);
-		frames.resetGraphs();
+//		frames.pauseGraphs(false);
+//		frames.resetGraphs();
 	}
 
-	public void pause(boolean b) {
-		frames.pauseGraphs(b);
+	public void eof(boolean b) {
+	//	frames.pauseGraphs(b);
 	}
 	
 }

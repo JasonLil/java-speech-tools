@@ -5,9 +5,10 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Random;
 
+import speech.Data;
 import speech.NeuralNet;
 
-public class FeedForward implements Cloneable,FeedForwardIF,Serializable {
+public class FeedForward extends NNProcess implements Cloneable,FeedForwardIF,Serializable {
 
 	/**
 	 * 
@@ -171,4 +172,14 @@ public class FeedForward implements Cloneable,FeedForwardIF,Serializable {
 		}
 		
 	}
+
+
+	@Override
+	public double[] backPropTrain(double[] in, double[] tgt) throws Exception {
+		
+		throw new Exception(" Sorry plain FeedForward net does not implemtent backPropTraining");
+		
+	}
+	
+
 }

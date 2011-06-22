@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 import java.util.Random;
 
@@ -8,7 +8,7 @@ import uk.ac.bath.ai.backprop.TrainingData;
 
 public class RecursiveNetTest {
 
-	public static void train(NeuralNet bp, TestSequence seq) {
+	public static void train(NeuralNet bp, TestSequence seq) throws Exception {
 
 		double Thresh = 0.001;
 
@@ -62,7 +62,7 @@ public class RecursiveNetTest {
 		}
 	}
 
-	public static void main(String arg[]) {
+	public static void main(String arg[]) throws Exception {
 
 		TestSequence seq = new TestSequence();
 

@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import uk.ac.bath.ai.backprop.TrainingData;
 
 public class BackPropTest {
 
-	public static void train(NeuralNet bp, TestData tD,Evaluator eval) {
+	public static void train(NeuralNet bp, TestData tD,Evaluator eval) throws Exception {
 		//int nTest = target.length;
 		double Thresh = 0.00001;
 
@@ -24,7 +24,7 @@ public class BackPropTest {
 
 		System.out.println("Now training the network....");
 		int i;
-
+		
 		for (i = 0; i < num_iter; i++) {
 			double maxError = 0;
 
@@ -54,7 +54,7 @@ public class BackPropTest {
 
 	
 
-	public static void main(String arg[]) {
+	public static void main(String arg[]) throws Exception {
 
 		// prepare XOR traing data
 

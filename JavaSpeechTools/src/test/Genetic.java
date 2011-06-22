@@ -1,4 +1,4 @@
-package uk.ac.bath.test;
+package test;
 
 import speech.NeuralNet;
 import uk.ac.bath.ai.backprop.BackProp;

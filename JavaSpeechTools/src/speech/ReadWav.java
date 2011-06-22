@@ -1,4 +1,4 @@
-package speech.spectral;
+package speech;
 
 import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.VanillaRandomAccessFile;
@@ -8,6 +8,7 @@ import config.Config;
 import java.io.File;
 import java.io.RandomAccessFile;
 
+import speech.spectral.SampledToSpectral;
 import uk.org.toot.audio.core.AudioBuffer; 
 
 //
@@ -66,7 +67,7 @@ public class ReadWav {
 			int num) throws Exception {
 
 		SampledToSpectral spectralAnalysis = new SampledToSpectral(
-				fftSize, 0,Config.sampleRate);
+				fftSize, 0,Config.sampleRate,Config.getFeatureVectorSize());
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
@@ -78,12 +79,13 @@ public class ReadWav {
 
 		int i = 0;
 
+	
 		while (!audioReader.eof()) {
 
 			chunk.makeSilence();
 			audioReader.processAudio(chunk);
-			spectralAnalysis.processAudio(chunk,null);
-			double magn[]=spectralAnalysis.getMagn();
+			
+			double magn[]=spectralAnalysis.processAudio(chunk);
 			
 			for (int j = 0; j < magn.length; j++) {
 				output[i][j] = magn[j];

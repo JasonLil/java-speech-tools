@@ -1,8 +1,9 @@
-package speech;
+package speech.monopthong;
 
 import java.io.IOException;
 
 import javax.swing.JApplet;
+
 
 
 public class MainApplet extends JApplet {

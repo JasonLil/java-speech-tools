@@ -1,19 +1,7 @@
 package speech.gui;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
-
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -23,27 +11,19 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.filechooser.FileFilter;
 
-import com.frinika.global.FrinikaConfig;
-import com.frinika.project.ProjectContainer;
-import com.frinika.project.gui.ProjectFrame;
-import com.frinika.tracker.ProjectFileFilter;
-
-import config.Config;
-
-import speech.MainApp;
-import speech.gui.DrawGraph.KeyHandler;
+import speech.Data;
+import speech.monopthong.MainApp;
 import speech.spectral.SpectralProcess;
+import config.Config;
 
 // addComponent function from http://www.java-forums.org/
 
@@ -53,7 +33,7 @@ public class MakeFrames {
 	private DrawTract drawTargTract;
 	private DrawLips drawLips;
 	private DrawLips drawTargLips;
-	public DrawGraph drawGraph;
+	public  DrawGraph drawGraph;
 	private DrawScrollingSpect drawScroll;
 	private DrawHist drawHist;
 
@@ -80,17 +60,19 @@ public class MakeFrames {
 	private SpectralProcess spectralProcess = new SpectralProcess() {
 
 		@Override
-		public void notifyMoreDataReady(double[] data) {
+		public void notifyMoreDataReady(Data data) {
 			if (drawScroll != null) {
-				drawScroll.notifyMoreDataReady(data);
+				drawScroll.notifyMoreDataReady(data.feature);
 				if (specFrame != null) {
-					drawHist.update(data);
+					drawHist.update(data.feature);
 					drawHist.repaint();
 				}
 			}
 		}
 	};
-	private File waveDiretory;
+	
+	
+	
 	private MainApp app;
 
 	public MakeFrames(boolean isApplet, String[] phonemeNames,
