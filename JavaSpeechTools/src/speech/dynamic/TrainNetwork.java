@@ -6,11 +6,14 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Random;
 
+import javax.swing.JFrame;
+
 import config.Config;
 
 import speech.Data;
 import speech.NeuralNet;
 import speech.ReadWav;
+import speech.gui.ConfusionPanel;
 import speech.spectral.SpectrumToFeature;
 import uk.ac.bath.ai.backprop.BackProp;
 import uk.ac.bath.ai.backprop.BackPropRecursive;
@@ -58,6 +61,23 @@ public class TrainNetwork {
 
 		int nTarget = pool.nTarget();
 
+		JFrame frame = new JFrame();
+		ConfusionPanel pan = new ConfusionPanel(pool.names);
+		frame.setContentPane(pan);
+		frame.setSize(400, 400);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+		frame = new JFrame();
+		ConfusionPanel panEnd = new ConfusionPanel(pool.names);
+		frame.setContentPane(panEnd);
+		frame.setSize(400, 400);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+
 		double target[][] = new double[nTarget][];
 
 		for (int i = 0; i < nTarget; i++) {
@@ -67,6 +87,7 @@ public class TrainNetwork {
 		Data data = new Data(0, featSize);
 
 		double sum[] = new double[nTarget];
+		double confusionSum[][] = new double[nTarget][nTarget];
 		double confusion[][] = new double[nTarget][nTarget];
 		int itcount[] = new int[nTarget];
 		int iters = 0;
@@ -77,7 +98,7 @@ public class TrainNetwork {
 			TrainingData td = pool.trainingData.get(kkk);
 
 			data.target = target[td.id];
-			
+
 			Arrays.fill(sum, 0.0);
 			for (double[] vec : td.featureSequence()) {
 				data.feature = vec;
@@ -94,14 +115,31 @@ public class TrainNetwork {
 			}
 
 			for (int i = 0; i < nTarget; i++) {
-				confusion[td.id][i] += sum[i] / tot;
+				confusionSum[td.id][i] += sum[i] / tot;
 			}
 
 			iters++;
 			itcount[td.id]++;
-			dump(confusion, itcount,iters);
+
+			for (int i = 0; i < nTarget; i++) {
+				for (int j = 0; j < nTarget; j++) {
+					if (itcount[i] == 0) {
+						confusion[i][j]=0;
+					}else {
+						confusion[i][j]=confusionSum[i][j]/itcount[i];
+					}
+				}
+			}
+			if (iters %100 ==0) dump(confusionSum, itcount,iters);
+			pan.update(confusion);
+			//pan.repaint();
+
+			// 
 
 		}
+		
+		
+		
 		// // -------- Train Network------------------ //
 		//
 		// FileOutputStream istr = new FileOutputStream(
@@ -112,9 +150,9 @@ public class TrainNetwork {
 
 	}
 
-	static void dump(double[][] array, int[] itcount,int iter) {
+	static void dump(double[][] array, int[] itcount, int iter) {
 
-		System.out.println(" Iteration : "+iter);
+		System.out.println(" Iteration : " + iter);
 
 		for (int rowId = 0; rowId < array.length; rowId++) {
 			for (double x : array[rowId]) {
@@ -124,10 +162,10 @@ public class TrainNetwork {
 				} else {
 					System.out.format(" %.3f", x / itcount[rowId]);
 				}
-				
+
 			}
 			System.out.println();
-			
+
 		}
 	}
 }
