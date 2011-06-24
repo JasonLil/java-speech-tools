@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import config.Config;
@@ -35,7 +34,7 @@ public class WavTrainingPool {
 				if (f.getName().startsWith("."))
 					continue;
 
-				String key = f.getName();
+				String key = removeExtention(f.getName());
 				if (set.containsKey(key)) {
 					set.get(key).add(f);
 				} else {
@@ -67,5 +66,24 @@ public class WavTrainingPool {
 	public int nTarget() {
 		return nOut;
 	}
+	
+	public static String removeExtention(String name) {
+	   
+
+	    // Now we know it's a file - don't need to do any special hidden
+	    // checking or contains() checking because of:
+	    final int lastPeriodPos = name.lastIndexOf('.');
+	    if (lastPeriodPos == -1)
+	    {
+	        // No period after first character - return name as it was passed in
+	        return name;
+	    }
+	    else
+	    {
+	        // Remove the last period and everything after it
+	        return name.substring(0, lastPeriodPos);
+	    }
+	}
+
 
 }
