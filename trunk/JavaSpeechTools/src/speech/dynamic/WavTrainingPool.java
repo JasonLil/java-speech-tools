@@ -15,36 +15,42 @@ public class WavTrainingPool {
 	private int nOut;
 	public List<TrainingData> trainingData;
 	ReadFeatureVectors reader;
-	WavTrainingPool(File root,Config config){
 
-	    reader= new  ReadFeatureVectors(config.getFeatureVectorSize(),config.getFFTSize());
-		trainingData=new ArrayList<TrainingData>();
-	
-		
-		HashMap<String,List<File>> set=new HashMap<String,List<File>> ();
-			
-		assert(root.isDirectory());
-		for(File dir:root.listFiles()) {
-			assert(dir.isDirectory());
-			for(File f:dir.listFiles()) {
-				String key=f.getName();
-				if (set.containsKey(key)){
+	WavTrainingPool(File root, Config config) {
+
+		reader = new ReadFeatureVectors(config.getFeatureVectorSize(),
+				config.getFFTSize());
+		trainingData = new ArrayList<TrainingData>();
+
+		HashMap<String, List<File>> set = new HashMap<String, List<File>>();
+
+		assert (root.isDirectory());
+		for (File dir : root.listFiles()) {
+			if (dir.getName().startsWith("."))
+				continue;
+			assert (dir.isDirectory());
+			for (File f : dir.listFiles()) {
+				if (f.getName().startsWith("."))
+					continue;
+
+				String key = f.getName();
+				if (set.containsKey(key)) {
 					set.get(key).add(f);
 				} else {
-					List<File> list=new ArrayList<File>();
+					List<File> list = new ArrayList<File>();
 					list.add(f);
-					set.put(key,list);
+					set.put(key, list);
 				}
 			}
 		}
-			
-	
-		nOut=0;
-		for(String key:set.keySet()){
-			List<File> list=set.get(key);
-			for (File file:list){
+
+		nOut = 0;
+		for (String key : set.keySet()) {
+			List<File> list = set.get(key);
+			for (File file : list) {
 				try {
-					TrainingData td=new TrainingData(file,nOut,reader);
+					System.out.println(" Loading features: " + file.getPath());
+					TrainingData td = new TrainingData(file, nOut, reader);
 					trainingData.add(td);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -52,13 +58,11 @@ public class WavTrainingPool {
 				}
 			}
 			nOut++;
-		}		
+		}
 	}
-	
+
 	public int nTarget() {
 		return nOut;
 	}
-	
-	
-	
+
 }
