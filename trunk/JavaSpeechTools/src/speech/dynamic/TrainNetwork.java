@@ -1,5 +1,6 @@
 package speech.dynamic;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Random;
@@ -23,12 +24,9 @@ import uk.ac.bath.ai.backprop.BackPropRecursive;
 public class TrainNetwork {
 	
 	public static NeuralNet neuralNet;
-	public static SpectrumToFeature specAdjust;
-	public static ReadWav readWav;
 	
 	public static float Fs = Config.sampleRate;
-	public static int maxAudioLength = 1000;
-
+	
 	public static int inputs = 128;
 	public static int hidden = 30;
 	public static int outputs = 6;    // TODO
@@ -45,77 +43,31 @@ public class TrainNetwork {
 
 	public static void main(String args[]) throws Exception {
 
-		int sz[] = { inputs, hidden, outputs };
+		Config config=new Config();
+		File root=new File("src/speech/wavfiles/Dynamic");
+		WavTrainingPool pool= new WavTrainingPool(root,config);
+		
+
+
+		int sz[] = { config.getFeatureVectorSize(), hidden, pool.nTarget() };
 
 		Random rand=new Random();
 		neuralNet = new BackPropRecursive(sz, beta, alpha, rand);
-		specAdjust = new SpectrumToFeature(onscreenBins,fftSize);
-		readWav = new ReadWav(outputs);
-
 		neuralNet.randomWeights(0.0, 0.01);
 
-		double error = 1.0;
+		int id=rand.nextInt(pool.trainingData.size());
 		
-		double[] fftSpectrum = new double[fftSize];
-		double[] featureVec = new double[onscreenBins];
-
-		int count = 0;
 		
-		// -------- Train Network------------------ //
-
-		// Read wavs from file
-		double[][][] wavs = readWav.getMonoThongWavs(fftSize, outputs, Fs, maxAudioLength);
 		
-		while (error > maxError) {
-			
-			error = 0.0;
-			
-			i_max = readWav.file_length[0] - 1;
+//		// -------- Train Network------------------ //
+//
+//		FileOutputStream istr = new FileOutputStream(
+//				"src/textfiles/network.txt");
+//		ObjectOutputStream out = new ObjectOutputStream(istr);
+//		out.writeObject(neuralNet);
+//		out.close();
 
-			// readWav.file_length[0] can be replaced with a number
-
-			for (int i = 1; i < i_max; i++) { // Cycle through instances of FFT
-				for (int p = 0; p < outputs+1; p++) { // Cycle through phonemes
-					
-					for (int j = 0; j < fftSize; j++) {
-						fftSpectrum[j] = wavs[i][j][p];
-					}
-					
-					// phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
-					 specAdjust.spectrumToFeature(fftSpectrum,featureVec); //running3Average(onscreenBins, phonemeLog); 
-
-					double[] train_outvals = new double[outputs+1];
-					if (p != outputs)
-						train_outvals[p] = 1.0;
-
-					neuralNet.backPropTrain(featureVec, train_outvals); // Go!
-
-					double[] output_vals = neuralNet
-							.forwardPass(featureVec);
-
-					for (int j = 0; j < outputs; j++) {
-						error += (train_outvals[j] - output_vals[j])
-								* (train_outvals[j] - output_vals[j]);
-					}
-
-				}
-			}
-			
-			if (count % 10 == 0)
-				System.out.println("Total Error: " + error);
-			count++;
-			
-		}
-
-		FileOutputStream istr = new FileOutputStream(
-				"src/textfiles/network.txt");
-		ObjectOutputStream out = new ObjectOutputStream(istr);
-		out.writeObject(neuralNet);
-		out.close();
-
-		System.out.println("Whooop finished training! \n It took me "
-				+ count + " back props");
-
+		
 	}
 
 }
