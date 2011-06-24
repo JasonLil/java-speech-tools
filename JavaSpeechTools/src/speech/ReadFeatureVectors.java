@@ -20,13 +20,11 @@ public class ReadFeatureVectors {
 	
 	private SpectrumToFeature spectAdjust;
 
-	ReadFeatureVectors(int featureSize,int fftSize) {
-		
-	
+	public ReadFeatureVectors(int featureSize,int fftSize) {
 		spectAdjust=new SpectrumToFeature(featureSize,fftSize);
 	}
 	
-	double[][] readVectors(File file) throws IOException {
+	public ArrayList<double[]> readVectors(File file) throws IOException {
 
 		int fftSize=Config.getFFTSize();
 		int featSize=Config.getFeatureVectorSize();
@@ -53,8 +51,9 @@ public class ReadFeatureVectors {
 			double spectrum[] = spectralAnalysis.processAudio(chunk);
 			double feature[]=new double[featSize];
 			spectAdjust.spectrumToFeature(spectrum,feature);
+			list.add(feature);
 		}
-		return (double[][])list.toArray();
+		return list;
 	}
 
 }

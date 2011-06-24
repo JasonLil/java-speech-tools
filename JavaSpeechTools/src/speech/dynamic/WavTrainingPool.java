@@ -1,16 +1,26 @@
 package speech.dynamic;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import config.Config;
+
+import speech.ReadFeatureVectors;
+
 public class WavTrainingPool {
 	private int nOut;
-	
-	WavTrainingPool(File root){
+	public List<TrainingData> trainingData;
+	ReadFeatureVectors reader;
+	WavTrainingPool(File root,Config config){
 
+	    reader= new  ReadFeatureVectors(config.getFeatureVectorSize(),config.getFFTSize());
+		trainingData=new ArrayList<TrainingData>();
+	
+		
 		HashMap<String,List<File>> set=new HashMap<String,List<File>> ();
 			
 		assert(root.isDirectory());
@@ -28,23 +38,27 @@ public class WavTrainingPool {
 			}
 		}
 			
-		nOut=set.size();
+	
+		nOut=0;
 		for(String key:set.keySet()){
 			List<File> list=set.get(key);
-			
-			
-		}
-		
+			for (File file:list){
+				try {
+					TrainingData td=new TrainingData(file,nOut,reader);
+					trainingData.add(td);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			nOut++;
+		}		
 	}
 	
-
-	class TrainingData {
-		
-		int id;
-		
-		TrainingData(File file,int id){
-			this.id=id;
-		}
+	public int nTarget() {
+		return nOut;
 	}
+	
+	
 	
 }
