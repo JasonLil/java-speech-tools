@@ -15,9 +15,11 @@ public class WavTrainingPool {
 	private int nOut;
 	public List<TrainingData> trainingData;
 	ReadFeatureVectors reader;
+	ArrayList<String> names;
 
 	WavTrainingPool(File root, Config config) {
-
+		names=new ArrayList<String>();
+		
 		reader = new ReadFeatureVectors(config.getFeatureVectorSize(),
 				config.getFFTSize());
 		trainingData = new ArrayList<TrainingData>();
@@ -47,6 +49,7 @@ public class WavTrainingPool {
 		nOut = 0;
 		for (String key : set.keySet()) {
 			List<File> list = set.get(key);
+			names.add(key);
 			for (File file : list) {
 				try {
 					System.out.println(" Loading features: " + file.getPath());
