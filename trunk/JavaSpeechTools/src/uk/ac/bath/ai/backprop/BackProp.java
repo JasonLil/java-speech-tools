@@ -53,7 +53,7 @@ public class BackProp extends FeedForward implements Serializable, NeuralNet,Fee
 		super();
 	}
 	
-	public BackProp(int sz[], double b, double a, Random rand) {
+	public BackProp(int sz[], double b, double a) {
 		super(sz);
 		
 		
@@ -86,21 +86,7 @@ public class BackProp extends FeedForward implements Serializable, NeuralNet,Fee
 			}
 		}
 
-		// seed and assign random weights
-		// srand((unsigned)(time(NULL)));
-
-		
-
-		for (int i = 1; i < numlayer; i++) {
-			for (int j = 0; j < layersizes[i]; j++) {
-				for (int k = 0; k < layersizes[i - 1] + 1; k++) {
-					prevDwt[i][j][k] = 0.0f;// Note that the following variables
-											// are unused,
-			
-				}
-			}
-		}
-		randomWeights(-.5,.5,rand);
+		//randomWeights(-.5,.5,rand);
 	}
 
 	public Vector<Tweakable> getTweaks() {
@@ -235,11 +221,22 @@ public class BackProp extends FeedForward implements Serializable, NeuralNet,Fee
 		 return out[numlayer-1];
 	}
 
-	@Override
-	public void randomWeights(double low, double high) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void randomWeights(double low, double high) {
+//		assert(false);
+//		
+//	}
 
+	public void wash() {
+		super.wash();
+		for (int i = 1; i < numlayer; i++) {
+			for (int j = 0; j < layersizes[i]; j++) {
+				for (int k = 0; k < layersizes[i - 1] + 1; k++) {
+					prevDwt[i][j][k] = 0.0f;
+			
+				}
+			}
+		}
+	}
 	
 }

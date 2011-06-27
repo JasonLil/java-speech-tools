@@ -47,11 +47,12 @@ public class TrainNetwork {
 		int sz[] = { inputs, hidden, outputs };
 
 		Random rand=new Random();
-		neuralNet = new BackProp(sz, beta, alpha, rand);
+		neuralNet = new BackProp(sz, beta, alpha);
 		specAdjust = new SpectrumToFeature(onscreenBins,fftSize);
 		readWav = new ReadWav(outputs);
 
-		neuralNet.randomWeights(0.0, 0.01);
+		//neuralNet.randomWeights(0.0, 0.01);
+		neuralNet.randomWeights(-0.5, 0.5,rand);
 
 		double error = 1.0;
 		

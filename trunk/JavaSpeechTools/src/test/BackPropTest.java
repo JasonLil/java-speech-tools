@@ -66,7 +66,10 @@ public class BackPropTest {
 				double beta = .01, alpha = 1000.;
 		
 		// Creating the net
-		BackProp bp = new BackProp(lSz, beta, alpha, new Random());
+		BackProp bp = new BackProp(lSz, beta, alpha);
+		Random rand=new Random();
+		bp.randomWeights(-0.5, 0.5,rand);
+
 		Evaluator eval=new Evaluator(testData);
 		train(bp,testData,eval);
 		eval.testNet(bp);
