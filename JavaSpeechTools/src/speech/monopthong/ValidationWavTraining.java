@@ -2,6 +2,7 @@ package speech.monopthong;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import speech.NeuralNet;
 import speech.spectral.SpectrumToFeature;
@@ -43,11 +44,12 @@ public class ValidationWavTraining {
 
 		int sz[] = { inputs, hidden, outputs };
 
-		neuralNet = new BackProp(sz, beta, alpha, null);
+		neuralNet = new BackProp(sz, beta, alpha);
 		specAdjust = new SpectrumToFeature(onscreenBins,fftSize);
 		readWav = new ValidationReadWav(outputs, 2);
 
-		neuralNet.randomWeights(0.0, 0.01);
+		Random rand=new Random();
+		neuralNet.randomWeights(-0.5, 0.5,rand);
 
 		double error = 1.0;
 		double[] phonemeRaw = new double[fftSize];

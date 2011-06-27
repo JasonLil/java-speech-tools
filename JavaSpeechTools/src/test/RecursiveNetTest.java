@@ -71,8 +71,9 @@ public class RecursiveNetTest {
 
 		double beta = .00001, alpha = 10000.;
 		// Creating the net
-		BackPropRecursive bp = new BackPropRecursive(lSz, beta, alpha,new Random());
-
+		BackPropRecursive bp = new BackPropRecursive(lSz, beta, alpha,true,true);
+		Random rand=new Random();
+		bp.randomWeights(-0.5, 0.5,rand);
 		train(bp, seq);
 
 	}

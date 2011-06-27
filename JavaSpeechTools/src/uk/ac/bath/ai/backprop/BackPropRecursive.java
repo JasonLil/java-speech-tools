@@ -23,14 +23,21 @@ public class BackPropRecursive extends NNProcess implements Serializable, Neural
 	public BackProp bp;
 	private int hidSize;
 	private double[] in;
+	private boolean hFeed;
+	private boolean oFeed;
+	private int outSize;
 
-	public BackPropRecursive(int sz[], double b, double a, Random rand) {
+	public BackPropRecursive(int sz[], double b, double a,boolean hidFeedBack,boolean outFeedBack) {
 		this.inSize = sz[0];
 		this.hidSize = sz[1];
-
-		sz[0] = sz[0] + sz[1]; // increase size to include hidden layer feedback
+		this.outSize=sz[2];
+		if (hidFeedBack) sz[0]+=sz[1];
+	   	if (outFeedBack) sz[0]+=sz[2];
+	   	this.hFeed=hidFeedBack;
+	   	this.oFeed=outFeedBack;
+		 
 		this.in = new double[sz[0]];
-		bp = new BackProp(sz, b, a, rand);
+		bp = new BackProp(sz, b, a);
 	}
 
 	public Vector<Tweakable> getTweaks() {
@@ -39,8 +46,19 @@ public class BackPropRecursive extends NNProcess implements Serializable, Neural
 
 	// feed forward one set of input
 	private void makeInput(double in1[]) {
-		System.arraycopy(in1, 0, this.in, 0, this.inSize);
-		System.arraycopy(bp.out[1], 0, this.in, this.inSize, this.hidSize);
+		int inPtr=0;
+		System.arraycopy(in1, 0, this.in, inPtr, this.inSize);
+		
+		inPtr+=this.inSize;
+
+		if (hFeed){
+			System.arraycopy(bp.out[1], 0, this.in, inPtr, this.hidSize);
+			inPtr+=hidSize;
+		}
+		
+		if (oFeed){
+			System.arraycopy(bp.out[2], 0, this.in, inPtr, this.outSize);
+		}	
 	}
 
 	@Override
@@ -61,8 +79,8 @@ public class BackPropRecursive extends NNProcess implements Serializable, Neural
 	// }
 
 	@Override
-	public void randomWeights(double low, double high) {
-		bp.randomWeights(low, high);
+	public void randomWeights(double low, double high,Random rand) {
+		bp.randomWeights(low, high,rand);
 
 	}
 
@@ -70,6 +88,11 @@ public class BackPropRecursive extends NNProcess implements Serializable, Neural
 	public void printWeights(PrintStream str) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void wash() {
+		bp.wash();	
 	}
 
 	

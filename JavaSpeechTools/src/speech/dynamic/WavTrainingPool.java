@@ -15,7 +15,8 @@ public class WavTrainingPool {
 	public List<TrainingData> trainingData;
 	ReadFeatureVectors reader;
 	ArrayList<String> names;
-
+	public double target[][];
+	
 	WavTrainingPool(File root, Config config) {
 		names=new ArrayList<String>();
 		
@@ -61,6 +62,15 @@ public class WavTrainingPool {
 			}
 			nOut++;
 		}
+		
+
+		 target = new double[nOut][];
+
+		for (int i = 0; i < nOut; i++) {
+			target[i] = new double[nOut];
+			target[i][i] = 1.0;
+		}
+
 	}
 
 	public int nTarget() {

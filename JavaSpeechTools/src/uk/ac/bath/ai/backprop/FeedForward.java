@@ -28,7 +28,14 @@ public class FeedForward extends NNProcess implements Cloneable,FeedForwardIF,Se
 	int layersizes[];
 	
 	
-	
+	public void wash() {
+		for(double[] row:out){
+			for(int i=0;i<row.length;i++){
+				row[i]=0.0;
+			}
+		}
+		
+	}
 	public FeedForward(int sz[]) {
 		
 		numlayer = sz.length;

@@ -1,6 +1,7 @@
 package speech;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import uk.ac.bath.ai.backprop.FeedForwardIF;
 
@@ -16,8 +17,9 @@ public interface NeuralNet extends Serializable ,FeedForwardIF{
 
 	double [] backPropTrain(double[] phonemeSmoothed, double[] trainOutvals) throws Exception;
 
-	void randomWeights(double low, double high);
+	void randomWeights(double low, double high,Random rand);
 
 	void process(Data data) throws Exception;
 
+	void wash();
 }

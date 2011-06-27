@@ -99,9 +99,10 @@ public class NeuralNetTest {
 		// achieved)
 		double beta = .01, alpha = 1000.;
 		// Creating the net
-		NeuralNet bp = new BackProp(lSz, beta, alpha, new Random());
+		NeuralNet bp = new BackProp(lSz, beta, alpha);
 		//NeuralNet bp = new JR_NeuralNet(lSz[0],lSz[1],lSz[2],beta);
-
+		Random rand=new Random();
+		bp.randomWeights(-0.5, 0.5,rand);
 		train(bp,testData,target);
 		testNet(bp,testData,target);
 		

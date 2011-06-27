@@ -18,9 +18,7 @@ import speech.spectral.SpectrumToFeature;
 import uk.ac.bath.ai.backprop.BackProp;
 import uk.ac.bath.ai.backprop.BackPropRecursive;
 
-//
-//@author JER
-//
+
 /*
  * Trains a neural network for a given set of audio data acquired from
  * a variety of sound sources
@@ -28,23 +26,15 @@ import uk.ac.bath.ai.backprop.BackPropRecursive;
 
 public class TrainNetwork {
 
-	public static NeuralNet neuralNet;
+	
+	
+	
+	public static int hidden = 40;
 
-	public static float Fs = Config.sampleRate;
+	
+	public static double alpha =  3e6;
+	public static double beta =  1e-9;
 
-	public static int inputs = 128;
-	public static int hidden = 30;
-	public static int outputs = 6; // TODO
-
-	public static int fftSize = 1024;
-	public static int onscreenBins = 128;
-
-	public static double alpha = 300000.0;
-	public static double beta = .000001;
-
-	public static double maxError = 0.01;
-
-	private static int i_max;
 
 	public static void main(String args[]) throws Exception {
 
@@ -56,20 +46,20 @@ public class TrainNetwork {
 		int sz[] = { config.getFeatureVectorSize(), hidden, pool.nTarget() };
 
 		Random rand = new Random();
-		neuralNet = new BackPropRecursive(sz, beta, alpha, rand);
-		neuralNet.randomWeights(0.0, 0.01);
+		NeuralNet net = new BackPropRecursive(sz, beta, alpha,true,true);
+		net.randomWeights(-0.1, 0.1,rand);
 
-		int nTarget = pool.nTarget();
+		
 
-		JFrame frame = new JFrame();
-		ConfusionPanel pan = new ConfusionPanel(pool.names);
-		frame.setContentPane(pan);
+		JFrame frame = new JFrame("Average");
+		ConfusionPanel panSum = new ConfusionPanel(pool.names);
+		frame.setContentPane(panSum);
 		frame.setSize(400, 400);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		frame = new JFrame();
+		frame = new JFrame("End");
 		ConfusionPanel panEnd = new ConfusionPanel(pool.names);
 		frame.setContentPane(panEnd);
 		frame.setSize(400, 400);
@@ -77,66 +67,33 @@ public class TrainNetwork {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-
-		double target[][] = new double[nTarget][];
-
-		for (int i = 0; i < nTarget; i++) {
-			target[i] = new double[nTarget];
-			target[i][i] = 1.0;
-		}
 		Data data = new Data(0, featSize);
 
-		double sum[] = new double[nTarget];
-		double confusionSum[][] = new double[nTarget][nTarget];
-		double confusion[][] = new double[nTarget][nTarget];
-		int itcount[] = new int[nTarget];
-		int iters = 0;
+		int iter=0;
+		
 		while (true) {
 
+			// select training set randomly
 			int kkk = rand.nextInt(pool.trainingData.size());
 
 			TrainingData td = pool.trainingData.get(kkk);
 
-			data.target = target[td.id];
+			data.target = pool.target[td.id];
 
-			Arrays.fill(sum, 0.0);
+			// sum of outputs over time.
+			net.wash();
+			
 			for (double[] vec : td.featureSequence()) {
 				data.feature = vec;
-				neuralNet.process(data);
-				for (int i = 0; i < nTarget; i++) {
-					sum[i] += data.output[i];
-				}
+				net.process(data);
 			}
-
-			double tot = 0;
-
-			for (int i = 0; i < nTarget; i++) {
-				tot += sum[i];
+			if (iter %1000 == 0) {
+				testNet(net, pool, config, panSum, panEnd);
+				
 			}
-
-			for (int i = 0; i < nTarget; i++) {
-				confusionSum[td.id][i] += sum[i] / tot;
-			}
-
-			iters++;
-			itcount[td.id]++;
-
-			for (int i = 0; i < nTarget; i++) {
-				for (int j = 0; j < nTarget; j++) {
-					if (itcount[i] == 0) {
-						confusion[i][j]=0;
-					}else {
-						confusion[i][j]=confusionSum[i][j]/itcount[i];
-					}
-				}
-			}
-			if (iters %100 ==0) dump(confusionSum, itcount,iters);
-			pan.update(confusion);
-			//pan.repaint();
-
-			// 
 
 		}
+		
 		
 		
 		
@@ -149,6 +106,76 @@ public class TrainNetwork {
 		// out.close();
 
 	}
+
+	
+	static void testNet(NeuralNet net,WavTrainingPool pool,Config config,ConfusionPanel panSum,ConfusionPanel panEnd) throws Exception {
+
+		Data data = new Data(0, config.getFeatureVectorSize());
+
+		int nTarget=pool.nTarget();
+		double confusionSum[][] = new double[nTarget][nTarget];
+		double confusionEnd[][] = new double[nTarget][nTarget];
+		double sum[] = new double[nTarget];
+		int itcount[] = new int[nTarget];
+		
+		for (TrainingData td:pool.trainingData){
+			
+			// sum of outputs over time.
+			Arrays.fill(sum, 0.0);
+			net.wash();
+			
+			for (double[] vec : td.featureSequence()) {
+				data.feature = vec;
+				net.process(data);
+				for (int i = 0; i < nTarget; i++) {
+					sum[i] += data.output[i];
+				}
+			}
+
+			normalize(sum);
+			
+	
+			for (int i = 0; i < nTarget; i++) {
+				confusionSum[td.id][i] +=  sum[i];
+				confusionEnd[td.id][i] +=  data.output[i];
+			}
+
+			itcount[td.id]++;
+
+		}
+	
+		for (int i = 0; i < nTarget; i++) {
+			for (int j = 0; j < nTarget; j++) {
+				confusionSum[i][j]=confusionSum[i][j]/itcount[i];
+				confusionEnd[i][j]=confusionEnd[i][j]/itcount[i];
+			}
+		}
+		
+		
+		
+		//pan.repaint();
+	
+		panSum.update(confusionSum);
+		panEnd.update(confusionEnd);
+	
+	}
+	
+	private static void normalize(double[] sum) {
+		double tot = 0;
+
+		for (int i = 0; i < sum.length; i++) {
+			tot += sum[i];
+		}
+
+		for (int i = 0; i < sum.length; i++) {
+			sum[i] *=1.0/tot;
+		}
+
+		
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	static void dump(double[][] array, int[] itcount, int iter) {
 

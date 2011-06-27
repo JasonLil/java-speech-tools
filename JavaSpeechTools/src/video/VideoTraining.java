@@ -2,6 +2,7 @@ package video;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import speech.NeuralNet;
 import uk.ac.bath.ai.backprop.BackProp;
@@ -36,11 +37,13 @@ public class VideoTraining {
 
 		int sz[] = { inputs, hidden, outputs };
 		
-		neuralNet = new BackProp(sz, beta, alpha, null);
+		neuralNet = new BackProp(sz, beta, alpha);
 		readStills = new ReadVideoStills();
 
-		neuralNet.randomWeights(-0.1, 0.1);
-
+		//neuralNet.randomWeights(-0.1, 0.1);
+		Random rand=new Random();
+		neuralNet.randomWeights(-0.5, 0.5,rand);
+		
 		double error = 1.0;
 
 		double[][][] stills = readStills.read();
