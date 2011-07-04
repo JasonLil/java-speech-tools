@@ -10,6 +10,8 @@ import uk.org.toot.audio.server.JavaSoundAudioServer;
 
 import com.frinika.audio.io.AudioReader;
 
+import config.Config;
+
 public class RealTimeSpectralSource {
 
 	private  JavaSoundAudioServer audioServer;
@@ -28,46 +30,61 @@ public class RealTimeSpectralSource {
 		this.app=app;
 	}
 
-	public void startAudio(String inName1, String outName1,
-			final int onscreen_bins, final NNSpectralFeatureDetector client)
+	public void startAudio(final NNSpectralFeatureDetector client)
 			throws Exception {
 
 		// Setup audio server
-
+		String ins[]=Config.preferredIn;
+		String outs[]=Config.preferredIn;
+		
 		audioServer = new JavaSoundAudioServer();
-		List<String> outputs = audioServer.getAvailableOutputNames();
-		System.out.println("Available Outputs:");
-
-		for (String name : outputs) {
-			System.out.println(name);
-		}
-
+		
+		// ----------- INPUT  SELECT
 		List<String> inputs = audioServer.getAvailableInputNames();
 		System.out.println("Available Inputs:");
 		for (String name : inputs) {
 			System.out.println(name);
 		}
+		
+		String inName=null;
 
-		String inName = inputs.get(0);
-		String outName = outputs.get(0);
-
-		if (outName1 != null) {
-			for (String name : outputs) {
-				if (name.equals(outName1)) {
-					outName = outName1;
+		for (String name : inputs) {
+			for (String ins1:ins){
+				if (name.startsWith(ins1)){
+					inName=name;
 					break;
 				}
 			}
+			if (inName != null) break;
 		}
 
-		if (inName1 != null) {
-			for (String name : inputs) {
-				if (name.equals(inName1)) {
-					inName = inName1;
+		if (inName == null) inName=inputs.get(0);
+
+		
+		/// -------- OUTPUTS 
+		String outName=null;
+		
+		List<String> outputs = audioServer.getAvailableOutputNames();
+		System.out.println("Available Outputs:");
+		
+		for (String name : outputs) {
+			System.out.println(name);
+		}
+
+
+		for (String name : outputs) {
+			for (String outs1:outs){
+				if (name.startsWith(outs1)){
+					outName=name;
 					break;
 				}
 			}
+			if (outName != null) break;
 		}
+
+		if (outName == null) outName=outputs.get(0);
+		
+		//---------------
 		
 		System.out.println(" Using Output: " + outName);
 		System.out.println("  Using Input: " + inName);

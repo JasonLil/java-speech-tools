@@ -46,7 +46,7 @@ public class MakeFrames {
 
 	private int onscreenBins;
 	private KeyHandler keyHandler;
-	File defaultWavFile = Config.defaultWaveFile;
+	File defaultWavFile= Config.defaultWaveFile;
 
 	// For training
 	private double targetNeuralOutputs[];
@@ -74,21 +74,23 @@ public class MakeFrames {
 	
 	
 	private MainApp app;
+	private Config config;
 
-	public MakeFrames(boolean isApplet, String[] phonemeNames,
-			int onscreenBins, MainApp app) throws IOException {
-		this.phonemeNames = phonemeNames;
+	public MakeFrames(boolean isApplet,  Config config, MainApp app) throws IOException {
+		this.phonemeNames = config.getOutputNames(); // phonemeNames;
 		this.nPhonemes = phonemeNames.length;
+		this.config=config;
 		this.app = app;
-		final ReadImage ri = new ReadImage(phonemeNames);
+		final ReadImage ri = new ReadImage(config);
 		drawTract = new DrawTract(nPhonemes, ri);
 		drawTargTract = new DrawTract(nPhonemes, ri);
 		drawLips = new DrawLips(nPhonemes, ri);
 		drawTargLips = new DrawLips(nPhonemes, ri);
-		this.onscreenBins = onscreenBins;
+		this.onscreenBins = config.getFeatureVectorSize();
 		targetNeuralOutputs = new double[nPhonemes];
 		targetNeuralOutputs[0] = 1.0;
 		targetText = "EEE";
+		
 
 	}
 
@@ -134,11 +136,12 @@ public class MakeFrames {
 		JMenu overLapMenu = new JMenu("Window Overlap");
 		menu.add(overLapMenu);
 		ButtonGroup group = new ButtonGroup();
-
+		int fftSize=config.getFFTSize();
+		
 		for (int i = 0; i < 4; i++) {
 
-			final int sampsOverLap = (Config.fftSize * i) / 4;
-			String percent = (100 * sampsOverLap) / Config.fftSize + "%";
+			final int sampsOverLap = (fftSize * i) / 4;
+			String percent = (100 * sampsOverLap) / fftSize + "%";
 			JRadioButtonMenuItem item = new JRadioButtonMenuItem(
 					new AbstractAction(percent) {
 

@@ -25,7 +25,7 @@ public class TrainNetwork {
 	public static SpectrumToFeature specAdjust;
 	public static ReadWav readWav;
 	
-	public static float Fs = Config.sampleRate;
+	public static float Fs;
 	public static int maxAudioLength = 1000;
 
 	public static int inputs = 128;
@@ -45,10 +45,11 @@ public class TrainNetwork {
 	public static void main(String args[]) throws Exception {
 
 		int sz[] = { inputs, hidden, outputs };
-
+		Config config=new Config();
+		Fs=config.getSampleRate();
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha);
-		specAdjust = new SpectrumToFeature(onscreenBins,fftSize);
+		specAdjust = config.getSpectrumToFeature(); //new SpectrumToFeature(onscreenBins,fftSize);
 		readWav = new ReadWav(outputs);
 
 		//neuralNet.randomWeights(0.0, 0.01);
@@ -64,7 +65,7 @@ public class TrainNetwork {
 		// -------- Train Network------------------ //
 
 		// Read wavs from file
-		double[][][] wavs = readWav.getMonoThongWavs(fftSize, outputs, Fs, maxAudioLength);
+		double[][][] wavs = readWav.getMonoThongWavs(config, maxAudioLength);
 		
 		while (error > maxError) {
 			

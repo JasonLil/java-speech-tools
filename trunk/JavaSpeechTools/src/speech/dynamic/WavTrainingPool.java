@@ -20,8 +20,7 @@ public class WavTrainingPool {
 	WavTrainingPool(File root, Config config) {
 		names=new ArrayList<String>();
 		
-		reader = new ReadFeatureVectors(config.getFeatureVectorSize(),
-				config.getFFTSize());
+		reader = new ReadFeatureVectors(config);
 		trainingData = new ArrayList<TrainingData>();
 
 		HashMap<String, List<File>> set = new HashMap<String, List<File>>();

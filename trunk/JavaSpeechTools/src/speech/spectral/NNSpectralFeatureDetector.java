@@ -34,11 +34,11 @@ public class NNSpectralFeatureDetector {
 	private FeatureClient featureClient;
 
 	public NNSpectralFeatureDetector(int fftsize, int onscreenBins,
-			SpectralProcess spectralClient,FeatureClient fc,URL nnURL) {
+			SpectralProcess spectralClient,FeatureClient fc,URL nnURL,Config config) {
 
 		this.featureSize = onscreenBins;
 	//	this.fftSize = fftsize;
-		specAdj = new SpectrumToFeature(onscreenBins,fftsize);
+		specAdj = config.getSpectrumToFeature(); // new SpectrumToFeature(onscreenBins,fftsize);
 		this.spectralClient = spectralClient;
 		this.featureClient=fc;
 		//outputs = new double[6];
