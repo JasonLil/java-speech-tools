@@ -19,27 +19,29 @@ public class ReadFeatureVectors {
 
 	
 	private SpectrumToFeature spectAdjust;
+	private Config config;
 
-	public ReadFeatureVectors(int featureSize,int fftSize) {
-		spectAdjust=new SpectrumToFeature(featureSize,fftSize);
+	public ReadFeatureVectors(Config config) {
+		spectAdjust=config.getSpectrumToFeature();
+		this.config=config;
 	}
 	
 	public ArrayList<double[]> readVectors(File file) throws IOException {
 
-		int fftSize=Config.getFFTSize();
-		int featSize=Config.getFeatureVectorSize();
+		int fftSize=config.getFFTSize();
+		int featSize=config.getFeatureVectorSize();
 		
 		ArrayList<double[]> list=new ArrayList<double[]>();
 		
 		SampledToSpectral spectralAnalysis = new SampledToSpectral(
-				fftSize, 0, Config.getSampleRate(),featSize);
+				fftSize, 0, config.getSampleRate(),featSize);
 
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
-				rafG), Config.getSampleRate());
+				rafG), config.getSampleRate());
 		AudioBuffer chunk = new AudioBuffer("Buf", 2, fftSize,
-				Config.getSampleRate());
+				config.getSampleRate());
 		chunk.setRealTime(false);
 
 		while (!audioReader.eof()) {

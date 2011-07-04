@@ -30,20 +30,24 @@ public class ReadImage {
 	double[][][] lipsOuter;
 	private String[] names;
 	private BufferedImage face;
+	private Config config;
 
-	public ReadImage(String names[]) throws IOException {
-		this.names=names;
+	public ReadImage(Config config) throws IOException {
+		this.config=config;
+		
+		this.names=config.getOutputNames();
 		tract = readTract();
 		lipsInner = readLips1();
 		lipsOuter = readLips2();
 		String resource = "imagefiles/face.bmp";
 		URL url = ReadImage.class.getResource(resource);
-		face = ImageIO.read(url);		
+		face = ImageIO.read(url);	
+		this.config=config;
 	}
 
 	private double[][][] readTract() throws IOException {
 
-		double all_points[][][] = new double[100][3][Config.phonemes];
+		double all_points[][][] = new double[100][3][config.getOutputSize()];
 		double points[][] = new double[100][3];
 		double sorted_points[][] = new double[100][3];
 //		String names[] = { "ee_wgr", "eh_wgr", "er_wgr", "ah_wgr", "oo_wgr",
@@ -81,7 +85,7 @@ public class ReadImage {
 
 	private double[][][] readLips1() throws IOException {
 
-		double all_points[][][] = new double[28][3][Config.phonemes];
+		double all_points[][][] = new double[28][3][config.getOutputSize()];
 		double points[][] = new double[28][3];
 		double sorted_points[][] = new double[28][3];
 
@@ -117,7 +121,7 @@ public class ReadImage {
 
 	private double[][][] readLips2() throws IOException {
 
-		double all_points[][][] = new double[26][3][Config.phonemes];
+		double all_points[][][] = new double[26][3][config.getOutputSize()];
 		double points[][] = new double[26][3];
 		double sorted_points[][] = new double[26][3];
 		for (int f = 0; f < names.length; f++) {

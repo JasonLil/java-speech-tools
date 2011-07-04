@@ -24,20 +24,21 @@ import uk.org.toot.audio.core.AudioBuffer;
 public class ReadWav {
 
 	public int file_length[];
+	private Config config;
 
 	public ReadWav(int outputs) {
 		file_length = new int[outputs + 1];
 	}
 
-	public double[][][] getMonoThongWavs(int fftSize, int outputs,
-			float Fs, int maxAudioLength) throws Exception {
-
-		double allWavs[][][] = new double[maxAudioLength][fftSize][21];
+	public double[][][] getMonoThongWavs(Config config, int maxAudioLength) throws Exception {
+		this.config=config;
+		
+		double allWavs[][][] = new double[maxAudioLength][config.getFFTSize()][21];
 //
 //		String names[] = { "eee_all", "ehh_all", "err_all", "ahh_all",
 //				"ooh_all", "uhh_all", "silence_all" };
 
-		String cn[]=Config.phonemeNames;
+		String cn[]=config.getOutputNames();
 		
 		String files[] = new String[cn.length+1];
 		
@@ -46,11 +47,11 @@ public class ReadWav {
 		}
 		files[cn.length]="src/speech/wavfiles/silence_all.wav";
 		
-		for (int i = 0; i < outputs + 1; i++) {
+		for (int i = 0; i < config.getOutputSize() + 1; i++) {
 
 			//String resource = "src/speech/wavfiles/" + names[i] + ".wav";
 			//assert(resource.equals(files[i]));
-			double wav[][] = readWav(files[i], fftSize, Fs, i);
+			double wav[][] = readWav(files[i], config.getFFTSize(),config.getSampleRate(), i);
 
 			for (int j = 0; j < wav.length; j++) {
 				for (int k = 0; k < wav[0].length; k++) {
@@ -67,7 +68,7 @@ public class ReadWav {
 			int num) throws Exception {
 
 		SampledToSpectral spectralAnalysis = new SampledToSpectral(
-				fftSize, 0,Config.sampleRate,Config.getFeatureVectorSize());
+				fftSize, 0,config.getSampleRate(),config.getFeatureVectorSize());
 		File file = new File(filename);
 		RandomAccessFile rafG = new RandomAccessFile(file, "r");
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
