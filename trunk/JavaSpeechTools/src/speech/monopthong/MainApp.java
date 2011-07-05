@@ -47,7 +47,7 @@ public class MainApp implements SpectralClient {
 	}
 
 	MainApp(boolean isApplet) throws IOException {
-		config=new Config();
+		config=new Config(null);
 		output=new double[config.getOutputSize()];
 		fftSize=config.getFFTSize();
 		sampleRate=config.getSampleRate();

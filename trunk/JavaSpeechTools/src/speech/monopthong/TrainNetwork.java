@@ -45,7 +45,7 @@ public class TrainNetwork {
 	public static void main(String args[]) throws Exception {
 
 		int sz[] = { inputs, hidden, outputs };
-		Config config=new Config();
+		Config config=new Config(null);
 		Fs=config.getSampleRate();
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha);

@@ -20,11 +20,11 @@
 	<classpathentry kind="lib" path="lib/jetty-6.1.12rc1.jar"/>
 	<classpathentry kind="lib" path="lib/jetty-util-6.1.12rc1.jar"/>
 	<classpathentry kind="lib" path="lib/jjack.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/frinika"/>
 	<classpathentry kind="lib" path="/usr/share/java/v4l4j.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/usr/lib/jni"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/frinika.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

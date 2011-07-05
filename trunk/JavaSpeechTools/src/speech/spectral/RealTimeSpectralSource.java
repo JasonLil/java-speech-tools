@@ -146,6 +146,8 @@ public class RealTimeSpectralSource {
 	public void streamFile(AudioReader audioReader) {
 		reader=audioReader;
 		eof=false;
+		if (reader == null) return;
+		
 		try {
 			reader.seekFrame(0, true);
 		} catch (IOException e) {
