@@ -34,7 +34,7 @@ public class NNSpectralFeatureDetector {
 	private FeatureClient featureClient;
 
 	public NNSpectralFeatureDetector(int fftsize, int onscreenBins,
-			SpectralProcess spectralClient,FeatureClient fc,URL nnURL,Config config) {
+			SpectralProcess spectralClient,FeatureClient fc,URL nnURL,Config config) throws IOException, ClassNotFoundException {
 
 		this.featureSize = onscreenBins;
 	//	this.fftSize = fftsize;
@@ -46,20 +46,13 @@ public class NNSpectralFeatureDetector {
 		//FileInputStream ostr;
 		
 		
-		try {
+	
 			//ostr = new FileInputStream("src/textfiles/network.txt");
 			//ostr = new FileInputStream(nnURL);
 			ObjectInputStream in = new ObjectInputStream(nnURL.openStream());
 			neuralNet = (NeuralNet) in.readObject();
 			in.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
+	
 	}
 
 	public void process(Data data) throws Exception {
