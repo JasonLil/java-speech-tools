@@ -24,41 +24,43 @@ public class NNSpectralFeatureDetector {
 
 	private NeuralNet neuralNet;
 	private SpectrumToFeature specAdj;
-//	private SampledToSpectral sprectralAnalysis;
+	// private SampledToSpectral sprectralAnalysis;
 	private SpectralProcess spectralClient;
-//private double outputs[];
-//	private  double smoothed[];
-//	private double magnLog[];
-//	private int fftSize;
+	// private double outputs[];
+	// private double smoothed[];
+	// private double magnLog[];
+	// private int fftSize;
 	private int featureSize;
 	private FeatureClient featureClient;
 
 	public NNSpectralFeatureDetector(int fftsize, int onscreenBins,
-			SpectralProcess spectralClient,FeatureClient fc,URL nnURL,Config config) throws IOException, ClassNotFoundException {
+			SpectralProcess spectralClient, FeatureClient fc, URL nnURL,
+			Config config) throws IOException, ClassNotFoundException {
 
 		this.featureSize = onscreenBins;
-	//	this.fftSize = fftsize;
-		specAdj = config.getSpectrumToFeature(); // new SpectrumToFeature(onscreenBins,fftsize);
+		// this.fftSize = fftsize;
+		specAdj = config.getSpectrumToFeature(); // new
+													// SpectrumToFeature(onscreenBins,fftsize);
 		this.spectralClient = spectralClient;
-		this.featureClient=fc;
-		//outputs = new double[6];
+		this.featureClient = fc;
+		// outputs = new double[6];
 
-		//FileInputStream ostr;
-		
-		
-	
-			//ostr = new FileInputStream("src/textfiles/network.txt");
-			//ostr = new FileInputStream(nnURL);
+		// FileInputStream ostr;
+
+		if (nnURL != null) {
+			// ostr = new FileInputStream("src/textfiles/network.txt");
+			// ostr = new FileInputStream(nnURL);
 			ObjectInputStream in = new ObjectInputStream(nnURL.openStream());
 			neuralNet = (NeuralNet) in.readObject();
 			in.close();
-	
+		} 
 	}
 
 	public void process(Data data) throws Exception {
 
 		// magnLog = specAdj.linearLog(featureSize, Config.fftSize, spectrum);
-		specAdj.spectrumToFeature(data.spectrum,data.feature); // running3Average(featureSize, magnLog);
+		specAdj.spectrumToFeature(data.spectrum, data.feature); // running3Average(featureSize,
+																// magnLog);
 
 		for (int i = 0; i < data.feature.length; i++) {
 			data.feature[i] *= 2; // This is adding volume to the input signal.
@@ -66,27 +68,29 @@ public class NNSpectralFeatureDetector {
 
 		if (spectralClient != null)
 			spectralClient.notifyMoreDataReady(data); // magnLog);
-		
-		 neuralNet.process(data);
-		 
-		if (featureClient != null)  featureClient.notifyMoreDataReady(data.output);
+
+		if (neuralNet != null) {
+			neuralNet.process(data);
+			if (featureClient != null)
+				featureClient.notifyMoreDataReady(data.output);
+		}
 	}
 
-	/** 
+	/**
 	 * 
-	 *  grab the latest neural net outputs
+	 * grab the latest neural net outputs
 	 * 
 	 * @return
 	 */
-//	public double[] getOutputs() {
-//		// TODO synchronize and copy to avoid concurrent modifications
-//		
-//		return outputs;
-//	}
-//
-//	public double[] getFFTLogMagnitude() {
-//		// TODO Auto-generated method stub
-//		return smoothed;
-//	}
+	// public double[] getOutputs() {
+	// // TODO synchronize and copy to avoid concurrent modifications
+	//
+	// return outputs;
+	// }
+	//
+	// public double[] getFFTLogMagnitude() {
+	// // TODO Auto-generated method stub
+	// return smoothed;
+	// }
 
 }

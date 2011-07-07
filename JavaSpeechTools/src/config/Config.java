@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import speech.spectral.JRSpectrumToFeature;
 import speech.spectral.MelSpectrumToFeature;
+import speech.spectral.RawSpectrumToFeature;
 import speech.spectral.SpectrumToFeature;
 
 public class Config {
@@ -25,25 +26,10 @@ public class Config {
 			"/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Cat.wav");
 	private Properties prop;
 	private SpectrumToFeature spectToFeat;
+	private float lowFreq=50;
+	private float highFreq=12000;
 
-	// public Config(InputStream inStr) {
-	// if (inStr == null) {
-	// this.prop = null;
-	// } else {
-	//
-	// prop = new Properties();
-	// try {
-	// prop.load(inStr);
-	// } catch (FileNotFoundException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// setProp(prop);
-	// }
+	
 
 	private Config(Properties prop) {
 		setProp(prop);
@@ -54,10 +40,14 @@ public class Config {
 		String feat = prop.getProperty("spectrumTofeature");
 
 		if (feat.equals("mel")) {
+			featureSize=200;
 			spectToFeat = new MelSpectrumToFeature(featureSize, fftSize,
-					200.0f, 10000.0f, sampleRate);
+					lowFreq, highFreq, sampleRate);
 		} else if (feat.equals("jr")) {
 			spectToFeat = new JRSpectrumToFeature(featureSize, fftSize);
+		} else if (feat.equals("raw")) {
+			featureSize=fftSize/2;
+			spectToFeat = new RawSpectrumToFeature(featureSize);
 		} else {
 			assert (false);
 		}
@@ -92,6 +82,15 @@ public class Config {
 		return phonemeNames;
 	}
 
+	public double getLowFreq() {
+		return lowFreq;
+	}
+
+	
+	public double getHighFreq() {
+		return highFreq;
+	}
+
 	public String getNetName() {
 
 		return spectToFeat.getName();
@@ -102,14 +101,21 @@ public class Config {
 		prop.setProperty("spectrumTofeature", "mel");
 		return new Config(prop);
 	}
-
+	
+	
 	public static Config jr() {
 		Properties prop = new Properties();
 		prop.setProperty("spectrumTofeature", "jr");
 		return new Config(prop);
 	}
+	
+	public static Config raw() {
+		Properties prop = new Properties();
+		prop.setProperty("spectrumTofeature", "raw");
+		return new Config(prop);
+	}
 
 	public static Config current() {
-		return mel();
+		return jr();
 	}
 }

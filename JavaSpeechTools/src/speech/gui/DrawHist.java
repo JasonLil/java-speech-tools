@@ -31,15 +31,17 @@ public class DrawHist extends JPanel {
 		int ypoints[] = {0, 0, 400, 400};
 		g2.fillPolygon(xpoints, ypoints, 4);
 		g2.setStroke(new BasicStroke( 2.0f ));
+		float scale=getHeight()/onscreenBins;
 		
 		for (int i = 0; i < onscreenBins; i++) {
+			int y=(int) (i*scale);
 			int red = (int)(magn[i]*200);
 			int green = (int)(magn[i]*200);
 			if (red>255) red=255;
 			if (green>255) green=255;
 			rgb = new java.awt.Color(red, green, 0);
 			g2.setColor(rgb);
-			g2.drawLine(0, i*3, (int)(magn[i]*100), i*3);
+			g2.drawLine(0, y, (int)(magn[i]*100), y);
 		}
 
 	}

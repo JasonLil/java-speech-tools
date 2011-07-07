@@ -76,7 +76,7 @@ public class ReadWav {
 		AudioBuffer chunk = new AudioBuffer("James buffer", 2, fftSize, Fs);
 		chunk.setRealTime(true);
 
-		double[][] output = new double[1000][fftSize];
+		double[][] output = new double[1000][fftSize/2];
 
 		int i = 0;
 

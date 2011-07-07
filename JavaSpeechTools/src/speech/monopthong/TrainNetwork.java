@@ -25,15 +25,13 @@ public class TrainNetwork {
 	public static SpectrumToFeature specAdjust;
 	public static ReadWav readWav;
 	
-	public static float Fs;
+	
 	public static int maxAudioLength = 1000;
 
 	public static int inputs = 128;
 	public static int hidden = 30;
 	public static int outputs = 6;    // TODO
-	
-	public static int fftSize = 1024;
-	public static int onscreenBins = 128;
+
 	
 	public static double alpha = 300000.0;
 	public static double beta = .000001;
@@ -46,7 +44,10 @@ public class TrainNetwork {
 
 		int sz[] = { inputs, hidden, outputs };
 		Config config=Config.current();
-		Fs=config.getSampleRate();
+		float Fs=config.getSampleRate();
+		int fftSize=config.getFFTSize();
+		int featSize=config.getFeatureVectorSize();
+		
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha);
 		specAdjust = config.getSpectrumToFeature(); //new SpectrumToFeature(onscreenBins,fftSize);
@@ -57,8 +58,8 @@ public class TrainNetwork {
 
 		double error = 1.0;
 		
-		double[] fftSpectrum = new double[fftSize];
-		double[] featureVec = new double[onscreenBins];
+		double[] fftSpectrum = new double[fftSize/2];
+		double[] featureVec = new double[featSize];
 
 		int count = 0;
 		
@@ -78,7 +79,7 @@ public class TrainNetwork {
 			for (int i = 1; i < i_max; i++) { // Cycle through instances of FFT
 				for (int p = 0; p < outputs+1; p++) { // Cycle through phonemes
 					
-					for (int j = 0; j < fftSize; j++) {
+					for (int j = 0; j < fftSize/2; j++) {
 						fftSpectrum[j] = wavs[i][j][p];
 					}
 					
