@@ -78,6 +78,7 @@ public class DrawScrollingSpect extends JPanel {
 	}
 
 	final Object imagSync = new Object();
+	private double[] peaksRev;
 
 	void createGraphics() {
 
@@ -87,7 +88,7 @@ public class DrawScrollingSpect extends JPanel {
 			System.out.println(" Spectrogram  nBins="+nBins);
 			int width = nChunks;
 			int height = nBins;
-
+			peaksRev = new double[nBins];
 			screenBuffer = new int[width * height];
 			//nChunks=width;
 			peaks=new double[nBins];
@@ -201,15 +202,15 @@ public class DrawScrollingSpect extends JPanel {
 		// if (ptr != 0) {
 		// g.drawImage(offscreen, w, 0, size.width, h, 0, 0, ptr, h, this);
 		// }
-		double peaksRev[] = new double[128];
-		int j=127;
-		for (int i = 0; i <128; i++) {
+		
+		int j=nBins-1;
+		for (int i = 0; i < nBins; i++) {
 			peaksRev[j] = peaks[i];
 			j--;
 		}
 		
 		double top=0.0;;
-		for (int i = 0; i <128; i++) {
+		for (int i = 0; i <nBins; i++) {
 			if (peaksRev[i] > 0.5) {
 				g.drawString("<------", 440, 5+(int)i*3);
 			}

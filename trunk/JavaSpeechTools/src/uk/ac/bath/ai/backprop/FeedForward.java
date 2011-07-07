@@ -109,6 +109,7 @@ public class FeedForward extends NNProcess implements Cloneable,FeedForwardIF,Se
 	protected void ffwd(double in[]) {
 		double sum;
 
+		assert(in.length ==  layersizes[0]);
 		// assign content to input layer
 		for (int i = 0; i < layersizes[0]; i++) {
 			out[0][i] = in[i]; // output_from_neuron(i,j) Jth neuron in Ith
