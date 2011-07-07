@@ -21,5 +21,7 @@ public interface SpectrumToFeature {
 
 	void spectrumToFeature(double[] spectrum, double[] feature);
 
+	String getName();
+
 
 }

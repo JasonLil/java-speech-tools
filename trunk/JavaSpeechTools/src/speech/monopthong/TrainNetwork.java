@@ -45,7 +45,7 @@ public class TrainNetwork {
 	public static void main(String args[]) throws Exception {
 
 		int sz[] = { inputs, hidden, outputs };
-		Config config=new Config(null);
+		Config config=Config.current();
 		Fs=config.getSampleRate();
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha);
@@ -108,14 +108,17 @@ public class TrainNetwork {
 			
 		}
 
-		FileOutputStream istr = new FileOutputStream(
-				"src/textfiles/network.txt");
+		
+		String name=config.getNetName();
+		
+		String fullName="src/textfiles/"+name+".net";
+		FileOutputStream istr = new FileOutputStream(fullName);
 		ObjectOutputStream out = new ObjectOutputStream(istr);
 		out.writeObject(neuralNet);
 		out.close();
 
 		System.out.println("Whooop finished training! \n It took me "
-				+ count + " back props");
+				+ count + " back props\n   Saved network as:" +fullName);
 
 	}
 

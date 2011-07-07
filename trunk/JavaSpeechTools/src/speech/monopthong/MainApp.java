@@ -4,11 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Properties;
 
 import javax.swing.Timer;
 
@@ -41,13 +43,32 @@ public class MainApp implements SpectralClient {
 	float sampleRate;
 	int outSize;
 	
-	public static void main(String args[]) throws Exception {
-		MainApp app = new MainApp(false);
-		app.start();
+	public static void main(String args[]) {
+		MainApp app;
+		try {
+			app = new MainApp(false);
+			app.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+
+		}
+	
 	}
 
 	MainApp(boolean isApplet) throws IOException {
-		config=new Config(null);
+		
+		config=Config.current();
 		output=new double[config.getOutputSize()];
 		fftSize=config.getFFTSize();
 		sampleRate=config.getSampleRate();
@@ -61,9 +82,7 @@ public class MainApp implements SpectralClient {
 			double outputSort[] = new double[outSize];
 			
 			public void actionPerformed(ActionEvent ae) {
-
-			
-				
+	
 				for (int i = 0; i < output.length; i++) {
 					outputSort[i] = output[i];
 				}
@@ -88,7 +107,7 @@ public class MainApp implements SpectralClient {
 
 	
 	
-	void start() throws InterruptedException {
+	void start() throws InterruptedException, IOException, ClassNotFoundException {
 
 
 		/**
@@ -131,12 +150,14 @@ public class MainApp implements SpectralClient {
 		// the neural net classification
 		
 		URL url=null;
-		try {
-			url = new File("src/textfiles/network.txt").toURI().toURL();
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
+
+			String name=config.getNetName();
+			
+			String fullName="src/textfiles/"+name+".net";
+
+			url = new File(fullName).toURI().toURL();
+		
 		
 		nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
 				config.getFeatureVectorSize(), frames.getSpectralProcess(),featureClient,url,config);

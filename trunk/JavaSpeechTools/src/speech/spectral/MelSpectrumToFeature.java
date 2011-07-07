@@ -13,9 +13,16 @@ public class MelSpectrumToFeature implements SpectrumToFeature {
 	
 	
 	ArrayList<Weight>[]  weights;
+
+	private float fLow;
+
+	private float fHigh;
 	
 	public MelSpectrumToFeature(int featureSize,int fftSize,float fLow,float fHigh,float Fs) {
 
+		this.fLow=fLow;
+		this.fHigh=fHigh;
+		
 		float mLow=fToMel(fLow);
 		float mHigh=fToMel(fHigh);
 		
@@ -90,6 +97,10 @@ public class MelSpectrumToFeature implements SpectrumToFeature {
 			}
 		}
 		
+	}
+	
+	public String getName(){
+		return "MEL"+"_"+fftSize+"_"+featureSize+"_"+fLow+"_"+fHigh;
 	}
 	
 }

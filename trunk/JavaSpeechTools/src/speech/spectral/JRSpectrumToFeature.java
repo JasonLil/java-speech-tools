@@ -68,4 +68,8 @@ public class JRSpectrumToFeature implements SpectrumToFeature {
 		}
 
 	}
+	
+	public String getName(){
+		return "JR"+"_"+fftSize+"_"+featureSize;
+	}
 }
