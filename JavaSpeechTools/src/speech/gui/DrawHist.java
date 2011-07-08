@@ -16,22 +16,25 @@ public class DrawHist extends JPanel {
 
 	int onscreenBins;
 	double magn[];
+//	int xpoints[] = {0, 320, 320, 0};
+//	int ypoints[] = {0, 0, 400, 400};
 
+	
 	public DrawHist(int onscreenBins) {
 		this.onscreenBins = onscreenBins;
 		magn = new double[onscreenBins];
+		setBackground(Color.blue);
 	}
 
 	public void paint(Graphics g) {
-
+		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
 		java.awt.Color rgb = new java.awt.Color(0, 0, 255);
 		g2.setColor(rgb);
-		int xpoints[] = {0, 320, 320, 0};
-		int ypoints[] = {0, 0, 400, 400};
-		g2.fillPolygon(xpoints, ypoints, 4);
-		g2.setStroke(new BasicStroke( 2.0f ));
-		float scale=getHeight()/onscreenBins;
+		
+//		g2.fillPolygon(xpoints, ypoints, 4);
+//		g2.setStroke(new BasicStroke( 2.0f ));
+		float scale=((float)getHeight())/onscreenBins;
 		
 		for (int i = 0; i < onscreenBins; i++) {
 			int y=(int) (i*scale);

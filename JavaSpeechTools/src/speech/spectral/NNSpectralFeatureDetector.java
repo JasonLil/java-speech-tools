@@ -53,6 +53,8 @@ public class NNSpectralFeatureDetector {
 			ObjectInputStream in = new ObjectInputStream(nnURL.openStream());
 			neuralNet = (NeuralNet) in.readObject();
 			in.close();
+			assert(neuralNet.inputSize() == featureSize);
+			
 		} 
 	}
 

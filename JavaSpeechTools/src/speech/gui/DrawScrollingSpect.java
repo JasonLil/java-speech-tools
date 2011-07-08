@@ -68,7 +68,7 @@ public class DrawScrollingSpect extends JPanel {
 	int ptr = 0;
 	Image offscreen;
 	ValMapper mapper;
-	double peaks[];
+//	double peaks[];
 
 	public DrawScrollingSpect() {
 		//this.nChunks = nChunks;
@@ -83,6 +83,7 @@ public class DrawScrollingSpect extends JPanel {
 	void createGraphics() {
 
 		synchronized (imagSync) {
+			reset=true;
 			nChunks=getWidth();
 			size = new Dimension(nChunks, nBins);
 			System.out.println(" Spectrogram  nBins="+nBins);
@@ -91,7 +92,7 @@ public class DrawScrollingSpect extends JPanel {
 			peaksRev = new double[nBins];
 			screenBuffer = new int[width * height];
 			//nChunks=width;
-			peaks=new double[nBins];
+//			peaks=new double[nBins];
 			screenConverter = new MemoryImageSource(width, height,
 					screenBuffer, 0, width);
 			screenConverter.setAnimated(true);
@@ -129,14 +130,16 @@ public class DrawScrollingSpect extends JPanel {
 			ptr=0;
 			Arrays.fill(screenBuffer, 0);
 			reset=false;
+			screenConverter.newPixels(0, 0, nChunks, nBins);
 		}
-		for (int i = 1; i < bins.length - 1; i++) {
-			if (bins[i] > bins[i - 1] && bins[i] > bins[i + 1]) {
-				peaks[i] = bins[i];
-			} else {
-				peaks[i] = 0;
-			}
-		}
+		
+//		for (int i = 1; i < bins.length - 1; i++) {
+//			if (bins[i] > bins[i - 1] && bins[i] > bins[i + 1]) {
+//				peaks[i] = bins[i];
+//			} else {
+//				peaks[i] = 0;
+//			}
+//		}
 	
 		int width = size.width;
 
@@ -177,12 +180,12 @@ public class DrawScrollingSpect extends JPanel {
 	// }
 	@Override
 	public void paint(Graphics g) {
-	// super.paintComponent(g);
+		super.paint(g);
 	//	if (!screenRepaint) {
 	//		return;
 	//	}
 		// System.out.println(" Spectro DRAWIMAGE");
-		if (size == null || nChunks==0 || peaks == null) return;
+		if (size == null || nChunks==0 )   return; // || peaks == null) return;
 		int w = size.width - ptr;
 		int h = size.height;
 
@@ -203,18 +206,18 @@ public class DrawScrollingSpect extends JPanel {
 		// g.drawImage(offscreen, w, 0, size.width, h, 0, 0, ptr, h, this);
 		// }
 		
-		int j=nBins-1;
-		for (int i = 0; i < nBins; i++) {
-			peaksRev[j] = peaks[i];
-			j--;
-		}
-		
-		double top=0.0;;
-		for (int i = 0; i <nBins; i++) {
-			if (peaksRev[i] > 0.5) {
-				g.drawString("<------", 440, 5+(int)i*3);
-			}
-		}
+//		int j=nBins-1;
+//		for (int i = 0; i < nBins; i++) {
+//			peaksRev[j] = peaks[i];
+//			j--;
+//		}
+//		
+//		double top=0.0;;
+//		for (int i = 0; i <nBins; i++) {
+//			if (peaksRev[i] > 0.5) {
+//				g.drawString("<------", 440, 5+(int)i*3);
+//			}
+//		}
 
 	//	screenRepaint = false;
 	}
@@ -234,49 +237,4 @@ public class DrawScrollingSpect extends JPanel {
 		pause=yes;	
 	}
 
-}
-
-class ValMapper implements Observer, Mapper {
-
-	double maxdb = 50;
-	double mindb = -50;
-	double max;
-	double min;
-	boolean linear=false;
-//	private Thread thread;
-
-	public final float eval(double val) {
-		if (linear) {
-			float vv = (float) ((val - min) / (max - min));
-			return vv;
-		} else {
-			double dB = 20 * Math.log10(val + 1e-15);
-			float vv = (float) ((dB - mindb) / (maxdb - mindb));
-			return vv;
-		}
-	}
-
-	public void update(Observable o, Object arg) {
-
-		// linear = linearBut.isSelected();
-
-		// maxdb = maxdB.doubleValue();
-		max = Math.pow(10, maxdb / 20.0);
-
-		// mindb = mindB.doubleValue();
-		min = Math.pow(10, mindb / 20.0);
-
-		// repaint();
-		// if (thread != null)
-		// thread.interrupt();
-
-		// thread = new Thread(new Runnable() {
-		// public void run() {
-		// spectroSlicePanel.repaint();
-		// timePanel.spectroImage.update(null, null);
-		// thread = null;
-		// }
-		// });
-		// thread.start();
-	}
 }

@@ -28,7 +28,7 @@ public class TrainNetwork {
 	
 	public static int maxAudioLength = 1000;
 
-	public static int inputs = 128;
+	//public static int inputs = 128;
 	public static int hidden = 30;
 	public static int outputs = 6;    // TODO
 
@@ -42,11 +42,12 @@ public class TrainNetwork {
 
 	public static void main(String args[]) throws Exception {
 
-		int sz[] = { inputs, hidden, outputs };
+		
 		Config config=Config.current();
 		float Fs=config.getSampleRate();
 		int fftSize=config.getFFTSize();
 		int featSize=config.getFeatureVectorSize();
+		int sz[] = { featSize, hidden, outputs };
 		
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha);

@@ -95,6 +95,11 @@ public class BackPropRecursive extends NNProcess implements Serializable, Neural
 		bp.wash();	
 	}
 
+	@Override
+	public int inputSize() {
+		return inSize;
+	}
+
 	
 
 }

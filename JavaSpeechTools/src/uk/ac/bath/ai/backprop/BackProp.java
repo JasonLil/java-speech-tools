@@ -238,5 +238,6 @@ public class BackProp extends FeedForward implements Serializable, NeuralNet,Fee
 			}
 		}
 	}
+
 	
 }
