@@ -22,4 +22,6 @@ public interface NeuralNet extends Serializable ,FeedForwardIF{
 	void process(Data data) throws Exception;
 
 	void wash();
+
+	int inputSize();
 }

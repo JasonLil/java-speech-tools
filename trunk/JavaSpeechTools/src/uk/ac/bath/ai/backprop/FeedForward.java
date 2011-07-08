@@ -190,4 +190,8 @@ public class FeedForward extends NNProcess implements Cloneable,FeedForwardIF,Se
 	}
 	
 
+	public int inputSize() {
+		// TODO Auto-generated method stub
+		return layersizes[0];
+	}
 }
