@@ -28,7 +28,7 @@ public class TrainNetwork {
 	
 	public static int maxAudioLength = 1000;
 
-	//public static int inputs = 128;
+
 	public static int hidden = 30;
 	public static int outputs = 6;    // TODO
 

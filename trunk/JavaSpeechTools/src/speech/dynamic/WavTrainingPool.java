@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import config.Config;
@@ -16,13 +17,19 @@ public class WavTrainingPool {
 	ReadFeatureVectors reader;
 	ArrayList<String> names;
 	public double target[][];
+	HashSet<String> filt;
 	
 	WavTrainingPool(File root, Config config) {
 		names=new ArrayList<String>();
 		
 		reader = new ReadFeatureVectors(config);
 		trainingData = new ArrayList<TrainingData>();
-
+		filt=new HashSet<String>();
+		
+		filt.add("Red");
+		filt.add("Bed");
+		filt.add("silence");
+		
 		HashMap<String, List<File>> set = new HashMap<String, List<File>>();
 
 		assert (root.isDirectory());
@@ -35,6 +42,7 @@ public class WavTrainingPool {
 					continue;
 
 				String key = removeExtention(f.getName());
+				if (filt == null || (! filt.contains(key))) continue;
 				if (set.containsKey(key)) {
 					set.get(key).add(f);
 				} else {

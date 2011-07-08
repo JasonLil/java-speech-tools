@@ -18,7 +18,7 @@ public class ConfusionPanel extends JPanel {
 	public ConfusionPanel(List<String> names) {
 		this.names=names;
 		color=new Color[256];
-		for(int i=0;i<255;i++) {
+		for(int i=0;i<256;i++) {
 			color[i]=new Color(i,i,255-i);
 		}
 	}
