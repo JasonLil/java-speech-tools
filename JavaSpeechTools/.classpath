@@ -25,6 +25,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/usr/lib/jni"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/frinika.jar"/>
+	<classpathentry kind="lib" path="lib/frinika.jar" sourcepath="/frinika"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

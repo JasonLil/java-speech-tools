@@ -20,7 +20,7 @@ import speech.gui.DrawScrollingSpect;
  * @author pjl
  * 
  */
-public class NNSpectralFeatureDetector {
+public class NNSpectralFeatureDetector implements SpectralProcessor  {
 
 	private NeuralNet neuralNet;
 	private SpectrumToFeature specAdj;

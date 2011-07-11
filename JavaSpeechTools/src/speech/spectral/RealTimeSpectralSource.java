@@ -9,6 +9,7 @@ import uk.org.toot.audio.server.IOAudioProcess;
 import uk.org.toot.audio.server.JavaSoundAudioServer;
 
 import com.frinika.audio.io.AudioReader;
+import com.frinika.audio.io.AudioWriter;
 
 import config.Config;
 
@@ -21,6 +22,7 @@ public class RealTimeSpectralSource {
 	private AudioReader reader;
 	private SpectralClient app;
 	private boolean eof=false;
+	private AudioWriter recorder;
 	
 	//public static SpectralClient client;
 	public static double spectrum[];
@@ -30,7 +32,7 @@ public class RealTimeSpectralSource {
 		this.app=app;
 	}
 
-	public void startAudio(final NNSpectralFeatureDetector client)
+	public void startAudio(final SpectralProcessor client)
 			throws Exception {
 
 		// Setup audio server
@@ -100,6 +102,7 @@ public class RealTimeSpectralSource {
 		chunkOut.makeSilence();
 		
 		audioClient = new AudioClient() {
+			
 			public void work(int arg0) {
 				chunk.makeSilence();
 				if (reader != null) {
@@ -114,6 +117,10 @@ public class RealTimeSpectralSource {
 					
 				} else {
 					input.processAudio(chunk);
+					if (recorder != null) {
+						recorder.processAudio(chunk);
+						recorder.stamp();
+					}
 					output.processAudio(chunkOut);
 				}
 				try {
@@ -143,6 +150,10 @@ public class RealTimeSpectralSource {
 		});
 	}
 
+	public void record(AudioWriter recorder){
+		this.recorder=recorder;
+	}
+	
 	public void streamFile(AudioReader audioReader) {
 		reader=audioReader;
 		eof=false;

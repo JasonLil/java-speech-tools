@@ -48,7 +48,7 @@ public class SampledToSpectral {
 		this.overlap = overlap;
 	}
 
-	public void processAudio(AudioBuffer chunk, NNSpectralFeatureDetector client) throws Exception {
+	public void processAudio(AudioBuffer chunk, SpectralProcessor client) throws Exception {
 
 		// PJL: Mix left and right so we don't need to worry about which channel
 		// is
