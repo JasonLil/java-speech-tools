@@ -8,15 +8,11 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import config.Config;
-
 import speech.Data;
 import speech.NeuralNet;
-import speech.ReadWav;
 import speech.gui.ConfusionPanel;
-import speech.spectral.SpectrumToFeature;
-import uk.ac.bath.ai.backprop.BackProp;
 import uk.ac.bath.ai.backprop.BackPropRecursive;
+import config.Config;
 
 /*
  * Trains a neural network for a given set of audio data acquired from
