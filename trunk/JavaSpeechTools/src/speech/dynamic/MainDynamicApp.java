@@ -14,21 +14,21 @@ import javax.swing.Timer;
 import speech.gui.MakeFrames;
 import speech.spectral.FeatureClient;
 import speech.spectral.NNSpectralFeatureDetector;
-import speech.spectral.RealTimeSpectralSource;
+import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
-import speech.spectral.SpectralClient;
+
 
 import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.VanillaRandomAccessFile;
 
 import config.Config;
 
-public class MainDynamicApp implements SpectralClient {
+public class MainDynamicApp  {
 
 	private NNSpectralFeatureDetector nnFeatureDetector;
 
 	double output[];
-	public RealTimeSpectralSource realTimeSpectralSource;
+	public RealTimeAudioSource realTimeSpectralSource;
 	public SampledToSpectral spectralConverter;
 	private Config config;
 	int fftSize;
@@ -113,14 +113,6 @@ public class MainDynamicApp implements SpectralClient {
 
 		};
 
-		// This is used to convert the audio stream to a spectral stream.
-		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
-				config.getFeatureVectorSize());
-
-		// Grabs input and feeds into the spectralConverter
-		realTimeSpectralSource = new RealTimeSpectralSource(spectralConverter,
-				this);
-
 		// takes the raw FFT from the spectral converter and feeds
 		// the neural net classification
 
@@ -139,10 +131,18 @@ public class MainDynamicApp implements SpectralClient {
 		nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
 				config.getFeatureVectorSize(), null, featureClient, url, config);
 
+		// This is used to convert the audio stream to a spectral stream.
+		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
+				config.getFeatureVectorSize(),nnFeatureDetector);
+
+		// Grabs input and feeds into the spectralConverter
+		realTimeSpectralSource = new RealTimeAudioSource();
+
+		
 		try {
 			// Start audio thread and connect nnFeatureDetector via the chunk
 			// size converter
-			realTimeSpectralSource.startAudio(nnFeatureDetector);
+			realTimeSpectralSource.startAudio(spectralConverter);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -150,10 +150,6 @@ public class MainDynamicApp implements SpectralClient {
 
 	}
 
-	@Override
-	public void eof(boolean b) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }

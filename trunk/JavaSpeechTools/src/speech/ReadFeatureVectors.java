@@ -50,7 +50,7 @@ public class ReadFeatureVectors {
 			audioReader.processAudio(chunk);
 
 			
-			double spectrum[] = spectralAnalysis.processAudio(chunk);
+			double spectrum[] = spectralAnalysis.processAudio2(chunk);
 			double feature[]=new double[featSize];
 			spectAdjust.spectrumToFeature(spectrum,feature);
 			list.add(feature);

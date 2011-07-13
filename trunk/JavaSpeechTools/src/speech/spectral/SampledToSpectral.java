@@ -3,6 +3,7 @@ package speech.spectral;
 import speech.Data;
 import uk.ac.bath.audio.FFTWorker;
 import uk.org.toot.audio.core.AudioBuffer;
+import uk.org.toot.audio.core.AudioProcess;
 
 /**
  * Takes chunks of one size and packs them into chunks of another size Once we
@@ -10,8 +11,7 @@ import uk.org.toot.audio.core.AudioBuffer;
  * client.
  */
 
-public class SampledToSpectral {
-
+public class SampledToSpectral implements AudioProcess {
 	private FFTWorker fft;
 
 	private boolean doHanning;
@@ -26,7 +26,15 @@ public class SampledToSpectral {
 
 	private Data data;
 
-	public SampledToSpectral(int fftSize, int overlap, float Fs,int featureSize) {
+	private SpectralProcessor client;
+
+	
+	public SampledToSpectral(int fftSize, int overlap, float Fs,int featureSize,SpectralProcessor client) {
+		this(fftSize,overlap,Fs,featureSize);
+		this.client=client;
+	}
+	
+	public SampledToSpectral(int fftSize, int overlap, float Fs,int featureSize) { 
 
 		doHanning = true;
 		fft = new FFTWorker(Fs, doHanning);
@@ -39,8 +47,12 @@ public class SampledToSpectral {
 		this.overlap = overlap;
 		this.fftSize = fftSize;
 		data = new Data(fftSize,featureSize);
-	
+		
 
+	}
+	
+	public void setClient(SpectralProcessor client) {
+		this.client=client;
 	}
 
 	public void setOverlap(int overlap) {
@@ -48,7 +60,7 @@ public class SampledToSpectral {
 		this.overlap = overlap;
 	}
 
-	public void processAudio(AudioBuffer chunk, SpectralProcessor client) throws Exception {
+	public int processAudio(AudioBuffer chunk) {
 
 		// PJL: Mix left and right so we don't need to worry about which channel
 		// is
@@ -76,12 +88,18 @@ public class SampledToSpectral {
 				}
 
 				if (client != null)
-					client.process(data);
+					try {
+						client.process(data);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 			}
 		}
+		return AUDIO_OK;
 	}
 
-	public double[] processAudio(AudioBuffer chunk) {
+	public double[] processAudio2(AudioBuffer chunk) {
 
 		// PJL: Mix left and right so we don't need to worry about which channel
 		// is
@@ -110,6 +128,18 @@ public class SampledToSpectral {
 			data.spectrum[j] = (float) Math.sqrt((real * real) + (imag * imag));
 		}
 		return data.spectrum;
+	}
+
+	@Override
+	public void open() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void close() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// public double[] getMagn() { // TODO Deprecate this

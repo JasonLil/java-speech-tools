@@ -1,11 +1,8 @@
 package speech;
 
-import config.Config;
-import uk.org.toot.audio.core.AudioBuffer;
-
 public class Data {
 	
-	public AudioBuffer chunk;
+	//private AudioBuffer chunk; 
 	public double[] spectrum;
 	public double[] feature;
 	public double[] target;

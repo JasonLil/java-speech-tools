@@ -116,6 +116,6 @@ public class Config {
 	}
 
 	public static Config current() {
-		return jr();
+		return raw();
 	}
 }
