@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import uk.org.toot.audio.core.AudioBuffer;
+import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.server.AudioClient;
 import uk.org.toot.audio.server.IOAudioProcess;
 import uk.org.toot.audio.server.JavaSoundAudioServer;
@@ -13,26 +14,26 @@ import com.frinika.audio.io.AudioWriter;
 
 import config.Config;
 
-public class RealTimeSpectralSource {
+public class RealTimeAudioSource {
 
 	private  JavaSoundAudioServer audioServer;
 	private  AudioBuffer chunk;
 	private  AudioClient audioClient;
-	private  SampledToSpectral spectralProcess;
+	
 	private AudioReader reader;
-	private SpectralClient app;
+
 	private boolean eof=false;
 	private AudioWriter recorder;
 	
 	//public static SpectralClient client;
 	public static double spectrum[];
 
-	public RealTimeSpectralSource(SampledToSpectral spectralProcess,SpectralClient app) {
-		this.spectralProcess = spectralProcess;
-		this.app=app;
+	public RealTimeAudioSource() {
+		
+		
 	}
 
-	public void startAudio(final SpectralProcessor client)
+	public void startAudio(final AudioProcess client)
 			throws Exception {
 
 		// Setup audio server
@@ -111,7 +112,7 @@ public class RealTimeSpectralSource {
 					if (!eof) {
 						if (reader.eof()) {
 							eof=true;
-							app.eof(true);
+						//	app.eof(true);
 						}
 					}
 					
@@ -124,7 +125,7 @@ public class RealTimeSpectralSource {
 					output.processAudio(chunkOut);
 				}
 				try {
-					spectralProcess.processAudio(chunk,client);
+					client.processAudio(chunk);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -165,6 +166,14 @@ public class RealTimeSpectralSource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/*
+	 * returns true if streaming from file and we are at the end. 
+	 */
+	public boolean isEOF() {
+		
+		return eof;
 	}
 
 }

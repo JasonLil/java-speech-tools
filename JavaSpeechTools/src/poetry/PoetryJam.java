@@ -11,18 +11,17 @@ import javax.swing.Timer;
 
 import speech.Data;
 import speech.gui.MakeFrames;
-import speech.spectral.RealTimeSpectralSource;
+import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
-import speech.spectral.SpectralClient;
 import speech.spectral.SpectralProcessor;
 
 import com.frinika.audio.io.AudioReader;
-import com.frinika.audio.io.AudioWriter;
+
 import com.frinika.audio.io.VanillaRandomAccessFile;
 
 import config.Config;
 
-public class PoetryJam implements SpectralClient {
+public class PoetryJam  {
 
 	private MakeFrames frames;
 	private Timer timer;
@@ -30,7 +29,7 @@ public class PoetryJam implements SpectralClient {
 	public boolean isApplet = false; // hack hack hack ... eeeek
 
 	double output[];
-	public RealTimeSpectralSource realTimeSpectralSource;
+	public RealTimeAudioSource realTimeSpectralSource;
 	public SampledToSpectral spectralConverter;
 	private Config config;
 	int fftSize;
@@ -74,16 +73,7 @@ public class PoetryJam implements SpectralClient {
 	void start() throws InterruptedException, IOException,
 			ClassNotFoundException {
 
-		
-		// This is used to convert the audio stream to a spectral stream.
-		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
-				config.getFeatureVectorSize());
-
-		// Grabs input and feeds into the spectralConverter
-		realTimeSpectralSource = new RealTimeSpectralSource(spectralConverter,
-				this);
-
-		
+	
 		SpectralProcessor client=new SpectralProcessor(){
 
 			@Override
@@ -93,16 +83,25 @@ public class PoetryJam implements SpectralClient {
 			}
 			
 		};
+		// This is used to convert the audio stream to a spectral stream.
+		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
+				config.getFeatureVectorSize(),client);
+
+		// Grabs input and feeds into the spectralConverter
+		realTimeSpectralSource = new RealTimeAudioSource();
+
+		
+	
 
 		try {
 			// Start audio thread and connect nnFeatureDetector via the chunk
 			// size converter
-			realTimeSpectralSource.startAudio(client);
+			realTimeSpectralSource.startAudio(spectralConverter);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		setOutputWave(new File("/tmp/PJ.wav"));
+		// setOutputWave(new File("/tmp/PJ.wav"));
 	//	timer.start();
 	}
 
@@ -132,29 +131,29 @@ public class PoetryJam implements SpectralClient {
 		frames.resetGraphs();
 	}
 	
-	public void setOutputWave(File waveFile) {
-
-		if (waveFile == null) {
-			realTimeSpectralSource.record(null);
-			return;
-		}
-
-		try {
-
-			AudioFormat format = new AudioFormat(sampleRate,16,1, true,
-		            false);
-			AudioWriter rec = new AudioWriter(waveFile,format);
-			realTimeSpectralSource.record(rec);
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+//	public void setOutputWave(File waveFile) {
+//
+//		if (waveFile == null) {
+//			realTimeSpectralSource.record(null);
+//			return;
+//		}
+//
+//		try {
+//
+//			AudioFormat format = new AudioFormat(sampleRate,16,1, true,
+//		            false);
+//			AudioWriter rec = new AudioWriter(waveFile,format);
+//			realTimeSpectralSource.record(rec);
+//
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	}
 
 	public void eof(boolean b) {
 		frames.pauseGraphs(b);

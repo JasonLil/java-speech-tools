@@ -86,7 +86,7 @@ public class ReadWav {
 			chunk.makeSilence();
 			audioReader.processAudio(chunk);
 			
-			double magn[]=spectralAnalysis.processAudio(chunk);
+			double magn[]=spectralAnalysis.processAudio2(chunk);
 			
 			for (int j = 0; j < magn.length; j++) {
 				output[i][j] = magn[j];

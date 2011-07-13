@@ -14,16 +14,16 @@ import javax.swing.Timer;
 import speech.gui.MakeFrames;
 import speech.spectral.FeatureClient;
 import speech.spectral.NNSpectralFeatureDetector;
-import speech.spectral.RealTimeSpectralSource;
+import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
-import speech.spectral.SpectralClient;
+
 
 import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.VanillaRandomAccessFile;
 
 import config.Config;
 
-public class MainApp implements SpectralClient {
+public class MainApp {
 
 	private MakeFrames frames;
 	private Timer timer;
@@ -31,7 +31,7 @@ public class MainApp implements SpectralClient {
 	public boolean isApplet = false; // hack hack hack ... eeeek
 
 	double output[];
-	public RealTimeSpectralSource realTimeSpectralSource;
+	public RealTimeAudioSource realTimeSpectralSource;
 	public SampledToSpectral spectralConverter;
 	private Config config;
 	int fftSize;
@@ -95,6 +95,16 @@ public class MainApp implements SpectralClient {
 					}
 				}
 
+				if (realTimeSpectralSource.isEOF()) {
+
+					
+					frames.pauseGraphs(true);
+					
+
+				} else {
+					frames.pauseGraphs(false);
+					
+				}
 				frames.updateGfx(text, output);
 			}
 		});
@@ -134,17 +144,6 @@ public class MainApp implements SpectralClient {
 
 		};
 
-		// This is used to convert the audio stream to a spectral stream.
-		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
-				config.getFeatureVectorSize());
-
-		// Grabs input and feeds into the spectralConverter
-		realTimeSpectralSource = new RealTimeSpectralSource(spectralConverter,
-				this);
-
-		// takes the raw FFT from the spectral converter and feeds
-		// the neural net classification
-
 		URL url = null;
 
 		String name = config.getNetName();
@@ -156,15 +155,31 @@ public class MainApp implements SpectralClient {
 		} else {
 			System.err.println(" Could not find NN "+fullName );
 		}
-		
+
+		// takes the raw FFT from the spectral converter and feeds
+		// the neural net classification
+
 		nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
 				config.getFeatureVectorSize(), frames.getSpectralProcess(),
 				featureClient, url, config);
+		
+		// This is used to convert the audio stream to a spectral stream.
+		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
+				config.getFeatureVectorSize(),nnFeatureDetector);
+		
+		
+
+		// Grabs input and feeds into the spectralConverter
+		realTimeSpectralSource = new RealTimeAudioSource();
+
+		
+				
+		
 
 		try {
 			// Start audio thread and connect nnFeatureDetector via the chunk
 			// size converter
-			realTimeSpectralSource.startAudio(nnFeatureDetector);
+			realTimeSpectralSource.startAudio(spectralConverter);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -197,10 +212,6 @@ public class MainApp implements SpectralClient {
 		}
 		frames.pauseGraphs(false);
 		frames.resetGraphs();
-	}
-
-	public void eof(boolean b) {
-		frames.pauseGraphs(b);
 	}
 
 }
