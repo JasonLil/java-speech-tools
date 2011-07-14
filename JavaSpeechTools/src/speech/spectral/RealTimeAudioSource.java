@@ -108,24 +108,22 @@ public class RealTimeAudioSource {
 				chunk.makeSilence();
 				if (reader != null) {
 					reader.processAudio(chunk);
-					output.processAudio(chunk);
+					
 					if (!eof) {
 						if (reader.eof()) {
 							eof=true;
-						//	app.eof(true);
 						}
 					}
-					
 				} else {
 					input.processAudio(chunk);
-					if (recorder != null) {
-						recorder.processAudio(chunk);
-						recorder.stamp();
-					}
-					output.processAudio(chunkOut);
 				}
+				
+				
 				try {
 					client.processAudio(chunk);
+					
+					output.processAudio(chunk);
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

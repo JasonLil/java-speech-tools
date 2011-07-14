@@ -32,12 +32,21 @@ public class FFTWorker {
         return nBin;
     }
 
+    /*
+     * Parameter input  audio data
+     *           fftOut complex fftData
+     * 
+     */
     public void process(double[] input, double fftOut[]) {
 
         if (doHanning) {
-            for (int i = 0; i < fftsize; i++) {
-                fftOut[i] = input[i] * hanning[i];
-            }
+        	 for (int i = 0; i < fftsize; i++) {
+                 fftOut[i] = input[i] * hanning[i];
+             }
+        } else {
+        	 for (int i = 0; i < fftsize; i++) {
+                 fftOut[i] = input[i];
+             }
         }
 
         fft.calcReal(fftOut, -1);

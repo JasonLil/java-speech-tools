@@ -1,0 +1,10 @@
+RealTimeAudioSource
+
+     
+    
+       reader  <-- from file
+       output  -->  
+     OR
+       input  <--- from mic
+
+     
