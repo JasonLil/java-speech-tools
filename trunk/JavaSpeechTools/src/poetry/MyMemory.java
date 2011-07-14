@@ -21,8 +21,8 @@ public class MyMemory {
 		}
 
 		memPtr = 0;
-		this.fftSize=fftSize;
-		this.sampleRate=sampleRate;
+		this.fftSize = fftSize;
+		this.sampleRate = sampleRate;
 	}
 
 	void process(float in[]) {
@@ -31,46 +31,53 @@ public class MyMemory {
 		if (memPtr >= memory.size())
 			memPtr = 0;
 	}
-	
-	
+
 	class Leacher implements AudioProcess {
 
-		
 		private int delayInSamples;
 		private int ptr;
 		private int ptrBit;
 
 		Leacher(float delay) {
-			delayInSamples=(int) (delay/sampleRate);
-			ptr=(fftSize-1+delayInSamples)/fftSize;
-			ptrBit=fftSize - delayInSamples%fftSize;
-			
-		}
-		@Override
-		public void open() throws Exception {
-			// TODO Auto-generated method stub
-			
+			delayInSamples = (int) (delay / sampleRate);
+			ptr = (fftSize - 1 + delayInSamples) / fftSize;
+			ptrBit = fftSize - delayInSamples % fftSize;
+
 		}
 
 		@Override
+		public void open() throws Exception {
+			// TODO Auto-generated method stub
+
+		}
+
+		float b[][] = new float[2][];
+
+		@Override
 		public int processAudio(AudioBuffer buffer) {
-			int n=buffer.getSampleCount();
-			
-			int nInBuffer=fftSize-ptrBit;
-			
-			if (n<= nInBuffer) {
-				
-				
+
+			int nChn = buffer.getChannelCount();
+			int n = buffer.getSampleCount();
+			for (int chn = 0; chn < nChn; chn++) {
+				b[chn] = buffer.getChannel(chn);
 			}
-			
+
+			int nInBuffer = fftSize - ptrBit;
+			if (n <= nInBuffer) {
+				for (int chn = 0; chn < nChn; chn++) {
+					
+				}
+
+			}
+
 		}
 
 		@Override
 		public void close() throws Exception {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
-	
+
 }
