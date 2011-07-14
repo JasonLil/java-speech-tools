@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.swing.Timer;
@@ -29,13 +30,14 @@ public class PoetryJam  {
 	public boolean isApplet = false; // hack hack hack ... eeeek
 
 	double output[];
-	public RealTimeAudioSource realTimeSpectralSource;
+	public RealTimeAudioSource realTimeAudioServer;
 	public SampledToSpectral spectralConverter;
 	private Config config;
 	int fftSize;
 	float sampleRate;
 	int outSize;
 
+	
 	public static void main(String args[]) {
 		PoetryJam app;
 		try {
@@ -61,12 +63,13 @@ public class PoetryJam  {
 
 	PoetryJam(boolean isApplet) throws IOException {
 
+		float delay=10.0f;
 		config = Config.current();
 		output = new double[config.getOutputSize()];
 		fftSize = config.getFFTSize();
 		sampleRate = config.getSampleRate();
 		outSize = config.getOutputSize();
-
+		
 		
 	}
 
@@ -78,8 +81,7 @@ public class PoetryJam  {
 
 			@Override
 			public void process(Data data) throws Exception {
-				
-				
+			
 			}
 			
 		};
@@ -88,15 +90,13 @@ public class PoetryJam  {
 				config.getFeatureVectorSize(),client);
 
 		// Grabs input and feeds into the spectralConverter
-		realTimeSpectralSource = new RealTimeAudioSource();
+		realTimeAudioServer = new RealTimeAudioSource();
 
 		
-	
-
 		try {
 			// Start audio thread and connect nnFeatureDetector via the chunk
 			// size converter
-			realTimeSpectralSource.startAudio(spectralConverter);
+			realTimeAudioServer.startAudio(spectralConverter);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -108,7 +108,7 @@ public class PoetryJam  {
 	public void setInputWave(File waveFile) {
 
 		if (waveFile == null) {
-			realTimeSpectralSource.streamFile(null);
+			realTimeAudioServer.streamFile(null);
 			frames.pauseGraphs(false);
 			frames.resetGraphs();
 			return;
@@ -118,7 +118,7 @@ public class PoetryJam  {
 			RandomAccessFile rafG = new RandomAccessFile(waveFile, "r");
 			AudioReader audioReader = new AudioReader(
 					new VanillaRandomAccessFile(rafG), sampleRate);
-			realTimeSpectralSource.streamFile(audioReader);
+			realTimeAudioServer.streamFile(audioReader);
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

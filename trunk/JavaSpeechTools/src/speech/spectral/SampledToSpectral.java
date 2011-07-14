@@ -47,7 +47,7 @@ public class SampledToSpectral implements AudioProcess {
 		this.overlap = overlap;
 		this.fftSize = fftSize;
 		data = new Data(fftSize,featureSize);
-		
+		preFft=data.input;
 
 	}
 	
@@ -94,6 +94,8 @@ public class SampledToSpectral implements AudioProcess {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					
 			}
 		}
 		return AUDIO_OK;
