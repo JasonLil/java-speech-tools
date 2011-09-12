@@ -25,14 +25,17 @@ public class DrawLips extends JPanel {
 	double points2[][][];
 	int phonemes;
 	Image img = null;
+	int maxW=320;
+	int maxH=400;
+	
 	public DrawLips(int phonemes,ReadImage ri) throws IOException {
 		this.phonemes = phonemes;
 		
 		
 		
 		img=ri.getFace();
-		setPreferredSize(new Dimension(320, 400));
-		setMaximumSize(new Dimension(320, 400));
+		setPreferredSize(new Dimension(maxW, maxH));
+		setMaximumSize(new Dimension(maxW, maxH));
 		points = ri.lipsInner; 			// of lip and tract shapes
 		points2 = ri.lipsOuter;
 	
@@ -41,6 +44,13 @@ public class DrawLips extends JPanel {
 	public void paint(Graphics g) {
 		if (!isVisible()) return;
 		Graphics2D g2 = (Graphics2D)g;
+		double w=getWidth();
+		double h=getHeight();
+		
+		double scale=Math.min(w/maxW,h/maxH);
+		if (scale < 1.0){
+			g2.scale(scale,scale);	
+		}
 		g2.drawImage(img, 0, 0, null);
 		g2.setColor(Color.BLACK);
 		g2.fillPolygon(posx, posy, 8);
@@ -81,6 +91,39 @@ public class DrawLips extends JPanel {
 			}
 			posx2[i] = (int) (-48.0 + (sum_x / (sum)));
 			posy2[i] = (int) (100.0 + (sum_y / (sum)));
+		}
+
+		//repaint();
+	}
+	
+	public void vector(int k) {
+
+		double sum_x, sum_y;//, sum;
+
+		for (int i = 0; i < 28; i++) {
+			sum_x = 0.0;
+			sum_y = 0.0;
+			//sum = 0.0;
+			//for (int k = 0; k < phonemes; k++) {
+				sum_x = points[i][0][k] *  0.6;
+				sum_y = points[i][1][k] *  0.47;
+				//sum += outputs[k];
+			//}
+			posx[i] = (int) (-48.0 + (sum_x ));		// Locate the lips on the
+			posy[i] = (int) (100.0 + (sum_y ));		// screen (178 & 358)
+		}
+
+		for (int i = 0; i < 26; i++) {
+			sum_x = 0.0;
+			sum_y = 0.0;
+			//sum = 0.0;
+			//for (int k = 0; k < phonemes; k++) {
+				sum_x = points2[i][0][k] *  0.6;
+				sum_y = points2[i][1][k] *  0.47;
+			//	sum += outputs[k];
+			//}
+			posx2[i] = (int) (-48.0 + (sum_x ));
+			posy2[i] = (int) (100.0 + (sum_y ));
 		}
 
 		//repaint();

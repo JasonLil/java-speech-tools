@@ -27,6 +27,7 @@ public class DrawTract extends JPanel {
 	Font font;
 	int maxW=320;
 	int maxH=400;
+	
 	public DrawTract(int phonemes,ReadImage ri) {
 		this.phonemes = phonemes;
 		font=new Font("sansserif", Font.BOLD, 32);
@@ -39,6 +40,14 @@ public class DrawTract extends JPanel {
 	public void paint(Graphics g) {
 		if (!isVisible()) return;
 		Graphics2D g2 = (Graphics2D)g;
+		double w=getWidth();
+		double h=getHeight();
+		
+		double scale=Math.min(w/maxW,h/maxH);
+		if (scale < 1.0){
+			g2.scale(scale,scale);	
+		}
+		
 		java.awt.Color rgb = new java.awt.Color(239, 170, 180);
 		g2.setColor(rgb);
 		g2.fillPolygon(posx, posy, nPts);
@@ -73,6 +82,24 @@ public class DrawTract extends JPanel {
 //		posy[100]=1200;
 //		posx[101]=1500;
 //		posy[101]=0;
+		posx[100]=100;
+		posy[100]=maxH;
+		posx[101]=maxW;
+		posy[101]=maxH;
+		posx[102]=maxW;
+		posy[102]=0;
+		
+		// repaint();
+	}
+	
+	
+	public void vector( int iPh, String text) {
+		this.text=text;
+		
+		for (int i=0; i<100; i++)  {
+			posx[i]=(int)( (points[i][0][iPh]*.82*0.4+25)/(1-.6*.82));
+			posy[i]=(int) ( (points[i][1][iPh]*.82*0.4)/(1-.6*.82));
+		}
 		posx[100]=100;
 		posy[100]=maxH;
 		posx[101]=maxW;

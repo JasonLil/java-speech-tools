@@ -18,7 +18,8 @@ public class Config {
 	static int featureSize = 128;
 	static int fftSize = 1024;
 	static String phonemeNames[] = { "EEE", "EHH", "ERR", "AHH", "OOH", "UHH" };
-
+	static String phonemeWords[] = { "Read", "red", "Great", "Father", "Blue", "Burn" };
+	
 	public static String preferredIn[] = { "U0x46d0x805", "default" };
 	public static String preferredOut[] = { "NVidia [plughw:0,0]", "default" };
 
