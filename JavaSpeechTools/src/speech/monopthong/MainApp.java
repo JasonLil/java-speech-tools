@@ -1,5 +1,7 @@
 package speech.monopthong;
 
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.Arrays;
 
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import speech.gui.MakeFrames;
@@ -70,9 +73,40 @@ public class MainApp {
 		outSize = config.getOutputSize();
 
 		frames = new MakeFrames(isApplet, config, this); // Create gfx for
-															// output
+								
+		// output
+		int w= frames.windowSize.width;
+		int h=frames.windowSize.height;
+		
+		float wI=320;
+		float hI=400;
+		
+		int hE=h;
+		int wE=(int)(hE*wI/hI/(config.getNumberOfTargets()))*2;
+		
+		Rectangle rE=new Rectangle(0,0,wE,hE);
+	
+			
+		
+		
+		JFrame fm=frames.makeMaster();
+		Insets in=fm.getInsets();
+		Rectangle rM=new Rectangle(wE,0,(int)(wI*2+in.left+in.right),(int)(hI+in.top+in.bottom)+20);
+		fm.setBounds(rM);
+		
+		JFrame fE=frames.makeExamples();
+		fE.setBounds(rE);
+		
+		JFrame fs=frames.makeSpectrogramFrame();
+		fs.setBounds(fm.getX()+fm.getWidth(),0,w-fm.getWidth()-fm.getX(),fm.getHeight());
+		fs.setVisible(true);
+		
+		JFrame fG=frames.makephoneGraph();
+		Rectangle rG=new Rectangle(wE,fm.getHeight()+fm.getY(),(int)(w-wE),h-fm.getHeight()-fm.getY());
 
-		frames.makeMaster();
+		fG.setBounds(rG);
+
+		
 		timer = new Timer(50, new ActionListener() {
 
 			double outputSort[] = new double[outSize];

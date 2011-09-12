@@ -59,40 +59,40 @@ public class DrawScrollingSpect extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Dimension size;
 	private int[] screenBuffer;
-//	private boolean dirty = true;
-//	private double thresh;
 	private MemoryImageSource screenConverter;
-	// private boolean screenRepaint = false;
+
 	int nChunks;
 	int nBins;
 	int ptr = 0;
 	Image offscreen;
 	ValMapper mapper;
-//	double peaks[];
+
 
 	public DrawScrollingSpect() {
-		//this.nChunks = nChunks;
+		
 		this.mapper = new ValMapper();
 		mapper.update(null, null);
-		// setDoubleBuffered(true);
+	
 	}
 
 	final Object imagSync = new Object();
-	private double[] peaksRev;
+	
 
 	void createGraphics() {
-
+		
 		synchronized (imagSync) {
 			reset=true;
-			nChunks=getWidth();
+			
+			int nnn=getWidth();
+			if (nnn <=0) return;
+			nChunks=nnn;
 			size = new Dimension(nChunks, nBins);
-			System.out.println(" Spectrogram  nBins="+nBins);
+			System.out.println(" Spectrogram  nBins="+nBins+ " width="+nChunks);
 			int width = nChunks;
 			int height = nBins;
-			peaksRev = new double[nBins];
+			
 			screenBuffer = new int[width * height];
-			//nChunks=width;
-//			peaks=new double[nBins];
+
 			screenConverter = new MemoryImageSource(width, height,
 					screenBuffer, 0, width);
 			screenConverter.setAnimated(true);
@@ -100,29 +100,32 @@ public class DrawScrollingSpect extends JPanel {
 			offscreen = Toolkit.getDefaultToolkit()
 					.createImage(screenConverter);
 			ptr=0;
-			// setPreferredSize(size);
-			// setSize(size);
+		
 		}
 	}
 
 	boolean recursion = false;
-	private boolean reset;
-	private boolean pause;
+	private boolean reset=true;
+	private boolean pause=false;
 
 	public void notifyMoreDataReady(double[] bins) {
+		
+		
 		
 		if (pause) return;
 		if (recursion) {
 			System.err.println(" RECURSION ");
 		}
+		
 		nBins = bins.length;
+		
 		if (nBins == 0) {
 			return;
 		}
 
 		recursion = true;
 
-		if (size == null || nBins != size.height || nChunks != size.width) {
+		if (size == null || nBins != size.height || nChunks != getWidth()) {
 			createGraphics();
 		}
 
@@ -133,14 +136,6 @@ public class DrawScrollingSpect extends JPanel {
 			screenConverter.newPixels(0, 0, nChunks, nBins);
 		}
 		
-//		for (int i = 1; i < bins.length - 1; i++) {
-//			if (bins[i] > bins[i - 1] && bins[i] > bins[i + 1]) {
-//				peaks[i] = bins[i];
-//			} else {
-//				peaks[i] = 0;
-//			}
-//		}
-	
 		int width = size.width;
 
 		for (int i = 0; i < nBins; i++) {
@@ -181,11 +176,10 @@ public class DrawScrollingSpect extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-	//	if (!screenRepaint) {
-	//		return;
-	//	}
+
 		// System.out.println(" Spectro DRAWIMAGE");
-		if (size == null || nChunks==0 )   return; // || peaks == null) return;
+		if (size == null || nChunks==0 )   return;
+		
 		int w = size.width - ptr;
 		int h = size.height;
 
@@ -200,26 +194,7 @@ public class DrawScrollingSpect extends JPanel {
 					0, ptr, h, this);
 		}
 
-		// g.drawImage(offscreen, 0, 0, w, h, ptr, 0, size.width, h, this);
-		//
-		// if (ptr != 0) {
-		// g.drawImage(offscreen, w, 0, size.width, h, 0, 0, ptr, h, this);
-		// }
-		
-//		int j=nBins-1;
-//		for (int i = 0; i < nBins; i++) {
-//			peaksRev[j] = peaks[i];
-//			j--;
-//		}
-//		
-//		double top=0.0;;
-//		for (int i = 0; i <nBins; i++) {
-//			if (peaksRev[i] > 0.5) {
-//				g.drawString("<------", 440, 5+(int)i*3);
-//			}
-//		}
 
-	//	screenRepaint = false;
 	}
 
 	public int getHeightXX() {

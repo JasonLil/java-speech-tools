@@ -50,8 +50,7 @@ public class ReadImage {
 		double all_points[][][] = new double[100][3][config.getOutputSize()];
 		double points[][] = new double[100][3];
 		double sorted_points[][] = new double[100][3];
-//		String names[] = { "ee_wgr", "eh_wgr", "er_wgr", "ah_wgr", "oo_wgr",
-//				"oh_wgr" };
+
 
 		for (int f = 0; f < names.length; f++) {
 
