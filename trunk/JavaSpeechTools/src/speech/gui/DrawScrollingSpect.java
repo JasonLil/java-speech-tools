@@ -66,6 +66,9 @@ public class DrawScrollingSpect extends JPanel {
 	int ptr = 0;
 	Image offscreen;
 	ValMapper mapper;
+	boolean recursion = false;
+	private boolean reset=true;
+	private boolean pause=false;
 
 
 	public DrawScrollingSpect() {
@@ -104,14 +107,9 @@ public class DrawScrollingSpect extends JPanel {
 		}
 	}
 
-	boolean recursion = false;
-	private boolean reset=true;
-	private boolean pause=false;
-
+	
 	public void notifyMoreDataReady(double[] bins) {
-		
-		
-		
+				
 		if (pause) return;
 		if (recursion) {
 			System.err.println(" RECURSION ");
