@@ -97,7 +97,7 @@ public class MainApp {
 		JFrame fE=frames.makeExamples();
 		fE.setBounds(rE);
 		
-		JFrame fs=frames.makeSpectrogramFrame();
+		JFrame fs=frames.makeSpectrogramFrame2();
 		fs.setBounds(fm.getX()+fm.getWidth(),0,w-fm.getWidth()-fm.getX(),fm.getHeight());
 		fs.setVisible(true);
 		
