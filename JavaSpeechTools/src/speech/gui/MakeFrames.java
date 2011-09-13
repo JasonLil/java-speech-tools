@@ -28,7 +28,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.filechooser.FileFilter;
 
 import speech.Data;
-import speech.monopthong.MainApp;
+import speech.monophthong.MainApp;
 import speech.spectral.SpectralProcess;
 import config.Config;
 
@@ -70,9 +70,11 @@ public class MakeFrames {
 				drawScroll.notifyMoreDataReady(data.feature);
 				if (specFrame != null) {
 					drawHist.update(data.feature);
-					drawHist.repaint();
+					//drawHist.repaint();
 				}
+				specFrame.repaint();
 			}
+			
 		}
 	};
 

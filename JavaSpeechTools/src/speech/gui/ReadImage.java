@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import config.Config;
 
-import speech.monopthong.MainApp;
+import speech.monophthong.MainApp;
 
 // multidimensional array sort taken from: http://realityisimportant.blogspot.com/
 
