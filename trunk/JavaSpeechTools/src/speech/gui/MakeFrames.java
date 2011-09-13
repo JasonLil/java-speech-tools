@@ -257,7 +257,7 @@ public class MakeFrames {
 		final JFrame frame = new JFrame("Spectrogram");
 		frame.setLayout(null);
 		drawScroll = new DrawScrollingSpect();
-		drawHist = new DrawHist(onscreenBins);
+		drawHist = new DrawHist1(onscreenBins);
 
 		frame.add(drawScroll);
 		frame.add(drawHist);
@@ -342,6 +342,95 @@ public class MakeFrames {
 		return frame;
 	}
 
+	public JFrame makeSpectrogramFrame2() {
+		final JFrame frame = new JFrame("Spectrogram");
+		frame.setLayout(null);
+		drawScroll = new DrawScrollingSpect();
+		drawHist = new DrawHist2(onscreenBins);
+
+		frame.add(drawScroll);
+		frame.add(drawHist);
+
+		frame.addComponentListener(new ComponentListener() {
+			
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				int h=frame.getHeight();
+				int w=frame.getWidth();
+
+				int barH=100;
+				drawScroll.setLocation(0, 0);
+				drawScroll.setSize(w, h-barH);
+				drawHist.setLocation(0,h-barH);
+				drawHist.setSize(w, barH);
+				
+				System.out.println(" HELLO "+ w+" "+h);
+				frame.repaint();
+				
+			}
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
+		//frame.setSize(680, 400);
+		//frame.setVisible(true);
+
+		specFrame = frame;
+		specFrame.addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.out.println(" CLOSING");
+				drawHist = null;
+				drawScroll = null;
+				specFrame = null;
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
+		
+		return frame;
+	}
+
+	
 	public JFrame makephoneGraph() {
 		JFrame frame = new JFrame("Phoneme Classification");
 		// frame.setLayout(null);
