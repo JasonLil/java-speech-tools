@@ -9,7 +9,12 @@
 	<property name="build" value="bin" />
 	<property name="dest" value="dest" />
 	<property name="lib" value="lib" />
+        <property name="classpath" value="audioServers.jar  pjl.jar rasmusdsp.jar toot-r2.jar frinika.jar jl1.0.1.jar jcommon-1.0.14.jar"  />
+    <property name="javaversion" value="1.5" />
 
+
+ 
+		
 	<property name="marshall.dir" value="marshallr" />
 
 
@@ -31,8 +36,8 @@
 
 	<!-- make a jar file -->
 	<target name="jar" depends="compile">
-		<copy todir="${build}/imagefiles">
-			<fileset dir="${src}/imagefiles" />
+		<copy todir="${build}/speech/gui/imagefiles">
+			<fileset dir="${src}/speech/gui/imagefiles" />
 		</copy>
 		<copy todir="${build}/textfiles">
 			<fileset dir="${src}/textfiles" />
@@ -47,9 +52,9 @@
 
 		<copy todir="${dest}" file="SpeechApplet.html" />
 
-		<jar jarfile="${dest}/${jarname}" basedir="${build}">
+		<jar jarfile="dest/${jarname}" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="PJL_MainApp" />
+				<attribute name="Main-Class" value="speech.monophthong.MainApp" />
 				<attribute name="Sealed" value="false" />
 				<attribute name="Class-Path" value="${classpath}" />
 			</manifest>
