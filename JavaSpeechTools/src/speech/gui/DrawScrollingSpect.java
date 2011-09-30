@@ -182,13 +182,14 @@ public class DrawScrollingSpect extends JPanel {
 		int h = size.height;
 
 		int magX = Math.max(1, getWidth() / size.width);
-		int magY = Math.max(1, getHeight() / size.height);
+		//int magY = Math.max(1, getHeight() / size.height);
 		// System.out.println(magX+" "+magY);
-
-		g.drawImage(offscreen, 0, 0, w * magX, h * magY, ptr, 0, size.width, h,
+		//float magX=(float)getWidth() / size.width;
+		float magY=(float)getHeight() / size.height;
+		g.drawImage(offscreen, 0, 0, w * magX, (int)(h * magY), ptr, 0, size.width, h,
 				this);
 		if (ptr != 0) {
-			g.drawImage(offscreen, w * magX, 0, size.width * magX, h * magY, 0,
+			g.drawImage(offscreen, w * magX, 0, size.width * magX, (int)(h * magY), 0,
 					0, ptr, h, this);
 		}
 

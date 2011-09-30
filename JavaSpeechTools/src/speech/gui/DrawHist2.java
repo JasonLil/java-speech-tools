@@ -34,18 +34,20 @@ public class DrawHist2 extends DrawHist   {
 		
 //		g2.fillPolygon(xpoints, ypoints, 4);
 //		g2.setStroke(new BasicStroke( 2.0f ));
-		float scale=((float)getHeight())/onscreenBins;
+		float scale=((float)getWidth())/onscreenBins;
+		int w=getWidth();
 		int h=getHeight();
 		for (int i = 0; i < onscreenBins; i++) {
-			int x=(int) (i*scale);
+			int x=(int) (w-i*scale);
 			int red = (int)(magn[i]*200);
 			int green = (int)(magn[i]*200);
-			if (red>255) red=255;
+			//if (red>255) 
+			red=255;
 			if (green>255) green=255;
-			rgb = new java.awt.Color(red, green, 0);
+			rgb = new java.awt.Color(red, green, 255-green);
 			g2.setColor(rgb);
-			int hh=Math.max(h,h-(int)(magn[i]*100));
-			g2.drawLine(x, h, hh, x);
+			int hh=Math.max(0,h-(int)(magn[i]*100));
+			g2.drawLine(x, h, x,hh);
 		}
 
 	}
