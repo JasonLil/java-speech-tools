@@ -25,9 +25,11 @@ public class ReadWav {
 
 	public int file_length[];
 	private Config config;
+	private String srcDir;
 
-	public ReadWav(int outputs) {
+	public ReadWav(String srcDir,int outputs) {
 		file_length = new int[outputs + 1];
+		this.srcDir=srcDir;
 	}
 
 	public double[][][] getMonoThongWavs(Config config, int maxAudioLength) throws Exception {
@@ -43,9 +45,10 @@ public class ReadWav {
 		String files[] = new String[cn.length+1];
 		
 		for (int i=0;i<cn.length;i++) {
-			files[i]="src/speech/wavfiles/"+cn[i].toLowerCase()+"_all.wav";
+			files[i]=srcDir+"/"+cn[i].toLowerCase()+"_all.wav";
 		}
-		files[cn.length]="src/speech/wavfiles/silence_all.wav";
+		
+		files[cn.length]=srcDir+"/silence_all.wav";
 		
 		for (int i = 0; i < config.getOutputSize() + 1; i++) {
 

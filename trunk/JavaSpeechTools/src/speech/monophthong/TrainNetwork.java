@@ -42,7 +42,7 @@ public class TrainNetwork {
 
 	public static void main(String args[]) throws Exception {
 
-		
+		String srcDir="../JavaSpeechToolData/wavfiles";
 		Config config=Config.current();
 		float Fs=config.getSampleRate();
 		int fftSize=config.getFFTSize();
@@ -52,7 +52,7 @@ public class TrainNetwork {
 		Random rand=new Random();
 		neuralNet = new BackProp(sz, beta, alpha);
 		specAdjust = config.getSpectrumToFeature(); //new SpectrumToFeature(onscreenBins,fftSize);
-		readWav = new ReadWav(outputs);
+		readWav = new ReadWav(srcDir,outputs);
 
 		//neuralNet.randomWeights(0.0, 0.01);
 		neuralNet.randomWeights(-0.5, 0.5,rand);

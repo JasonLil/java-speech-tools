@@ -33,7 +33,7 @@ public class TrainNetwork {
 	public static void main(String args[]) throws Exception {
 
 		Config config = Config.current();
-		File root = new File("src/speech/wavfiles/Dynamic");
+		File root = new File("../JavaSpeechToolData/wavfiles/Dynamic");
 		WavTrainingPool pool = new WavTrainingPool(root, config);
 		int featSize = config.getFeatureVectorSize();
 
