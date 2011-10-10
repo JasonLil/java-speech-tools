@@ -20,8 +20,8 @@ public class Config {
 	static String phonemeNames[] = { "EEE", "EHH", "ERR", "AHH", "OOH", "UHH" };
 	static String phonemeWords[] = { "Read", "red", "Great", "Father", "Blue", "Burn" };
 	
-	public static String preferredIn[] = { "U0x46d0x805", "default" };
-	public static String preferredOut[] = { "NVidia [plughw:0,0]", "default" };
+	public static String preferredIn[] = {"M1010LT [plughw:0,0]", "U0x46d0x805", "default" };
+	public static String preferredOut[] = { "M1010LT [plughw:0,0]","NVidia [plughw:0,0]", "default" };
 
 	public static File defaultWaveFile = new File(
 			"/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Cat.wav");

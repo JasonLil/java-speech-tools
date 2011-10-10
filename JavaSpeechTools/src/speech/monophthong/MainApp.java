@@ -18,6 +18,8 @@ import speech.gui.MakeFrames;
 import speech.spectral.FeatureClient;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
+import speech.spectral.TootRealTimeAudioSource;
+
 import speech.spectral.SampledToSpectral;
 
 
@@ -204,11 +206,8 @@ public class MainApp {
 		
 
 		// Grabs input and feeds into the spectralConverter
-		realTimeSpectralSource = new RealTimeAudioSource();
+		realTimeSpectralSource = new TootRealTimeAudioSource();
 
-		
-				
-		
 
 		try {
 			// Start audio thread and connect nnFeatureDetector via the chunk
