@@ -1,16 +1,15 @@
 
 package uk.ac.bath.audio;
 
-import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
-import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D;
+import rasmus.interpreter.sampled.util.FFT;
 
 /**
  *
  * @author pjl
  */
-public class FFTWorker {
+public class FFTWorkerRasmus {
 
-    private DoubleFFT_1D fft;
+    private FFT fft;
     private double[] hanning;
     int fftsize=-1;
     private int nBin;
@@ -20,7 +19,7 @@ public class FFTWorker {
     private double Fs;
     private boolean doHanning;
 
-    public FFTWorker(double Fs, boolean doHanning) {
+    public FFTWorkerRasmus(double Fs, boolean doHanning) {
         this.doHanning = doHanning;
 //        this.Fs=Fs;
     }
@@ -50,7 +49,7 @@ public class FFTWorker {
              }
         }
 
-        fft.realForward(fftOut);
+        fft.calcReal(fftOut, -1);
 
     }
 
@@ -60,7 +59,7 @@ public class FFTWorker {
     	if (this.fftsize == fftsize) return;
     	
         this.fftsize = fftsize;
-        fft = new DoubleFFT_1D(fftsize);
+        fft = new FFT(fftsize);
         hanning = fft.wHanning();
 
         nBin = fftsize / 2;
