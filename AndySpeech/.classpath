@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="uk/org/toot/audio/mixer/|uk/org/toot/audio/dynamics/|uk/org/toot/audio/system/|uk/org/toot/audio/reverb/|uk/org/toot/audio/delay/|uk/org/toot/audio/distort/|uk/org/toot/midi/|uk/org/toot/control/|uk/org/toot/misc/|uk/org/toot/music/|uk/org/toot/service/|uk/org/toot/swingui/|uk/org/toot/synth/|uk/org/toot/transport/" kind="src" path="tootSrc"/>
+	<classpathentry excluding="speech/gui/|speech/spectral/TootRealTimeAudioSource.java" kind="src" path="srcJST"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
