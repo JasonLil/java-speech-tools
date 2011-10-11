@@ -11,7 +11,7 @@ import config.Config;
 
 import speech.Data;
 import speech.NeuralNet;
-import speech.gui.DrawScrollingSpect;
+//import speech.gui.DrawScrollingSpect;
 
 /**
  * Process the output of the FFT using an NN which is loaded from file
