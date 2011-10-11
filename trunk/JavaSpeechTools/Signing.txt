@@ -1,0 +1,92 @@
+1. Generate key: keytool -genkey -keyalg rsa -alias myKey
+Enter keystore password: *******
+What is your first and last name?
+[Unknown]: Your Name
+What is the name of your organizational unit?
+[Unknown]: YourUnit
+What is the name of your organization?
+[Unknown]: YourOrg
+What is the name of your City or Locality?
+[Unknown]: YourCity
+What is the name of your State or Province?
+[Unknown]: YS
+What is the two-letter country code for this unit?
+[Unknown]: US
+Is CN=Your Name, OU=YourUnit, O=YourOrg, L=YourCity, ST=YS, C=US
+correct?
+[no]: yes
+
+(wait...)
+
+Enter key password for myKey
+(RETURN if same as keystore password):
+
+(press [enter])
+
+4. Export key: keytool -export -alias myKey -file myCert.crt
+
+Enter keystore password: *******
+Certificate stored in file myCert.crt
+
+5. Create your JAR using maven / eclipse / netbeans / CLI
+
+6. Sign JAR: jarsigner myJar.jar myKey
+Enter Passphrase for keystore: *******
+
+7. Verify Signing: jarsigner -verify -verbose -certs myJar.jar
+
+130 Thu Jul 27 13:04:12 GMT+02:00 2000 META-INF/MANIFEST.MF
+183 Thu Jul 27 13:04:12 GMT+02:00 2000 META-INF/TSTKEY.SF
+920 Thu Jul 27 13:04:12 GMT+02:00 2000 META-INF/TSTKEY.RSA
+Thu Jul 27 12:58:28 GMT+02:00 2000 META-INF/
+smk 849 Thu Jul 27 12:49:04 GMT+02:00 2000 tst.class
+
+X.509, CN=Your Name, OU=YourUnit, O=YourOrg, L=YourCity, ST=YS, C=US
+(tstkey)
+
+s = signature was verified
+m = entry is listed in manifest
+k = at least one certificate was found in keystore
+i = at least one certificate was found in identity scope
+
+jar verified.
+
+9. use the HTML converter, selecting the extended version which allows all browsers. (this is a java app)
+ 
+
+
+
+
+
+
+
+
+
+
+Certificate Authenticators
+
+1) Is to export a cert request using the key tool and send it to a CA verification source like verisign. 
+When the reponse comes back, import it into the keystore overwriting the original cert for the generated key.
+
+To export request:
+keytool -certreg -alias tstkey -file tstcert.req
+
+To import response:
+keytool -import -trustcacerts -alias tstkey -file careply.crt
+
+An applet signed with a cert that has been verified by a CA source will automatically be recognized by the plugin.
+2) For development or otherwise, you may want to just use your self-signed certificate. 
+In that case, the JDK plugin will recognize all certs that have a root cert located in the JDK cacerts keystore. 
+This means you can import your test certificate into this keystore and have the plugin recognize your jars when you sign them.
+
+To import self-signed certificate into the cacerts keystore, change directory to where the JDK plugin key store is located.
+For JDK 1.3.0_02: C:\Program Files\JavaSoft\JRE\1.3.0_02\lib\security
+For JDK 1.3.1: C:\Program Files\JavaSoft\JRE\1.3.1\lib\security
+
+Import your self-signed cert into the cacerts keystore:
+keytool -import -keystore cacerts -storepass changeit -file tstcert.crt
+(the password is literally 'changeit')
+Now, regardless of which method you use, the applet should be recognized as coming from a signed jar. The user can choose to activate it if he / she chooses. If your applet uses classes from multiple jars, for example Apache's Xerce's parser, you will need to sign those jars as well to allow them to execute in the client's brower. Otherwise, only the classes coming from the signed jar will work with the java.security.AllPermission setting and all other classes from unsigned jars will run in the sandbox.
+NOTE: Unless otherwise specified by the -keystore command in all keytool and jarsigner operations, the keystore file used is named '.keystore' in the user's home directory. 
+
+The first time any keystore is accessed (including the default) it will be created and secured with the first password given by the user. There is no way to figure out the password if you forget it, but you can delete the default file and recreate it if necessary. For most operations, using the -keystore command is safer to keep from cluttering or messing up your default keystore
