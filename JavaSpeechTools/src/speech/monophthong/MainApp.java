@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import speech.gui.MakeFrames;
+import speech.gui.ReadImage;
 import speech.spectral.FeatureClient;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
@@ -184,20 +185,23 @@ public class MainApp {
 
 		String name = config.getNetName();
 
-		String fullName = "src/textfiles/" + name + ".net";
+		String fullName = "/textfiles/" + name + ".net";
 
-		if (new File(fullName).exists()) {
-			url = new File(fullName).toURI().toURL();
-		} else {
-			System.err.println(" Could not find NN "+fullName );
-		}
+		URL url1 = MainApp.class.getResource(fullName);
+		
+		
+//		if (new File(fullName).exists()) {
+//			url1 = new File(fullName).toURI().toURL();
+//		} else {
+//			System.err.println(" Could not find NN "+fullName );
+//		}
 
 		// takes the raw FFT from the spectral converter and feeds
 		// the neural net classification
 
 		nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
 				config.getFeatureVectorSize(), frames.getSpectralProcess(),
-				featureClient, url, config);
+				featureClient, url1, config);
 		
 		// This is used to convert the audio stream to a spectral stream.
 		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
