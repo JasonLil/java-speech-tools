@@ -1,0 +1,61 @@
+<?xml version='1.0'?>
+<project name="speech" default="jar" basedir=".">
+
+	<!-- set global properties for this build -->
+	<property name="name" value="speech" />
+	<property name="package" value="*" />
+	<property name="jarname" value="${name}.jar" />
+	<property name="src" value="src" />
+	<property name="srcToot" value="tootSrc" />
+	<property name="srcServer" value="srcTootServers"/>
+	<property name="srcRasmus" value="rasmusDSPsrc"/>
+	<property name="srcdirs" value="${src}:${srcToot}:${srcServer}:${srcRasmus}" />
+
+	<property name="build" value="bin" />
+	<property name="dest" value="dest" />
+	<property name="javaversion" value="1.5" />
+
+	<!-- all jar-files used by speech -->
+
+
+	<property name="javaversion" value="1.6" />
+
+
+	<target name="compile">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${srcdirs}" destdir="${build}">
+			<classpath>
+				<pathelement path="${classpath}" />
+			</classpath>
+		</javac>
+	</target>
+
+
+	<!-- make a jar file -->
+
+	<target name="jar" depends="compile">
+		<copy todir="${build}/speech/gui/imagefiles">
+			<fileset dir="${src}/speech/gui/imagefiles" />
+		</copy>
+		<copy todir="${build}/textfiles">
+			<fileset dir="${src}/textfiles" />
+		</copy>
+		<copy todir="${build}/config">
+			<fileset dir="${src}/config" />
+		</copy>
+
+
+		<copy todir="${dest}" file="SpeechApplet.html" />
+
+		<jar jarfile="dest/${jarname}" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="speech.monophthong.MainApp" />
+				<attribute name="Sealed" value="false" />
+				<attribute name="Class-Path" value="${classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+
+</project>
+

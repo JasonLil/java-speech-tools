@@ -15,7 +15,8 @@ import com.frinika.toot.PriorityAudioServer;
  * JavaSoundAudioServer extends BasicAudioServer with JavaSound-style byte[]
  * buffer provision and management and JavaSound audio I/O provision.
  */
-public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
+public class JavaSoundAudioServer extends  // PriorityAudioServer 
+TimedAudioServer
 {
     private byte[] sharedByteBuffer;
 
