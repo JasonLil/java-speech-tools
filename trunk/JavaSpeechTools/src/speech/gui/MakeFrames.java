@@ -82,6 +82,8 @@ public class MakeFrames {
 	private Config config;
 	public Rectangle windowSize;
 	private ReadImage ri;
+	private boolean isApplet;
+	JFileChooser chooser;
 	
 	void calcScreenSize() {
 		
@@ -114,6 +116,9 @@ public class MakeFrames {
 		drawLips = new DrawLips(nPhonemes, ri);
 		//drawTargLips = new DrawLips(nPhonemes, ri);
 		this.onscreenBins = config.getFeatureVectorSize();
+		this.isApplet=isApplet;
+		if (!isApplet) 
+			chooser = new JFileChooser(defaultWavFile);
 		
 
 	}
@@ -145,7 +150,7 @@ public class MakeFrames {
 		
 		
 		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if (!isApplet) frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.setVisible(true);
 		frame.pack();
@@ -165,7 +170,7 @@ public class MakeFrames {
 		content.add(drawLips);
 		content.add(drawTract);
 		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if (!isApplet) frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.setVisible(true);
 		masterFrame = frame;
@@ -613,7 +618,6 @@ public class MakeFrames {
 //		}
 //	}
 
-	JFileChooser chooser = new JFileChooser(defaultWavFile);
 
 	File selectWaveFile() {
 		chooser.setDialogTitle("Select audio file");
