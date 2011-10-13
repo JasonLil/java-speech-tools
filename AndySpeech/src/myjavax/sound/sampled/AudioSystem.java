@@ -23,7 +23,7 @@
  * have any questions.
  */
 
-package javax.sound.sampled;
+package myjavax.sound.sampled;
 
 import java.io.File;
 import java.io.InputStream;

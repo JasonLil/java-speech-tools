@@ -1,4 +1,4 @@
-package java.awt;
+package myjava.awt;
 
 public class Color {
 

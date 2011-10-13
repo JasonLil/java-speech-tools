@@ -1,4 +1,4 @@
-package javax.sound.sampled;
+package myjavax.sound.sampled;
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.

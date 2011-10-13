@@ -1,3 +1,5 @@
+package uk.co.pjl;
+
 
 import android.app.Activity;
 import android.media.AudioFormat;
@@ -9,15 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 public class AndroidAudioServer {
-	// originally from
-	// http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
-	// and modified by Steve Pomeroy <steve@staticfree.info>
-	// private final int duration = 3; // seconds
 	private final int sampleRate = 8000;
-	private final int numSamples = duration * sampleRate;
-	private final float sample[] = new double[numSamples];
-	//private final double freqOfTone = 840; // hz
-	//private  AudioTrack audioTrack;
+
 	int idx = 0;
 	private RawClient client;
 	boolean isBigendian=false;
