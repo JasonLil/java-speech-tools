@@ -16,6 +16,7 @@ import speech.spectral.FeatureClient;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
+import speech.spectral.TootRealTimeAudioSource;
 
 
 import com.frinika.audio.io.AudioReader;
@@ -136,7 +137,7 @@ public class MainDynamicApp  {
 				config.getFeatureVectorSize(),nnFeatureDetector);
 
 		// Grabs input and feeds into the spectralConverter
-		realTimeSpectralSource = new RealTimeAudioSource();
+		realTimeSpectralSource = new TootRealTimeAudioSource();
 
 		
 		try {
