@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import speech.ReadFeatureVectors;
+
 import config.Config;
 
-import speech.ReadFeatureVectors;
+//import speech.ReadFeatureVectors;
 
 public class WavTrainingPool {
 	private int nOut;

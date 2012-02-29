@@ -15,6 +15,7 @@ import speech.gui.MakeFrames;
 import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
 import speech.spectral.SpectralProcessor;
+import speech.spectral.TootRealTimeAudioSource;
 
 import com.frinika.audio.io.AudioReader;
 
@@ -90,7 +91,7 @@ public class PoetryJam  {
 				config.getFeatureVectorSize(),client);
 
 		// Grabs input and feeds into the spectralConverter
-		realTimeAudioServer = new RealTimeAudioSource();
+		realTimeAudioServer = new TootRealTimeAudioSource();
 
 		
 		try {
