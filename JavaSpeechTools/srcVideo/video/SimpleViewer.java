@@ -22,8 +22,9 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  *
  */
 public class SimpleViewer extends WindowAdapter implements CaptureCallback{
-        private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
-        private static String   device = "/dev/video0";
+        //private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
+	private static int      width = 1280, height = 1024, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
+        private static String   device = "/dev/video1";
 
         private VideoDevice     videoDevice;
         private FrameGrabber    frameGrabber;

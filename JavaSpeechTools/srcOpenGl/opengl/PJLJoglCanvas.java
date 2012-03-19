@@ -25,7 +25,7 @@ import com.sun.opengl.util.texture.TextureIO;
  * @author <a href="mailto:kain@land-of-kain.de">Kai Ruhl</a>
  * @since 26 Feb 2009
  */
-public class MyJoglCanvasStep6 extends GLCanvas implements GLEventListener {
+public class PJLJoglCanvas extends GLCanvas implements GLEventListener {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -55,7 +55,7 @@ public class MyJoglCanvasStep6 extends GLCanvas implements GLEventListener {
      * @param width The window width.
      * @param height The window height.
      */
-    public MyJoglCanvasStep6(GLCapabilities capabilities, int width, int height) {
+    public PJLJoglCanvas(GLCapabilities capabilities, int width, int height) {
         addGLEventListener(this);
     }
 
@@ -78,6 +78,7 @@ public class MyJoglCanvasStep6 extends GLCanvas implements GLEventListener {
      */
     public void init(GLAutoDrawable drawable) {
         drawable.setGL(new DebugGL(drawable.getGL()));
+    	//drawable.setGL((drawable.getGL()));
         final GL gl = drawable.getGL();
 
         // Enable z- (depth) buffer for hidden surface removal. 
@@ -138,7 +139,7 @@ public class MyJoglCanvasStep6 extends GLCanvas implements GLEventListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
         // Set camera.
-        setCamera(gl, glu, 60);
+        setCamera(gl, glu, 30);
 
         // Prepare light parameters.
         float SHINE_ALL_DIRECTIONS = 1;
@@ -308,7 +309,7 @@ public class MyJoglCanvasStep6 extends GLCanvas implements GLEventListener {
      */
     public final static void main(String[] args) {
         GLCapabilities capabilities = createGLCapabilities();
-        MyJoglCanvasStep6 canvas = new MyJoglCanvasStep6(capabilities, 800, 500);
+        PJLJoglCanvas canvas = new PJLJoglCanvas(capabilities, 800, 500);
         JFrame frame = new JFrame("Mini JOGL Demo (breed)");
         frame.getContentPane().add(canvas, BorderLayout.CENTER);
         frame.setSize(800, 500);
