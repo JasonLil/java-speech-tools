@@ -20,4 +20,6 @@ public class TrainingData {
 	public ArrayList<double[]> featureSequence() {
 		return featSeq;
 	}
+	
+	
 }

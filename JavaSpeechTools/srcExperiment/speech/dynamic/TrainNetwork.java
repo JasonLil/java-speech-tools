@@ -34,7 +34,9 @@ public class TrainNetwork {
 
 		Config config = Config.current();
 		File root = new File("../JavaSpeechToolData/wavfiles/Dynamic");
-		WavTrainingPool pool = new WavTrainingPool(root, config);
+		String words[]={"Bed","Red"};
+		
+		WavTrainingPool pool = new WavTrainingPool(root, config,words);
 		int featSize = config.getFeatureVectorSize();
 
 		int sz[] = { config.getFeatureVectorSize(), hidden, pool.nTarget() };
