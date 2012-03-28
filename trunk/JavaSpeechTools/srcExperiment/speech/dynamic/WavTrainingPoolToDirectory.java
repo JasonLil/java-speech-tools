@@ -13,15 +13,15 @@ import config.Config;
 
 //import speech.ReadFeatureVectors;
 
-public class WavTrainingPool {
+public class WavTrainingPoolToDirectory {
 	private int nOut;
 	public List<TrainingData> trainingData;
 	ReadFeatureVectors reader;
 	ArrayList<String> names;
-	public double target[][];
+	public double target[];
 	HashSet<String> filt;
 	
-	WavTrainingPool(File root, Config config,String words[]) {
+	WavTrainingPoolToDirectory(File root, Config config,String words[]) {
 		names=new ArrayList<String>();
 		
 		reader = new ReadFeatureVectors(config);
@@ -35,7 +35,12 @@ public class WavTrainingPool {
 		HashMap<String, List<File>> set = new HashMap<String, List<File>>();
 
 		assert (root.isDirectory());
+		
+		// Create a map of the files against the key==WORD
+		
 		for (File dir : root.listFiles()) {
+			
+			// For each subdirectory
 			if (dir.getName().startsWith("."))
 				continue;
 			assert (dir.isDirectory());
@@ -55,15 +60,28 @@ public class WavTrainingPool {
 			}
 		}
 
+		
+		
+		
 		nOut = 0;
+		int nOutTot=set.keySet().size();
+		
 		for (String key : set.keySet()) {
+			
+			// For each name
+			target = new double[nOutTot];
+
+			
+			target[nOut] = 1.0;
+			
+			
 			List<File> list = set.get(key);
 			names.add(key);
 			for (File file : list) {
 				try {
 					System.out.println(" Loading features: " + file.getPath());
-					TrainingData td = new TrainingData(file, nOut, reader);
-					trainingData.add(td);
+					ArrayList<double[]> featSeq= reader.readVectors(file);
+						
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -73,12 +91,6 @@ public class WavTrainingPool {
 		}
 		
 
-		target = new double[nOut][];
-
-		for (int i = 0; i < nOut; i++) {
-			target[i] = new double[nOut];
-			target[i][i] = 1.0;
-		}
 
 	}
 
