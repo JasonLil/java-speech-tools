@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import speech.ReadFeatureVectors;
+import speech.FeatureVectorReader;
+
 
 import config.Config;
 
@@ -16,7 +17,7 @@ import config.Config;
 public class WavTrainingPool {
 	private int nOut;
 	public List<TrainingData> trainingData;
-	ReadFeatureVectors reader;
+	FeatureVectorReader reader;
 	ArrayList<String> names;
 	public double target[][];
 	HashSet<String> filt;
@@ -24,7 +25,7 @@ public class WavTrainingPool {
 	WavTrainingPool(File root, Config config,String words[]) {
 		names=new ArrayList<String>();
 		
-		reader = new ReadFeatureVectors(config);
+		reader = new FeatureVectorReader(config);
 		trainingData = new ArrayList<TrainingData>();
 		filt=new HashSet<String>();
 		
