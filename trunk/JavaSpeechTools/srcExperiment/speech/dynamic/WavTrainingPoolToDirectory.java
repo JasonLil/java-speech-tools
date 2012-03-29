@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import speech.ReadFeatureVectors;
+import speech.FeatureVectorReader;
+import uk.ac.bath.ai.util.Data;
 
 import config.Config;
 
@@ -16,7 +17,7 @@ import config.Config;
 public class WavTrainingPoolToDirectory {
 	private int nOut;
 	public List<TrainingData> trainingData;
-	ReadFeatureVectors reader;
+	FeatureVectorReader reader;
 	ArrayList<String> names;
 	public double target[];
 	HashSet<String> filt;
@@ -24,7 +25,7 @@ public class WavTrainingPoolToDirectory {
 	WavTrainingPoolToDirectory(File root, Config config,String words[]) {
 		names=new ArrayList<String>();
 		
-		reader = new ReadFeatureVectors(config);
+		reader = new FeatureVectorReader(config);
 		trainingData = new ArrayList<TrainingData>();
 		filt=new HashSet<String>();
 		
@@ -65,6 +66,7 @@ public class WavTrainingPoolToDirectory {
 		
 		nOut = 0;
 		int nOutTot=set.keySet().size();
+	
 		
 		for (String key : set.keySet()) {
 			
@@ -73,6 +75,7 @@ public class WavTrainingPoolToDirectory {
 
 			
 			target[nOut] = 1.0;
+			int nFeature=0;
 			
 			
 			List<File> list = set.get(key);
@@ -81,6 +84,20 @@ public class WavTrainingPoolToDirectory {
 				try {
 					System.out.println(" Loading features: " + file.getPath());
 					ArrayList<double[]> featSeq= reader.readVectors(file);
+					Data data=new Data();
+					
+					int nslice=featSeq.size();
+					if (nFeature==0) {
+						nFeature=nslice;
+					} else {
+						assert(nFeature == nslice);
+					}
+					int imageSize=config.getFeatureVectorSize()*nslice;
+						
+					
+					float feat[]=new float[imageSize];
+					
+					
 						
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

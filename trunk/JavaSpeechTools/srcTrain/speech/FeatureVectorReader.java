@@ -15,13 +15,13 @@ import com.frinika.audio.io.VanillaRandomAccessFile;
 
 import config.Config;
 
-public class ReadFeatureVectors {
+public class FeatureVectorReader {
 
 	
 	private SpectrumToFeature spectAdjust;
 	private Config config;
 
-	public ReadFeatureVectors(Config config) {
+	public FeatureVectorReader(Config config) {
 		spectAdjust=config.getSpectrumToFeature();
 		this.config=config;
 	}
