@@ -30,6 +30,11 @@ public class FeatureVectorReader {
 
 		int fftSize=config.getFFTSize();
 		int featSize=config.getFeatureVectorSize();
+		int bitSize=(int) Math.round(fftSize*((100.0-config.getPercentOverlap())/100.0));
+			
+		assert(fftSize % bitSize == 0);
+		
+		int nBitPerChunk=fftSize/bitSize;
 		
 		ArrayList<double[]> list=new ArrayList<double[]>();
 		
@@ -40,10 +45,20 @@ public class FeatureVectorReader {
 		
 		AudioReader audioReader = new AudioReader(new VanillaRandomAccessFile(
 				rafG), config.getSampleRate());
+		
+		
 		AudioBuffer chunk = new AudioBuffer("Buf", 2, fftSize,
 				config.getSampleRate());
 		chunk.setRealTime(false);
 
+		
+		AudioBuffer bit = new AudioBuffer("Bufbit", 2, bitSize,
+				config.getSampleRate());
+		chunk.setRealTime(false);
+
+		
+		
+		
 		while (!audioReader.eof()) {
 
 			chunk.makeSilence();

@@ -18,19 +18,21 @@ public class Config {
 	static int featureSize = 128;
 	static int fftSize = 1024;
 	static String phonemeNames[] = { "EEE", "EHH", "ERR", "AHH", "OOH", "UHH" };
-	static String phonemeWords[] = { "Read", "red", "Great", "Father", "Blue", "Burn" };
-	
-	public static String preferredIn[] = {"M1010LT [plughw:0,0]", "U0x46d0x805", "default" };
-	public static String preferredOut[] = { "M1010LT [plughw:0,0]","NVidia [plughw:0,0]", "default" };
+	static String phonemeWords[] = { "Read", "red", "Great", "Father", "Blue",
+			"Burn" };
+
+	public static String preferredIn[] = { "M1010LT [plughw:0,0]",
+			"U0x46d0x805", "default" };
+	public static String preferredOut[] = { "M1010LT [plughw:0,0]",
+			"NVidia [plughw:0,0]", "default" };
 
 	public static File defaultWaveFile = new File(
 			"/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Cat.wav");
 	private Properties prop;
 	private SpectrumToFeature spectToFeat;
-	private float lowFreq=50;
-	private float highFreq=12000;
-
-	
+	private float lowFreq = 50;
+	private float highFreq = 12000;
+	private double percentOverlap = 0;
 
 	private Config(Properties prop) {
 		setProp(prop);
@@ -41,13 +43,13 @@ public class Config {
 		String feat = prop.getProperty("spectrumTofeature");
 
 		if (feat.equals("mel")) {
-			featureSize=200;
+			featureSize = 200;
 			spectToFeat = new MelSpectrumToFeature(featureSize, fftSize,
 					lowFreq, highFreq, sampleRate);
 		} else if (feat.equals("jr")) {
 			spectToFeat = new JRSpectrumToFeature(featureSize, fftSize);
 		} else if (feat.equals("raw")) {
-			featureSize=fftSize/2;
+			featureSize = fftSize / 2;
 			spectToFeat = new RawSpectrumToFeature(featureSize);
 		} else {
 			assert (false);
@@ -87,7 +89,6 @@ public class Config {
 		return lowFreq;
 	}
 
-	
 	public double getHighFreq() {
 		return highFreq;
 	}
@@ -102,14 +103,13 @@ public class Config {
 		prop.setProperty("spectrumTofeature", "mel");
 		return new Config(prop);
 	}
-	
-	
+
 	public static Config jr() {
 		Properties prop = new Properties();
 		prop.setProperty("spectrumTofeature", "jr");
 		return new Config(prop);
 	}
-	
+
 	public static Config raw() {
 		Properties prop = new Properties();
 		prop.setProperty("spectrumTofeature", "raw");
@@ -118,5 +118,13 @@ public class Config {
 
 	public static Config current() {
 		return jr();
+	}
+
+	public double getPercentOverlap() {
+		return percentOverlap;
+	}
+
+	public void setPercentOverlap(double pc) {
+		percentOverlap = pc;
 	}
 }
