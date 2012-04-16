@@ -21,11 +21,20 @@ public class CreateSerializeDataMain {
 		public static void main(String args[]) throws Exception {
 
 			Config config = Config.current();
-			File root = new File("../JavaSpeechToolData/wavfiles/Dynamic");
-			String words[]={"Bed_","Red_","Bad_"};
+			File rootSrc = new File("../JavaSpeechToolData/wavfiles/Dynamic");
+			File rootDir = new File("/tmp/SPEECH");
+			
+			rootDir.mkdir();
+			
+			
+			
+			
+			String words[]={"Bed_","Red_","Bad_","Call_","Did_","Father_","Leg_","Tea_","Wet_"};
+			
+			double fractTrain=0.7;
 			
 			WavTrainingPoolToDirectory pool = 
-				new WavTrainingPoolToDirectory(root, config,words);
+				new WavTrainingPoolToDirectory(rootSrc,rootDir,fractTrain, config,words);
 			
 
 		}
