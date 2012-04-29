@@ -1,0 +1,2 @@
+set +x
+mplayer -af resample=44100 -ao pcm:waveheader $1;
