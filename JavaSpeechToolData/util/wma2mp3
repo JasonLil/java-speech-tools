@@ -1,0 +1,5 @@
+set +x
+mplayer -af resample=44100 -ao pcm:waveheader $1;
+lame -m s -V 3 audiodump.wav;
+mv audiodump.wav.mp3 `basename $1 .wma`.mp3
+rm audiodump.wav
