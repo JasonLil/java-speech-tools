@@ -26,7 +26,7 @@ public class WavTrainingPoolToDirectory {
 
 	HashSet<String> filt;
 
-	WavTrainingPoolToDirectory(File rootSrc, File rootDst, double fractTrain,
+	WavTrainingPoolToDirectory(File rootSrc, File rootDst, 
 			Config config, String words[]) throws IOException {
 		// names=new ArrayList<String>();
 

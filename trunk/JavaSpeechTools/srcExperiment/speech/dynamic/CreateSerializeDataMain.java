@@ -29,10 +29,10 @@ public class CreateSerializeDataMain {
 			
 			String words[]={"Bed_","Red_","Bad_","Call_","Did_","Father_","Leg_","Tea_","Wet_"};
 			
-			double fractTrain=0.7;
+			//double fractTrain=0.7;
 			
 			WavTrainingPoolToDirectory pool = 
-				new WavTrainingPoolToDirectory(rootSrc,rootDir,fractTrain, config,words);
+				new WavTrainingPoolToDirectory(rootSrc,rootDir, config,words);
 			
 
 		}
