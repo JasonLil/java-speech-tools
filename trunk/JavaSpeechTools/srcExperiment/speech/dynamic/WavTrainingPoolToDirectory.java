@@ -30,10 +30,8 @@ public class WavTrainingPoolToDirectory {
 			Config config, String words[]) throws IOException {
 		// names=new ArrayList<String>();
 
-		File trainDir = new File("/tmp/SPEECH/train");
-		File testDir  = new File("/tmp/SPEECH/test");
-		trainDir.mkdir();
-		testDir.mkdir();
+		File dst = new File("/tmp/SPEECH/"+config.getNetName());
+		dst.mkdir();
 
 		reader = new FeatureVectorReader(config);
 		trainingData = new ArrayList<TrainingData>();
@@ -55,6 +53,7 @@ public class WavTrainingPoolToDirectory {
 			if (dir.getName().startsWith("."))
 				continue;
 			assert (dir.isDirectory());
+			
 			for (File f : dir.listFiles()) {
 				if (f.getName().startsWith("."))
 					continue;
@@ -91,9 +90,6 @@ public class WavTrainingPoolToDirectory {
 
 			List<File> list = set.get(key);
 			
-			int nTrain=(int) (list.size()*fractTrain);
-			int nTest=list.size()-nTrain;
-			assert(nTrain > 0  && nTest> 0);
 			
 			int cntF=0;
 			
@@ -107,6 +103,7 @@ public class WavTrainingPoolToDirectory {
 				// Copy features into array
 				// pack as sequence of features
 				int nslice = featSeq.size();
+			
 				if (nFeature == 0) {
 					nFeature = nslice;
 				} else {
@@ -133,13 +130,12 @@ public class WavTrainingPoolToDirectory {
 				data.label = target;
 
 				
-				File fOut;
+				String ttt=file.getAbsolutePath();
+				String toks[]=ttt.split("/");
+				int n=toks.length;
+				String fileName=toks[n-1].replace(".wav","")+toks[n-2]+"_"+(idTrain++)+".data";
 				
-				if (cntF++ < nTrain){
-					fOut = new File(trainDir, "train_" + (idTrain++)+".data");
-				} else {
-					fOut = new File(testDir, "test_" + (idTest++)+".data");
-				}
+				File fOut = new File(dst, fileName);
 				
 				FileOutputStream fos = new FileOutputStream(fOut);
 				ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -150,29 +146,29 @@ public class WavTrainingPoolToDirectory {
 			outCount++;
 		}
 
-		File filename = new File(trainDir, "dimensionIn.data");
+		File filename = new File(dst, "dimensionIn.data");
 		FileOutputStream fos = new FileOutputStream(filename);
 		ObjectOutputStream out = new ObjectOutputStream(fos);
 		out.writeObject(inDimension);
 		out.close();
 
-		filename = new File(trainDir, "dimensionOut.data");
+		filename = new File(dst, "dimensionOut.data");
 		fos = new FileOutputStream(filename);
 		out = new ObjectOutputStream(fos);
 		out.writeObject(outDimension);
 		out.close();
-
-		filename = new File(testDir, "dimensionIn.data");
-		fos = new FileOutputStream(filename);
-		out = new ObjectOutputStream(fos);
-		out.writeObject(inDimension);
-		out.close();
-
-		filename = new File(testDir, "dimensionOut.data");
-		fos = new FileOutputStream(filename);
-		out = new ObjectOutputStream(fos);
-		out.writeObject(outDimension);
-		out.close();
+//
+//		filename = new File(testDir, "dimensionIn.data");
+//		fos = new FileOutputStream(filename);
+//		out = new ObjectOutputStream(fos);
+//		out.writeObject(inDimension);
+//		out.close();
+//
+//		filename = new File(testDir, "dimensionOut.data");
+//		fos = new FileOutputStream(filename);
+//		out = new ObjectOutputStream(fos);
+//		out.writeObject(outDimension);
+//		out.close();
 		
 	}
 
