@@ -27,8 +27,6 @@ public class CreateSerializeDataMain {
 			rootDir.mkdir();
 			
 			
-			
-			
 			String words[]={"Bed_","Red_","Bad_","Call_","Did_","Father_","Leg_","Tea_","Wet_"};
 			
 			double fractTrain=0.7;
