@@ -104,15 +104,15 @@ public class TrainNetwork {
 		Data data = new Data(0, config.getFeatureVectorSize());
 
 		int nTarget = pool.nTarget();
-		double confusionSum[][] = new double[nTarget][nTarget];
-		double confusionEnd[][] = new double[nTarget][nTarget];
-		double sum[] = new double[nTarget];
+		float confusionSum[][] = new float[nTarget][nTarget];
+		float confusionEnd[][] = new float[nTarget][nTarget];
+		float sum[] = new float[nTarget];
 		int itcount[] = new int[nTarget];
 
 		for (TrainingData td : pool.trainingData) {
 
 			// sum of outputs over time.
-			Arrays.fill(sum, 0.0);
+			Arrays.fill(sum, 0.0f);
 			//net.wash();
 
 			for (double[] vec : td.featureSequence()) {
@@ -142,7 +142,7 @@ public class TrainNetwork {
 		}
 
 		boolean done=true;
-		double err=0.0;
+		float err=0;
 		
 		for (int i = 0; i < nTarget; i++) {
 			for (int j = 0; j < nTarget; j++) {
@@ -161,8 +161,8 @@ public class TrainNetwork {
 		return err;
 	}
 
-	private static void normalize(double[] sum) {
-		double tot = 0;
+	private static void normalize(float[] sum) {
+		float tot = 0;
 
 		for (int i = 0; i < sum.length; i++) {
 			tot += sum[i];
@@ -176,12 +176,12 @@ public class TrainNetwork {
 
 	}
 
-	static void dump(double[][] array, int[] itcount, int iter) {
+	static void dump(float[][] array, int[] itcount, int iter) {
 
 		System.out.println(" Iteration : " + iter);
 
 		for (int rowId = 0; rowId < array.length; rowId++) {
-			for (double x : array[rowId]) {
+			for (float x : array[rowId]) {
 				if (itcount[rowId] == 0) {
 
 					System.out.format(" ----");
