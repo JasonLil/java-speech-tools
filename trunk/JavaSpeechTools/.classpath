@@ -12,6 +12,5 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/usr/lib/jni"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="srcVideo/video/SimpleViewer.java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
