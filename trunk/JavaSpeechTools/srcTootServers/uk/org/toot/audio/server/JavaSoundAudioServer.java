@@ -425,10 +425,25 @@ TimedAudioServer
         public JavaSoundAudioInput(AudioFormat format, Mixer.Info info, String label, String location)
         	throws LineUnavailableException {
             super(format, info, label);
+            
+
             infoIn = new DataLine.Info(TargetDataLine.class, format);
 //            System.out.println(label+": "+infoIn+" from "+info);
             if ( !AudioSystem.getMixer(mixerInfo).isLineSupported(infoIn) ) {
-                throw new LineUnavailableException(mixerInfo+" does not support "+infoIn);
+            	if (format.getChannels() == 2){
+            		  format = new AudioFormat(
+            		        	format.getSampleRate(),
+            		            format.getSampleSizeInBits(),
+            		            1, // !!!
+            		            true,
+            		            false);	// 
+
+                      infoIn = new DataLine.Info(TargetDataLine.class, format);
+                      if ( !AudioSystem.getMixer(mixerInfo).isLineSupported(infoIn) ) {
+                          throw new LineUnavailableException(mixerInfo+" does not support "+infoIn);
+                      }
+            	}
+            	
             }
             metaInfo = new AudioBuffer.MetaInfo(label, location);
 //            System.out.println(mixerInfo+" supports "+infoIn);
