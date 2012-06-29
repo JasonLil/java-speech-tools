@@ -21,7 +21,7 @@ public class Config {
 	static String phonemeWords[] = { "Read", "red", "Great", "Father", "Blue",
 			"Burn" };
 
-	public static String preferredIn[] = { "M1010LT [plughw:0,0]",
+	public static String preferredIn[] = { "AK5370 [plughw:1,0]","M1010LT [plughw:0,0]",
 			"U0x46d0x805", "default" };
 	public static String preferredOut[] = { "M1010LT [plughw:0,0]",
 			"NVidia [plughw:0,0]", "default" };
