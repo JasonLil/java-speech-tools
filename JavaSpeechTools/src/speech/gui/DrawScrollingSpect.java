@@ -75,6 +75,7 @@ public class DrawScrollingSpect extends JPanel {
 		
 		this.mapper = new ValMapper();
 		mapper.update(null, null);
+		setDoubleBuffered(true);
 	
 	}
 

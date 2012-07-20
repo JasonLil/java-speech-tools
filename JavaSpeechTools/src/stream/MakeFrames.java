@@ -1,4 +1,4 @@
-package speech.gui;
+package stream;
 
 import java.awt.Container;
 import java.awt.GraphicsConfiguration;
@@ -25,6 +25,11 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.filechooser.FileFilter;
 
 import speech.Data;
+import speech.gui.AppBase;
+import speech.gui.DrawHist;
+import speech.gui.DrawHist1;
+import speech.gui.DrawHist2;
+import speech.gui.DrawScrollingSpect;
 import speech.spectral.SpectralProcess;
 import config.Config;
 
@@ -32,24 +37,18 @@ import config.Config;
 
 public class MakeFrames {
 
-	private DrawTract drawTract;
-	//private DrawTract drawTargTract;
-	private DrawLips drawLips;
-	//private DrawLips drawTargLips;
-	public DrawGraph drawGraph;
 	private DrawScrollingSpect drawScroll;
 	private DrawHist drawHist;
 
-	private int nPhonemes;
-	private String[] phonemeNames;
 
 	private JFrame specFrame;
-	private JFrame graphFrame;
-	private JFrame masterFrame;
+
 
 	private int onscreenBins;
 //	private KeyHandler keyHandler;
 	File defaultWavFile = Config.defaultWaveFile;
+
+	
 
 	
 
@@ -77,7 +76,6 @@ public class MakeFrames {
 	private AppBase app;
 	private Config config;
 	public Rectangle windowSize;
-	private ReadImage ri;
 	private boolean isApplet;
 	JFileChooser chooser;
 	
@@ -102,14 +100,11 @@ public class MakeFrames {
 	public MakeFrames(boolean isApplet, Config config, AppBase app)
 			throws IOException {
 		calcScreenSize();
-		this.phonemeNames = config.getOutputNames(); // phonemeNames;
-		this.nPhonemes = phonemeNames.length;
+		
 		this.config = config;
 		this.app = app;
-		ri = new ReadImage(config);
-		drawTract = new DrawTract(nPhonemes, ri);
-		//drawTargTract = new DrawTract(nPhonemes, ri);
-		drawLips = new DrawLips(nPhonemes, ri);
+		
+		
 		//drawTargLips = new DrawLips(nPhonemes, ri);
 		this.onscreenBins = config.getFeatureVectorSize();
 		this.isApplet=isApplet;
@@ -119,66 +114,11 @@ public class MakeFrames {
 
 	}
 
-	public JFrame makeExamples() throws IOException {
-
-		JFrame frame = new JFrame("Example phonemes");
-
-		Container content = frame.getContentPane();
-		frame.setLayout(new GridLayout(config.getNumberOfTargets(),2));
-		// For training
-		double targetNeuralOutputs[];
-		String targetText = "";
-		for (int i=0;i<nPhonemes;i++){
-			targetNeuralOutputs = new double[nPhonemes];
-			targetNeuralOutputs[0] = 1.0;
-			targetText = "EEE";
-			targetText = phonemeNames[i];
-//			for (int ii = 0; ii < nPhonemes; ii++)
-//				targetNeuralOutputs[ii] = 0;
-//			targetNeuralOutputs[i] = 1.0;
-			DrawTract drawTargTract = new DrawTract(nPhonemes, ri);
-			DrawLips drawTargLips = new DrawLips(nPhonemes, ri);
-			content.add(drawTargLips);
-			content.add(drawTargTract);
-			drawTargTract.vector(i, targetText);
-			drawTargLips.vector(i);
-		}
-		
-		
-		
-		if (!isApplet) frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		frame.setVisible(true);
-		frame.pack();
-		return frame;
-		
-	}
 	
-	public JFrame makeMaster() {
-
-		JFrame frame = new JFrame("JR Speech Analysis Toolbox");
-
-		Container content = frame.getContentPane();
-		frame.setLayout(new GridLayout(1, 2));
-//		keyHandler = new KeyHandler();
-//		frame.addKeyListener(keyHandler);
-
-		content.add(drawLips);
-		content.add(drawTract);
-		
-		if (!isApplet) frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		frame.setVisible(true);
-		masterFrame = frame;
-		makeMenus();
-		frame.pack();
-		return frame;
-	}
-
 	void makeMenus() {
 
 		JMenuBar bar = new JMenuBar();
-		masterFrame.setJMenuBar(bar);
+		specFrame.setJMenuBar(bar);
 
 		bar.add(makeFileMenu());
 
@@ -340,6 +280,8 @@ public class MakeFrames {
 			}
 		});
 		
+		makeMenus();
+		frame.pack();
 		return frame;
 	}
 
@@ -427,57 +369,14 @@ public class MakeFrames {
 			public void windowActivated(WindowEvent e) {
 			}
 		});
-		
+		makeMenus();
+		frame.setSize(800,400);
+		frame.pack();
 		return frame;
 	}
 
 	
-	public JFrame makephoneGraph() {
-		JFrame frame = new JFrame("Phoneme Classification");
-		// frame.setLayout(null);
-		drawGraph = new DrawGraph(phonemeNames);
-		drawGraph.setBounds(0, 0, 680, 400);
-		frame.add(drawGraph);
-		frame.addKeyListener(drawGraph.keyHandler);
-		frame.setSize(680, 400);
-		frame.setVisible(true);
 
-		graphFrame = frame;
-		graphFrame.addWindowListener(new WindowListener() {
-
-			@Override
-			public void windowOpened(WindowEvent e) {
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-				System.out.println(" CLOSING");
-				drawGraph = null;
-				graphFrame = null;
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {
-			}
-		});
-		return frame;
-	}
 
 	JMenu makeAnalysisMenu() {
 		JMenu menu = new JMenu("Analyis");
@@ -490,14 +389,7 @@ public class MakeFrames {
 			}
 		}));
 
-		menu.add(new JMenuItem(new AbstractAction("PhonemeGraph") {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				makephoneGraph();
-
-			}
-		}));
+	
 
 		return menu;
 	}
@@ -526,26 +418,26 @@ public class MakeFrames {
 
 	public void updateGfx(String text, double[] neuralOutputs) { // , double[]
 																	// magn) {
+//
+//		if (!(masterFrame.getExtendedState() == JFrame.ICONIFIED)) {
+////			drawTract.vectorMean(neuralOutputs, text);
+////			drawLips.vectorMean(neuralOutputs);
+////		
+//			masterFrame.repaint();
+//		}
 
-		if (!(masterFrame.getExtendedState() == JFrame.ICONIFIED)) {
-			drawTract.vectorMean(neuralOutputs, text);
-			drawLips.vectorMean(neuralOutputs);
-		
-			masterFrame.repaint();
-		}
-
-		if (drawGraph != null) {
-			// drawGraph.updateGraph(neuralOutputs, text);
-			// graphFrame.repaint();
-		}
+//		if (drawGraph != null) {
+//			// drawGraph.updateGraph(neuralOutputs, text);
+//			// graphFrame.repaint();
+//		}
 
 	}
 
 	public void resetGraphs() {
-		if (drawGraph != null) {
-			drawGraph.reset();
-			// graphFrame.repaint();
-		}
+//		if (drawGraph != null) {
+//			drawGraph.reset();
+//			// graphFrame.repaint();
+//		}
 		if (drawScroll != null) {
 			drawScroll.reset();
 		}
@@ -553,10 +445,10 @@ public class MakeFrames {
 	}
 
 	public void pauseGraphs(boolean yes) {
-		if (drawGraph != null) {
-			drawGraph.pause(yes);
-			// graphFrame.repaint();
-		}
+//		if (drawGraph != null) {
+//			drawGraph.pause(yes);
+//			// graphFrame.repaint();
+//		}
 		if (drawScroll != null) {
 			drawScroll.pause(yes);
 		}

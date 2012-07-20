@@ -1,4 +1,4 @@
-package speech.monophthong;
+package stream;
 
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import speech.gui.AppBase;
-import speech.gui.MakeFrames;
+
 import speech.spectral.FeatureClient;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
@@ -91,23 +91,23 @@ public class MainApp implements AppBase {
 	
 			
 		
-		
-		JFrame fm=frames.makeMaster();
-		Insets in=fm.getInsets();
-		Rectangle rM=new Rectangle(wE,0,(int)(wI*2+in.left+in.right),(int)(hI+in.top+in.bottom)+20);
-		fm.setBounds(rM);
-		
-		JFrame fE=frames.makeExamples();
-		fE.setBounds(rE);
-		
+//		
+//		JFrame fm=frames.makeMaster();
+//		Insets in=fm.getInsets();
+//		Rectangle rM=new Rectangle(wE,0,(int)(wI*2+in.left+in.right),(int)(hI+in.top+in.bottom)+20);
+//		fm.setBounds(rM);
+//		
+//		JFrame fE=frames.makeExamples();
+//		fE.setBounds(rE);
+//		
 		JFrame fs=frames.makeSpectrogramFrame2();
-		fs.setBounds(fm.getX()+fm.getWidth(),0,w-fm.getWidth()-fm.getX(),fm.getHeight());
+	//	fs.setBounds(fm.getX()+fm.getWidth(),0,w-fm.getWidth()-fm.getX(),fm.getHeight());
 		fs.setVisible(true);
 		
-		JFrame fG=frames.makephoneGraph();
-		Rectangle rG=new Rectangle(wE,fm.getHeight()+fm.getY(),(int)(w-wE),h-fm.getHeight()-fm.getY());
-
-		fG.setBounds(rG);
+//		JFrame fG=frames.makephoneGraph();
+//		Rectangle rG=new Rectangle(wE,fm.getHeight()+fm.getY(),(int)(w-wE),h-fm.getHeight()-fm.getY());
+//
+//		fG.setBounds(rG);
 
 		
 		timer = new Timer(50, new ActionListener() {
@@ -173,10 +173,10 @@ public class MainApp implements AppBase {
 					MainApp.this.output[i] = MainApp.this.output[i] * damp
 							+ outputs[i] * (1.0 - damp);
 				}
-				if (frames == null || frames.drawGraph == null)
-					return;
-
-				frames.drawGraph.updateGraph(outputs, "");
+//				if (frames == null || frames.drawGraph == null)
+//					return;
+//
+//				frames.drawGraph.updateGraph(outputs, "");
 			}
 
 		};
