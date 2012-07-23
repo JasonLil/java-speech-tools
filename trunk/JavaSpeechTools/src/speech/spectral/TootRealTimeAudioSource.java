@@ -1,6 +1,8 @@
 package speech.spectral;
 
 import java.io.IOException;
+
+
 import java.util.List;
 
 import uk.org.toot.audio.core.AudioBuffer;
@@ -13,6 +15,29 @@ import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.AudioWriter;
 
 import config.Config;
+
+/***
+ * 
+ * @author pjl
+ *
+ *  Real time audio source.
+ *     reads from the input or you can stream a file.
+ *     feeds a user supplied AudioClient.
+ *     
+ *     
+ *     usage 
+ *     
+ *===================================     
+ 		realTimeSpectralSource = new TootRealTimeAudioSource();
+ 
+ /* Start the engine using default input.
+ 		realTimeSpectralSource.startAudio(client);
+ 
+ /*  Replace input using a AudioReader source.
+ /* (returns to default after end of file)
+       realTimeSpectralSource.streamFile(audioReader);
+ 
+ */
 
 public class TootRealTimeAudioSource implements RealTimeAudioSource{
 

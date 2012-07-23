@@ -6,9 +6,20 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 
 /**
- * Takes chunks of one size and packs them into chunks of another size Once we
- * have a full chunk it is fed into FFT and the spectral feature fed to the
+ * Converts a real stream into spectral vectors.
+ * Takes chunks of one size and packs them into chunks of another size.
+ * Once we have a full chunk it is fed into an FFT and the spectral feature fed to the
  * client.
+ * 
+ * We can have an ovelap so the output chunks represent ovelapping blocks of the inputs
+ * 
+ 
+ 
+ 	SpectralProcessor client= . . .
+ 	
+	new SampledToSpectral(fftSize,overlap,Fs,featureSize,client);
+	
+ 
  */
 
 public class SampledToSpectral implements AudioProcess {

@@ -371,7 +371,8 @@ public class MakeFrames {
 		});
 		makeMenus();
 		frame.setSize(800,400);
-		frame.pack();
+		//frame.pack();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		return frame;
 	}
 
