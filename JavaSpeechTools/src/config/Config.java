@@ -51,6 +51,17 @@ public class Config {
 		} else if (feat.equals("raw")) {
 			featureSize = fftSize / 2;
 			spectToFeat = new RawSpectrumToFeature(featureSize);
+		} else if (feat.equals("256_50")){
+			fftSize=256;
+			featureSize = fftSize / 2;
+			percentOverlap=50;
+			spectToFeat = new RawSpectrumToFeature(featureSize);
+		} else if (feat.equals("128_50")){
+				fftSize=128;
+				featureSize = fftSize / 2;
+				percentOverlap=50;
+				spectToFeat = new RawSpectrumToFeature(featureSize);
+		
 		} else {
 			assert (false);
 		}
@@ -115,6 +126,13 @@ public class Config {
 		prop.setProperty("spectrumTofeature", "raw");
 		return new Config(prop);
 	}
+	
+	public static Config byName(String xx) {
+		Properties prop = new Properties();
+		prop.setProperty("spectrumTofeature", xx);
+		return new Config(prop);
+	}
+
 
 	public static Config current() {
 		return jr();

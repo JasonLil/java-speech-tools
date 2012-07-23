@@ -1,7 +1,5 @@
 package speech.spectral;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class RawSpectrumToFeature implements SpectrumToFeature {
 

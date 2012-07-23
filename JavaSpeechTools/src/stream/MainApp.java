@@ -69,7 +69,7 @@ public class MainApp implements AppBase {
 
 	MainApp(boolean isApplet) throws IOException {
 
-		config = Config.current();
+		config = Config.byName("raw");
 		output = new double[config.getOutputSize()];
 		fftSize = config.getFFTSize();
 		sampleRate = config.getSampleRate();
@@ -78,36 +78,12 @@ public class MainApp implements AppBase {
 		frames = new MakeFrames(isApplet, config, this); // Create gfx for
 								
 		// output
-		int w= frames.windowSize.width;
-		int h=frames.windowSize.height;
+		//int w= frames.windowSize.width;
+		//int h=frames.windowSize.height;
 		
-		float wI=320;
-		float hI=400;
-		
-		int hE=h;
-		int wE=(int)(hE*wI/hI/(config.getNumberOfTargets()))*2;
-		
-		Rectangle rE=new Rectangle(0,0,wE,hE);
-	
-			
-		
-//		
-//		JFrame fm=frames.makeMaster();
-//		Insets in=fm.getInsets();
-//		Rectangle rM=new Rectangle(wE,0,(int)(wI*2+in.left+in.right),(int)(hI+in.top+in.bottom)+20);
-//		fm.setBounds(rM);
-//		
-//		JFrame fE=frames.makeExamples();
-//		fE.setBounds(rE);
-//		
+
 		JFrame fs=frames.makeSpectrogramFrame2();
-	//	fs.setBounds(fm.getX()+fm.getWidth(),0,w-fm.getWidth()-fm.getX(),fm.getHeight());
 		fs.setVisible(true);
-		
-//		JFrame fG=frames.makephoneGraph();
-//		Rectangle rG=new Rectangle(wE,fm.getHeight()+fm.getY(),(int)(w-wE),h-fm.getHeight()-fm.getY());
-//
-//		fG.setBounds(rG);
 
 		
 		timer = new Timer(50, new ActionListener() {
@@ -203,8 +179,10 @@ public class MainApp implements AppBase {
 				config.getFeatureVectorSize(), frames.getSpectralProcess(),
 				featureClient, url1, config);
 		
+		int overlap=(int) ((fftSize*config.getPercentOverlap())/100);
+		assert( ((4*fftSize) % overlap) == 0);
 		// This is used to convert the audio stream to a spectral stream.
-		spectralConverter = new SampledToSpectral(fftSize, 0, sampleRate,
+		spectralConverter = new SampledToSpectral(fftSize, overlap, sampleRate,
 				config.getFeatureVectorSize(),nnFeatureDetector);
 		
 		
