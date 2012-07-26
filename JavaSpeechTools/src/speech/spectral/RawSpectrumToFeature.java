@@ -1,6 +1,14 @@
 package speech.spectral;
 
 
+/***
+ * 
+ * Simplest conversion of the spectral data to a feature vector.
+ * Simply copies it !
+ * 
+ * @author pjl
+ *
+ */
 public class RawSpectrumToFeature implements SpectrumToFeature {
 
 
