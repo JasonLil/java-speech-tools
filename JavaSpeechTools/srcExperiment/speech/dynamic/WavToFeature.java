@@ -19,7 +19,7 @@ public class WavToFeature {
 	}
 	
 	
-	public float[] readFile(File file) throws IOException {
+	public float[] readFile(File file) throws Exception {
 		
 		ArrayList<double[]> featSeq = reader.readVectors(file);
 		

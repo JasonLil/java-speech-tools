@@ -7,7 +7,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import speech.spectral.SampledToSpectral;
-import speech.spectral.SpectrumToFeature;
+import speech.spectral.DataProcess;
 import uk.org.toot.audio.core.AudioBuffer;
 
 import com.frinika.audio.io.AudioReader;
@@ -18,7 +18,7 @@ import config.Config;
 public class FeatureVectorReader {
 
 	
-	private SpectrumToFeature spectAdjust;
+	private DataProcess spectAdjust;
 	private Config config;
 
 	public FeatureVectorReader(Config config) {
@@ -26,7 +26,7 @@ public class FeatureVectorReader {
 		this.config=config;
 	}
 	
-	public ArrayList<double[]> readVectors(File file) throws IOException {
+	public ArrayList<double[]> readVectors(File file) throws Exception {
 
 		int fftSize=config.getFFTSize();
 		int featSize=config.getFeatureVectorSize();
@@ -64,11 +64,11 @@ public class FeatureVectorReader {
 			chunk.makeSilence();
 			audioReader.processAudio(chunk);
 
-			
-			double spectrum[] = spectralAnalysis.processAudio2(chunk);
-			double feature[]=new double[featSize];
-			spectAdjust.spectrumToFeature(spectrum,feature);
-			list.add(feature);
+			Data data=new Data();
+			data.spectrum = spectralAnalysis.processAudio2(chunk);
+			data.feature=new double[featSize];
+			spectAdjust.process(data);
+			list.add(data.feature);
 		}
 		return list;
 	}

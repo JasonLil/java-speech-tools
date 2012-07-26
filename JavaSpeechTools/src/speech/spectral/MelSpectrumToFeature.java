@@ -3,7 +3,9 @@ package speech.spectral;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MelSpectrumToFeature implements SpectrumToFeature {
+import speech.Data;
+
+public class MelSpectrumToFeature implements DataProcess {
 
 	double[] magnLog;
 
@@ -92,7 +94,7 @@ public class MelSpectrumToFeature implements SpectrumToFeature {
 			System.out.println(" Feature: " + i);
 			for (Weight w : weights[i]) {
 				System.out.println(w.j + " " + w.w);
-				w.w = w.w/sc[i];
+				w.w = w.w / sc[i];
 			}
 		}
 
@@ -107,7 +109,10 @@ public class MelSpectrumToFeature implements SpectrumToFeature {
 		return (float) (2595.0 * Math.log10(1.0 + f / 700.0));
 	}
 
-	public void spectrumToFeature(double[] spectrum, double[] feature) {
+	@Override
+	public void process(Data data) {
+		double[] spectrum = data.spectrum;
+		double[] feature = data.feature;
 
 		assert (spectrum.length == fftSize / 2);
 		assert (feature.length == featureSize);

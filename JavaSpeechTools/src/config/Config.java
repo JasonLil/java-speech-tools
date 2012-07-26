@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import speech.spectral.DataProcess;
 import speech.spectral.JRSpectrumToFeature;
 import speech.spectral.MelSpectrumToFeature;
 import speech.spectral.RawSpectrumToFeature;
-import speech.spectral.SpectrumToFeature;
+
 
 public class Config {
 
@@ -29,7 +30,7 @@ public class Config {
 	public static File defaultWaveFile = new File(
 			"/bunty/pjl/Dropbox/SpeechShare/SORTED/Anny/Cat.wav");
 	private Properties prop;
-	private SpectrumToFeature spectToFeat;
+	private DataProcess spectToFeat;
 	private float lowFreq = 50;
 	private float highFreq = 12000;
 	private double percentOverlap = 0;
@@ -84,7 +85,7 @@ public class Config {
 		return phonemeNames.length;
 	}
 
-	public SpectrumToFeature getSpectrumToFeature() {
+	public DataProcess getSpectrumToFeature() {
 		return spectToFeat;
 	}
 
@@ -105,7 +106,6 @@ public class Config {
 	}
 
 	public String getNetName() {
-
 		return spectToFeat.getName();
 	}
 

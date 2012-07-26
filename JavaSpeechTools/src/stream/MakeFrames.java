@@ -30,7 +30,8 @@ import speech.gui.DrawHist;
 import speech.gui.DrawHist1;
 import speech.gui.DrawHist2;
 import speech.gui.DrawScrollingSpect;
-import speech.spectral.SpectralProcess;
+import speech.spectral.DataProcess;
+
 import config.Config;
 
 // addComponent function from http://www.java-forums.org/
@@ -57,10 +58,10 @@ public class MakeFrames {
 	// care not
 	// to call any GUI stuff from notifyMoreData.
 
-	private SpectralProcess spectralProcess = new SpectralProcess() {
+	private DataProcess spectralProcess = new DataProcess() {
 
 		@Override
-		public void notifyMoreDataReady(Data data) {
+		public void process(Data data) {
 			if (drawScroll != null) {
 				drawScroll.notifyMoreDataReady(data.feature);
 				if (specFrame != null) {
@@ -70,6 +71,12 @@ public class MakeFrames {
 				specFrame.repaint();
 			}
 			
+		}
+
+		@Override
+		public String getName() {
+			// TODO Auto-generated method stub
+			return "MakeFrames (gui)";
 		}
 	};
 
@@ -520,7 +527,7 @@ public class MakeFrames {
 
 	}
 
-	public SpectralProcess getSpectralProcess() {
+	public DataProcess getSpectralProcess() {
 		return spectralProcess;
 	}
 

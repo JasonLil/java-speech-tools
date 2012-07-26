@@ -14,27 +14,38 @@ import speech.NeuralNet;
 //import speech.gui.DrawScrollingSpect;
 
 /**
- * Process the output of the FFT using an NN which is loaded from file
+ * 
+ * Process the output of the FFT using an NN which is loaded from file.
+ * 
+ * Takes raw spectral and produces a feature vector
+ * 
+ * Then feature is classifies using the NN
+ * 
+ * There are 2 clients to observe.    
+ * 
+ *   1. featureClient
+ *   2. ouputClient
+ * 
  * 
  * 
  * @author pjl
  * 
  */
-public class NNSpectralFeatureDetector implements SpectralProcessor  {
+public class NNSpectralFeatureDetector implements DataProcess  {
 
 	private NeuralNet neuralNet;
-	private SpectrumToFeature specAdj;
+	private DataProcess specAdj;
 	// private SampledToSpectral sprectralAnalysis;
-	private SpectralProcess spectralClient;
+	private DataProcess spectralClient;
 	// private double outputs[];
 	// private double smoothed[];
 	// private double magnLog[];
 	// private int fftSize;
 	private int featureSize;
-	private FeatureClient featureClient;
+	private DataProcess outClient;
 
 	public NNSpectralFeatureDetector(int fftsize, int onscreenBins,
-			SpectralProcess spectralClient, FeatureClient fc, URL nnURL,
+			DataProcess spectralClient, DataProcess fc, URL nnURL,
 			Config config) throws IOException, ClassNotFoundException {
 
 		this.featureSize = onscreenBins;
@@ -42,7 +53,7 @@ public class NNSpectralFeatureDetector implements SpectralProcessor  {
 		specAdj = config.getSpectrumToFeature(); // new
 													// SpectrumToFeature(onscreenBins,fftsize);
 		this.spectralClient = spectralClient;
-		this.featureClient = fc;
+		this.outClient = fc;
 		// outputs = new double[6];
 
 		// FileInputStream ostr;
@@ -58,10 +69,11 @@ public class NNSpectralFeatureDetector implements SpectralProcessor  {
 		} 
 	}
 
+	@Override
 	public void process(Data data) throws Exception {
 
 		// magnLog = specAdj.linearLog(featureSize, Config.fftSize, spectrum);
-		specAdj.spectrumToFeature(data.spectrum, data.feature); // running3Average(featureSize,
+		specAdj.process(data); // running3Average(featureSize,
 																// magnLog);
 
 		for (int i = 0; i < data.feature.length; i++) {
@@ -69,13 +81,19 @@ public class NNSpectralFeatureDetector implements SpectralProcessor  {
 		} // the USB audio interface isn't 'hot' enough
 
 		if (spectralClient != null)
-			spectralClient.notifyMoreDataReady(data); // magnLog);
+			spectralClient.process(data); // magnLog);
 
 		if (neuralNet != null) {
 			neuralNet.process(data);
-			if (featureClient != null)
-				featureClient.notifyMoreDataReady(data.output);
+			if (outClient != null)
+				outClient.process(data);
 		}
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
