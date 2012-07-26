@@ -13,7 +13,7 @@ public class TrainingData {
 	private ArrayList<double[]> featSeq;
 
 	TrainingData(File file, int id, FeatureVectorReader reader)
-			throws IOException {
+			throws Exception {
 		this.id = id;
 		featSeq = reader.readVectors(file);
 	}

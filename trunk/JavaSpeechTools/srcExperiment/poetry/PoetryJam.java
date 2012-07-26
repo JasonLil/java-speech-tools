@@ -14,7 +14,7 @@ import speech.Data;
 import speech.gui.MakeFrames;
 import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
-import speech.spectral.SpectralProcessor;
+import speech.spectral.DataProcess;
 import speech.spectral.TootRealTimeAudioSource;
 
 import com.frinika.audio.io.AudioReader;
@@ -78,11 +78,17 @@ public class PoetryJam  {
 			ClassNotFoundException {
 
 	
-		SpectralProcessor client=new SpectralProcessor(){
+		DataProcess client=new DataProcess(){
 
 			@Override
 			public void process(Data data) throws Exception {
 			
+			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 			
 		};

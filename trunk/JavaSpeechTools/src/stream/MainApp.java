@@ -14,15 +14,15 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import speech.Data;
 import speech.gui.AppBase;
 
-import speech.spectral.FeatureClient;
+import speech.spectral.DataProcess;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
 import speech.spectral.TootRealTimeAudioSource;
 
 import speech.spectral.SampledToSpectral;
-
 
 import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.VanillaRandomAccessFile;
@@ -76,16 +76,14 @@ public class MainApp implements AppBase {
 		outSize = config.getOutputSize();
 
 		frames = new MakeFrames(isApplet, config, this); // Create gfx for
-								
-		// output
-		//int w= frames.windowSize.width;
-		//int h=frames.windowSize.height;
-		
 
-		JFrame fs=frames.makeSpectrogramFrame2();
+		// output
+		// int w= frames.windowSize.width;
+		// int h=frames.windowSize.height;
+
+		JFrame fs = frames.makeSpectrogramFrame2();
 		fs.setVisible(true);
 
-		
 		timer = new Timer(50, new ActionListener() {
 
 			double outputSort[] = new double[outSize];
@@ -110,13 +108,11 @@ public class MainApp implements AppBase {
 
 				if (realTimeSpectralSource.isEOF()) {
 
-					
 					frames.pauseGraphs(true);
-					
 
 				} else {
 					frames.pauseGraphs(false);
-					
+
 				}
 				frames.updateGfx(text, output);
 			}
@@ -132,64 +128,86 @@ public class MainApp implements AppBase {
 		 * user output
 		 */
 
-		FeatureClient featureClient = new FeatureClient() {
-
-			double halfLife = .05; // in secs
-
-			double nHalf = halfLife * sampleRate / fftSize;
-			double damp = Math.exp(Math.log(0.5) / nHalf);
-			{
-				System.out.println(" damp= " + damp);
-			}
-
-			@Override
-			public void notifyMoreDataReady(double[] outputs) {
-
-				for (int i = 0; i < outputs.length; i++) {
-					MainApp.this.output[i] = MainApp.this.output[i] * damp
-							+ outputs[i] * (1.0 - damp);
-				}
-//				if (frames == null || frames.drawGraph == null)
-//					return;
-//
-//				frames.drawGraph.updateGraph(outputs, "");
-			}
-
-		};
-
-		URL url = null;
-
-		String name = config.getNetName();
-
-		String fullName = "/textfiles/" + name + ".net";
-
-		URL url1 = MainApp.class.getResource(fullName);
-		
-		
-//		if (new File(fullName).exists()) {
-//			url1 = new File(fullName).toURI().toURL();
-//		} else {
-//			System.err.println(" Could not find NN "+fullName );
-//		}
-
+		// DataProcess outputClient = new DataProcess() {
+		//
+		// double halfLife = .05; // in secs
+		//
+		// double nHalf = halfLife * sampleRate / fftSize;
+		// double damp = Math.exp(Math.log(0.5) / nHalf);
+		// {
+		// System.out.println(" damp= " + damp);
+		// }
+		//
+		// @Override
+		// public void process(Data data){
+		// double[] outputs=data.output;
+		//
+		//
+		// for (int i = 0; i < outputs.length; i++) {
+		// MainApp.this.output[i] = MainApp.this.output[i] * damp
+		// + outputs[i] * (1.0 - damp);
+		// }
+		// // if (frames == null || frames.drawGraph == null)
+		// // return;
+		// //
+		// // frames.drawGraph.updateGraph(outputs, "");
+		// }
+		//
+		// };
+		//
+		// URL url = null;
+		//
+		// String name = config.getNetName();
+		//
+		// String fullName = "/textfiles/" + name + ".net";
+		//
+		// URL url1 = MainApp.class.getResource(fullName);
+		//
+		//
+		// if (new File(fullName).exists()) {
+		// url1 = new File(fullName).toURI().toURL();
+		// } else {
+		// System.err.println(" Could not find NN "+fullName );
+		// }
+		//
 		// takes the raw FFT from the spectral converter and feeds
 		// the neural net classification
 
-		nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
-				config.getFeatureVectorSize(), frames.getSpectralProcess(),
-				featureClient, url1, config);
-		
-		int overlap=(int) ((fftSize*config.getPercentOverlap())/100);
-		assert( ((4*fftSize) % overlap) == 0);
+		// nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
+		// config.getFeatureVectorSize(), frames.getSpectralProcess(),
+		// outputClient, url1, config);
+		//
+		int overlap = (int) ((fftSize * config.getPercentOverlap()) / 100);
+		assert (((4 * fftSize) % overlap) == 0);
 		// This is used to convert the audio stream to a spectral stream.
+
+		DataProcess myProcess = new DataProcess() {
+
+			public void process(Data data) throws Exception {
+				// magnLog = specAdj.linearLog(featureSize, Config.fftSize,
+				// spectrum);
+				config.getSpectrumToFeature().process(data); // running3Average(featureSize,
+																			// magnLog);
+
+				for (int i = 0; i < data.feature.length; i++) {
+					data.feature[i] *= 2; // This is adding volume to the input
+											// signal.
+				} // the USB audio interface isn't 'hot' enough
+				frames.getSpectralProcess().process(data);
+			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+
 		spectralConverter = new SampledToSpectral(fftSize, overlap, sampleRate,
-				config.getFeatureVectorSize(),nnFeatureDetector);
-		
-		
+				config.getFeatureVectorSize(), myProcess);
 
 		// Grabs input and feeds into the spectralConverter
 		realTimeSpectralSource = new TootRealTimeAudioSource();
-
 
 		try {
 			// Start audio thread and connect nnFeatureDetector via the chunk
@@ -231,7 +249,7 @@ public class MainApp implements AppBase {
 	}
 
 	@Override
-	public void setOverlap(int sampsOverLap){
+	public void setOverlap(int sampsOverLap) {
 		spectralConverter.setOverlap(sampsOverLap);
 	}
 }

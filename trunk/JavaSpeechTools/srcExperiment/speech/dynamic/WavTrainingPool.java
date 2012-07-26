@@ -22,7 +22,7 @@ public class WavTrainingPool {
 	public double target[][];
 	HashSet<String> filt;
 	
-	WavTrainingPool(File root, Config config,String words[]) {
+	WavTrainingPool(File root, Config config,String words[]) throws Exception {
 		names=new ArrayList<String>();
 		
 		reader = new FeatureVectorReader(config);

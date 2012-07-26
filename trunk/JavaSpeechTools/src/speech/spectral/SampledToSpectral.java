@@ -39,10 +39,10 @@ public class SampledToSpectral implements AudioProcess {
 
 	private Data data;
 
-	private SpectralProcessor client;
+	private DataProcess client;
 
 	
-	public SampledToSpectral(int fftSize, int overlap, float Fs,int featureSize,SpectralProcessor client) {
+	public SampledToSpectral(int fftSize, int overlap, float Fs,int featureSize,DataProcess client) {
 		this(fftSize,overlap,Fs,featureSize);
 		this.client=client;
 	}
@@ -64,7 +64,7 @@ public class SampledToSpectral implements AudioProcess {
 
 	}
 	
-	public void setClient(SpectralProcessor client) {
+	public void setClient(DataProcess client) {
 		this.client=client;
 	}
 

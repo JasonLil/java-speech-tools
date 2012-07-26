@@ -1,5 +1,7 @@
 package speech.spectral;
 
+import speech.Data;
+
 
 /***
  * 
@@ -9,7 +11,7 @@ package speech.spectral;
  * @author pjl
  *
  */
-public class RawSpectrumToFeature implements SpectrumToFeature {
+public class RawSpectrumToFeature implements DataProcess {
 
 
 	private int featureSize;
@@ -19,8 +21,9 @@ public class RawSpectrumToFeature implements SpectrumToFeature {
 	}
 
 
-	public void spectrumToFeature(double[] spectrum, double[] feature) {
-
+	public void process(Data data) {
+		double[] spectrum = data.spectrum;
+		double[] feature = data.feature;
 		assert(feature.length == featureSize);
 		assert(spectrum.length >= featureSize);
 		for (int i = 0; i < feature.length; i++) {

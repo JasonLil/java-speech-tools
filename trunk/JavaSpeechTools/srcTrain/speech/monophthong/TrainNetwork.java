@@ -6,9 +6,11 @@ import java.util.Random;
 
 import config.Config;
 
+import speech.Data;
 import speech.NeuralNet;
 import speech.ReadWav;
-import speech.spectral.SpectrumToFeature;
+import speech.spectral.DataProcess;
+
 import uk.ac.bath.ai.backprop.BackProp;
 
 //
@@ -22,7 +24,7 @@ import uk.ac.bath.ai.backprop.BackProp;
 public class TrainNetwork {
 	
 	public static NeuralNet neuralNet;
-	public static SpectrumToFeature specAdjust;
+	public static DataProcess specAdjust;
 	public static ReadWav readWav;
 	
 	
@@ -59,9 +61,15 @@ public class TrainNetwork {
 
 		double error = 1.0;
 		
-		double[] fftSpectrum = new double[fftSize/2];
-		double[] featureVec = new double[featSize];
+		
 
+		
+		Data data=new Data(fftSize,featSize);
+		
+		double[] fftSpectrum = data.spectrum;  // new double[fftSize/2];
+		double[] featureVec = data.feature;  // new double[featSize];
+		
+		
 		int count = 0;
 		
 		// -------- Train Network------------------ //
@@ -85,7 +93,8 @@ public class TrainNetwork {
 					}
 					
 					// phonemeLog = specAdjust.linearLog(onscreenBins, fftSize, phonemeRaw); 
-					specAdjust.spectrumToFeature(fftSpectrum,featureVec); //running3Average(onscreenBins, phonemeLog); 
+					//specAdjust.spectrumToFeature(fftSpectrum,featureVec); //running3Average(onscreenBins, phonemeLog);
+					specAdjust.process(data); //running3Average(onscreenBins, phonemeLog);
 
 					double[] train_outvals = new double[outputs+1];
 					if (p != outputs)

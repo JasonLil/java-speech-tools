@@ -2,7 +2,9 @@ package speech.spectral;
 
 import java.util.Arrays;
 
-public class JRSpectrumToFeature implements SpectrumToFeature {
+import speech.Data;
+
+public class JRSpectrumToFeature implements DataProcess {
 
 //	
 //	double[] smoothed;
@@ -21,8 +23,9 @@ public class JRSpectrumToFeature implements SpectrumToFeature {
 	
 
 	
-	public void spectrumToFeature(double[] spectrum,double [] feature){
-		
+	public void process(Data data) {
+		double[] spectrum = data.spectrum;
+		double[] feature = data.feature;
 		assert(spectrum.length == fftSize/2);
 		assert(feature.length == featureSize);
 		Arrays.fill(magnLog,0.0);

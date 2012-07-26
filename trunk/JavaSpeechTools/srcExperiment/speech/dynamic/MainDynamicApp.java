@@ -11,8 +11,9 @@ import java.util.Arrays;
 
 import javax.swing.Timer;
 
+import speech.Data;
 import speech.gui.MakeFrames;
-import speech.spectral.FeatureClient;
+import speech.spectral.DataProcess;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
 import speech.spectral.SampledToSpectral;
@@ -77,7 +78,7 @@ public class MainDynamicApp  {
 		 * user output
 		 */
 
-		FeatureClient featureClient = new FeatureClient() {
+		DataProcess featureClient = new DataProcess() {
 
 			String last="";
 			
@@ -90,7 +91,9 @@ public class MainDynamicApp  {
 			}
 
 			@Override
-			public void notifyMoreDataReady(double[] outputs) {
+			public void process(Data data){
+				
+				double[] outputs=data.output;
 
 				// System.out.println(" HELLO");
 				for (int i = 0; i < outputs.length; i++) {
@@ -110,6 +113,12 @@ public class MainDynamicApp  {
 				}
 				last=out;
 				
+			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 
 		};

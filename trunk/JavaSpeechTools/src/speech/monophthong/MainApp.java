@@ -14,9 +14,10 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import speech.Data;
 import speech.gui.AppBase;
 import speech.gui.MakeFrames;
-import speech.spectral.FeatureClient;
+import speech.spectral.DataProcess;
 import speech.spectral.NNSpectralFeatureDetector;
 import speech.spectral.RealTimeAudioSource;
 import speech.spectral.TootRealTimeAudioSource;
@@ -156,7 +157,7 @@ public class MainApp implements AppBase {
 		 * user output
 		 */
 
-		FeatureClient featureClient = new FeatureClient() {
+		DataProcess featureClient = new DataProcess() {
 
 			double halfLife = .05; // in secs
 
@@ -167,7 +168,9 @@ public class MainApp implements AppBase {
 			}
 
 			@Override
-			public void notifyMoreDataReady(double[] outputs) {
+			public void process(Data data){
+				double[] outputs=data.output;
+			
 
 				for (int i = 0; i < outputs.length; i++) {
 					MainApp.this.output[i] = MainApp.this.output[i] * damp
@@ -177,6 +180,12 @@ public class MainApp implements AppBase {
 					return;
 
 				frames.drawGraph.updateGraph(outputs, "");
+			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 
 		};

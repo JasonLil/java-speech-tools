@@ -10,6 +10,8 @@ public class Data {
 	public double[] output;
 	
 	
+	public Data(){};
+	
 	public Data(int fftSize,int featureSize) {
 		input=new double[fftSize];
 		spectrum=new double[fftSize/2];

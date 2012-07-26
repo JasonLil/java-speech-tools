@@ -121,9 +121,14 @@ public class TootRealTimeAudioSource implements RealTimeAudioSource{
 		final IOAudioProcess output = audioServer.openAudioOutput(outName,"output");
 		final IOAudioProcess input = audioServer
 				.openAudioInput(inName, "input");
-
+//
+//		final AudioBuffer zero = audioServer.createAudioBuffer("zero");
+//		zero.setRealTime(true);
+	
 		chunk = audioServer.createAudioBuffer("default");
 		chunk.setRealTime(true);
+		
+		
 		final AudioBuffer chunkOut = audioServer.createAudioBuffer("default");
 		chunkOut.setRealTime(true);
 		chunkOut.makeSilence();
@@ -148,7 +153,11 @@ public class TootRealTimeAudioSource implements RealTimeAudioSource{
 				try {
 					client.processAudio(chunk);
 					
-					output.processAudio(chunk);
+					if (reader != null) {
+						output.processAudio(chunk);
+					} else {
+						output.processAudio(chunkOut);
+					}
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
