@@ -57,12 +57,15 @@ public class Config {
 			featureSize = fftSize / 2;
 			percentOverlap=50;
 			spectToFeat = new RawSpectrumToFeature(featureSize);
-		} else if (feat.equals("128_50")){
+		} else if (feat.equals("128_50")) {
 				fftSize=128;
 				featureSize = fftSize / 2;
 				percentOverlap=50;
 				spectToFeat = new RawSpectrumToFeature(featureSize);
-		
+
+		} else if (feat.equals("lpc")) {
+			spectToFeat = new JRSpectrumToFeature(featureSize, fftSize);
+
 		} else {
 			assert (false);
 		}
