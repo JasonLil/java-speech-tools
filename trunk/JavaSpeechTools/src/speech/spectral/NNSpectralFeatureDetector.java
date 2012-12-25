@@ -35,12 +35,7 @@ public class NNSpectralFeatureDetector implements DataProcess  {
 
 	private NeuralNet neuralNet;
 	private DataProcess specAdj;
-	// private SampledToSpectral sprectralAnalysis;
 	private DataProcess spectralClient;
-	// private double outputs[];
-	// private double smoothed[];
-	// private double magnLog[];
-	// private int fftSize;
 	private int featureSize;
 	private DataProcess outClient;
 
@@ -49,18 +44,13 @@ public class NNSpectralFeatureDetector implements DataProcess  {
 			Config config) throws IOException, ClassNotFoundException {
 
 		this.featureSize = onscreenBins;
-		// this.fftSize = fftsize;
-		specAdj = config.getSpectrumToFeature(); // new
-													// SpectrumToFeature(onscreenBins,fftsize);
+		
+		specAdj = config.getSpectrumToFeature(); 
 		this.spectralClient = spectralClient;
 		this.outClient = fc;
-		// outputs = new double[6];
-
-		// FileInputStream ostr;
-
+	
 		if (nnURL != null) {
-			// ostr = new FileInputStream("src/textfiles/network.txt");
-			// ostr = new FileInputStream(nnURL);
+			
 			ObjectInputStream in = new ObjectInputStream(nnURL.openStream());
 			neuralNet = (NeuralNet) in.readObject();
 			in.close();
@@ -69,6 +59,15 @@ public class NNSpectralFeatureDetector implements DataProcess  {
 		} 
 	}
 
+	/**
+	 * 
+	 * Data must contain the raw FFT data.
+	 * 
+	 * This routine:
+	 *   convert raw spectrum to a feature vector.
+	 *   uses a neural net to classify features. 
+	 * 
+	 */
 	@Override
 	public void process(Data data) throws Exception {
 
@@ -95,22 +94,5 @@ public class NNSpectralFeatureDetector implements DataProcess  {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/**
-	 * 
-	 * grab the latest neural net outputs
-	 * 
-	 * @return
-	 */
-	// public double[] getOutputs() {
-	// // TODO synchronize and copy to avoid concurrent modifications
-	//
-	// return outputs;
-	// }
-	//
-	// public double[] getFFTLogMagnitude() {
-	// // TODO Auto-generated method stub
-	// return smoothed;
-	// }
 
 }

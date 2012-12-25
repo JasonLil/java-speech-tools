@@ -22,16 +22,15 @@ import config.Config;
  *
  *  Real time audio source.
  *     reads from the input or you can stream a file.
- *     feeds a user supplied AudioClient.
- *     
+ *     feeds raw data in chunks to a user supplied AudioClient.
  *     
  *     usage 
  *     
  *===================================     
- 		realTimeSpectralSource = new TootRealTimeAudioSource();
+ 		realTimeSource = new TootRealTimeAudioSource();
  
  /* Start the engine using default input.
- 		realTimeSpectralSource.startAudio(client);
+ 		realTimeSource.startAudio(client);
  
  /*  Replace input using a AudioReader source.
  /* (returns to default after end of file)

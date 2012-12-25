@@ -128,55 +128,7 @@ public class MainApp implements AppBase {
 		 * user output
 		 */
 
-		// DataProcess outputClient = new DataProcess() {
-		//
-		// double halfLife = .05; // in secs
-		//
-		// double nHalf = halfLife * sampleRate / fftSize;
-		// double damp = Math.exp(Math.log(0.5) / nHalf);
-		// {
-		// System.out.println(" damp= " + damp);
-		// }
-		//
-		// @Override
-		// public void process(Data data){
-		// double[] outputs=data.output;
-		//
-		//
-		// for (int i = 0; i < outputs.length; i++) {
-		// MainApp.this.output[i] = MainApp.this.output[i] * damp
-		// + outputs[i] * (1.0 - damp);
-		// }
-		// // if (frames == null || frames.drawGraph == null)
-		// // return;
-		// //
-		// // frames.drawGraph.updateGraph(outputs, "");
-		// }
-		//
-		// };
-		//
-		// URL url = null;
-		//
-		// String name = config.getNetName();
-		//
-		// String fullName = "/textfiles/" + name + ".net";
-		//
-		// URL url1 = MainApp.class.getResource(fullName);
-		//
-		//
-		// if (new File(fullName).exists()) {
-		// url1 = new File(fullName).toURI().toURL();
-		// } else {
-		// System.err.println(" Could not find NN "+fullName );
-		// }
-		//
-		// takes the raw FFT from the spectral converter and feeds
-		// the neural net classification
-
-		// nnFeatureDetector = new NNSpectralFeatureDetector(fftSize,
-		// config.getFeatureVectorSize(), frames.getSpectralProcess(),
-		// outputClient, url1, config);
-		//
+	
 		int overlap = (int) ((fftSize * config.getPercentOverlap()) / 100);
 		assert (((4 * fftSize) % overlap) == 0);
 		// This is used to convert the audio stream to a spectral stream.
@@ -186,6 +138,8 @@ public class MainApp implements AppBase {
 			public void process(Data data) throws Exception {
 				// magnLog = specAdj.linearLog(featureSize, Config.fftSize,
 				// spectrum);
+	
+				// Convert spectrum to a feature vector.
 				config.getSpectrumToFeature().process(data); // running3Average(featureSize,
 																			// magnLog);
 
